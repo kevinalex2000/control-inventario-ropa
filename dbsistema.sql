@@ -527,3 +527,30 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+CREATE TABLE talla
+(
+	idtalla int(11) PRIMARY KEY,
+    nombre varchar(50)
+);
+
+INSERT INTO talla(idTalla, nombre) VALUES 
+(1, 'S'),
+(2, 'M'),
+(3, 'L'),
+(4, 'XL');
+
+CREATE TABLE articulo_talla (
+    idarticulo_talla INT AUTO_INCREMENT PRIMARY KEY,
+    idarticulo INT NOT NULL,
+    idtalla INT NOT NULL,
+    stock INT NOT NULL DEFAULT 0,
+
+    FOREIGN KEY (idarticulo) REFERENCES articulo(idarticulo)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    FOREIGN KEY (idtalla) REFERENCES talla(idtalla)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);

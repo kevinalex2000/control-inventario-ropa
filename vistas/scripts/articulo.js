@@ -24,6 +24,7 @@ function limpiar(){
 	$("#descripcion").val("");
 	$("#stock").val("");
 	$("#imagenmuestra").attr("src","");
+   	$("#imagenmuestra").hide();
 	$("#imagenactual").val("");
 	$("#print").hide();
 	$("#idarticulo").val("");

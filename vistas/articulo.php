@@ -48,7 +48,7 @@ if ($_SESSION['almacen']==1) {
       <th>Imagen</th>
       <th>Descripcion</th>
       <th>Estado</th>
-    </tfoot>   
+    </tfoot>
   </table>
 </div>
 <div class="panel-body" id="formularioregistros">
@@ -59,24 +59,6 @@ if ($_SESSION['almacen']==1) {
       <input class="form-control" type="text" name="nombre" id="nombre" maxlength="100" placeholder="Nombre" required>
     </div>
     <div class="form-group col-lg-6 col-md-6 col-xs-12">
-      <label for="">Categoria(*):</label>
-      <select name="idcategoria" id="idcategoria" class="form-control selectpicker" data-Live-search="true" required></select>
-    </div>
-       <div class="form-group col-lg-6 col-md-6 col-xs-12">
-      <label for="">Stock</label>
-      <input class="form-control" type="number" name="stock" id="stock"  required>
-    </div>
-       <div class="form-group col-lg-6 col-md-6 col-xs-12">
-      <label for="">Descripcion</label>
-      <input class="form-control" type="text" name="descripcion" id="descripcion" maxlength="256" placeholder="Descripcion">
-    </div>
-        <div class="form-group col-lg-6 col-md-6 col-xs-12">
-      <label for="">Imagen:</label>
-      <input class="form-control" type="file" name="imagen" id="imagen">
-      <input type="hidden" name="imagenactual" id="imagenactual">
-      <img src="" alt="" width="150px" height="120" id="imagenmuestra">
-    </div>
-    <div class="form-group col-lg-6 col-md-6 col-xs-12">
       <label for="">Codigo:</label>
       <input class="form-control" type="text" name="codigo" id="codigo" placeholder="codigo del prodcuto" required>
       <!-- <button class="btn btn-success" type="button" onclick="generarbarcode()">Generar</button>
@@ -84,6 +66,53 @@ if ($_SESSION['almacen']==1) {
       <div id="print">
         <svg id="barcode"></svg>
       </div> -->
+    </div>
+    <div class="form-group col-lg-6 col-md-6 col-xs-12">
+      <label for="">Categoria(*):</label>
+      <select name="idcategoria" id="idcategoria" class="form-control selectpicker" data-Live-search="true" required></select>
+    </div>
+       
+       <div class="form-group col-lg-6 col-md-6 col-xs-12">
+      <label for="">Descripcion</label>
+      <input class="form-control" type="text" name="descripcion" id="descripcion" maxlength="256" placeholder="Descripcion">
+    </div>
+    <div class="form-group col-lg-6 col-md-6 col-xs-12">
+      <label for="">Stock por tallas:</label>
+      <table class="table table-bordered table-condensed text-center" style="max-width: 300px">
+        <thead>
+          <tr class="active">
+            <th class="text-center">Talla</th>
+            <th class="text-center">Stock</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>S</td>
+            <td><input type="number" class="form-control text-center" name="stock_s" min="0" value="0"></td>
+          </tr>
+          <tr>
+            <td>M</td>
+            <td><input type="number" class="form-control text-center" name="stock_m" min="0" value="0"></td>
+          </tr>
+          <tr>
+            <td>L</td>
+            <td><input type="number" class="form-control text-center" name="stock_l" min="0" value="0"></td>
+          </tr>
+          <tr>
+            <td>XL</td>
+            <td><input type="number" class="form-control text-center" name="stock_xl" min="0" value="0"></td>
+          </tr>
+        </tbody>
+      </table>
+<!--<input class="form-control" type="number" name="stock" id="stock"  required> -->
+    </div>
+    <div class="form-group col-lg-6 col-md-6 col-xs-12">
+
+      <label for="">Imagen:</label>
+      <input class="form-control" type="file" name="imagen" id="imagen">
+      <input type="hidden" name="imagenactual" id="imagenactual">
+
+      <img style="padding-top:10px;" width="150px" height="120" id="imagenmuestra">
     </div>
     <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
       <button class="btn btn-primary" type="submit" id="btnGuardar"><i class="fa fa-save"></i>  Guardar</button>
