@@ -54,8 +54,10 @@ public function mostrar($idcategoria){
 
 //listar registros
 public function listar(){
-	$sql="SELECT * FROM categoria";
-	return ejecutarConsulta($sql);
+    $sql = "SELECT c.*, 
+                   (SELECT COUNT(*) FROM articulo a WHERE a.idcategoria = c.idcategoria) as cantidad_articulos
+            FROM categoria c";
+    return ejecutarConsulta($sql);
 }
 //listar y mostrar en selct
 public function select(){

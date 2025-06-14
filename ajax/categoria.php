@@ -45,8 +45,9 @@ switch ($_GET["op"]) {
 			$data[]=array(
             "0"=>($reg->condicion)?'<button class="btn btn-warning btn-xs" onclick="mostrar('.$reg->idcategoria.')"><i class="fa fa-pencil"></i></button> '.'<button class="btn btn-danger btn-xs" onclick="eliminar('.$reg->idcategoria.')"><i class="fa fa-trash"></i></button>': '<button class="btn btn-warning btn-xs" onclick="mostrar('.$reg->idcategoria.')"><i class="fa fa-pencil"></i></button> '.'<button class="btn btn-primary btn-xs" onclick="activar('.$reg->idcategoria.')"><i class="fa fa-check"></i></button>',
             "1"=>$reg->nombre,
-            "2"=>$reg->descripcion,
-            "3"=>($reg->condicion)?'<span class="label bg-green">Activado</span>':'<span class="label bg-red">Desactivado</span>'
+			"2" => $reg->cantidad_articulos,
+            "3"=>$reg->descripcion,
+            "4"=>($reg->condicion)?'<span class="label bg-green">Activado</span>':'<span class="label bg-red">Desactivado</span>'
               );
 		}
 		$results=array(
