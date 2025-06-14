@@ -48,7 +48,7 @@ if ($_SESSION['almacen']==1) {
       <th>Imagen</th>
       <th>Descripcion</th>
       <th>Estado</th>
-    </tfoot>   
+    </tfoot>
   </table>
 </div>
 <div class="panel-body" id="formularioregistros">
@@ -63,8 +63,34 @@ if ($_SESSION['almacen']==1) {
       <select name="idcategoria" id="idcategoria" class="form-control selectpicker" data-Live-search="true" required></select>
     </div>
        <div class="form-group col-lg-6 col-md-6 col-xs-12">
-      <label for="">Stock</label>
-      <input class="form-control" type="number" name="stock" id="stock"  required>
+      <label for="">Stock por tallas:</label>
+      <table class="table table-bordered table-condensed text-center" style="max-width: 300px">
+        <thead>
+          <tr class="active">
+            <th class="text-center">Talla</th>
+            <th class="text-center">Stock</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>S</td>
+            <td><input type="number" class="form-control text-center" name="stock_s" min="0" value="0"></td>
+          </tr>
+          <tr>
+            <td>M</td>
+            <td><input type="number" class="form-control text-center" name="stock_m" min="0" value="0"></td>
+          </tr>
+          <tr>
+            <td>L</td>
+            <td><input type="number" class="form-control text-center" name="stock_l" min="0" value="0"></td>
+          </tr>
+          <tr>
+            <td>XL</td>
+            <td><input type="number" class="form-control text-center" name="stock_xl" min="0" value="0"></td>
+          </tr>
+        </tbody>
+      </table>
+<!--<input class="form-control" type="number" name="stock" id="stock"  required> -->
     </div>
        <div class="form-group col-lg-6 col-md-6 col-xs-12">
       <label for="">Descripcion</label>
