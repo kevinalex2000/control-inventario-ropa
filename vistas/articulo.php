@@ -59,10 +59,24 @@ if ($_SESSION['almacen']==1) {
       <input class="form-control" type="text" name="nombre" id="nombre" maxlength="100" placeholder="Nombre" required>
     </div>
     <div class="form-group col-lg-6 col-md-6 col-xs-12">
+      <label for="">Codigo:</label>
+      <input class="form-control" type="text" name="codigo" id="codigo" placeholder="codigo del prodcuto" required>
+      <!-- <button class="btn btn-success" type="button" onclick="generarbarcode()">Generar</button>
+      <button class="btn btn-info" type="button" onclick="imprimir()">Imprimir</button>
+      <div id="print">
+        <svg id="barcode"></svg>
+      </div> -->
+    </div>
+    <div class="form-group col-lg-6 col-md-6 col-xs-12">
       <label for="">Categoria(*):</label>
       <select name="idcategoria" id="idcategoria" class="form-control selectpicker" data-Live-search="true" required></select>
     </div>
+       
        <div class="form-group col-lg-6 col-md-6 col-xs-12">
+      <label for="">Descripcion</label>
+      <input class="form-control" type="text" name="descripcion" id="descripcion" maxlength="256" placeholder="Descripcion">
+    </div>
+    <div class="form-group col-lg-6 col-md-6 col-xs-12">
       <label for="">Stock por tallas:</label>
       <table class="table table-bordered table-condensed text-center" style="max-width: 300px">
         <thead>
@@ -92,24 +106,13 @@ if ($_SESSION['almacen']==1) {
       </table>
 <!--<input class="form-control" type="number" name="stock" id="stock"  required> -->
     </div>
-       <div class="form-group col-lg-6 col-md-6 col-xs-12">
-      <label for="">Descripcion</label>
-      <input class="form-control" type="text" name="descripcion" id="descripcion" maxlength="256" placeholder="Descripcion">
-    </div>
-        <div class="form-group col-lg-6 col-md-6 col-xs-12">
+    <div class="form-group col-lg-6 col-md-6 col-xs-12">
+
       <label for="">Imagen:</label>
       <input class="form-control" type="file" name="imagen" id="imagen">
       <input type="hidden" name="imagenactual" id="imagenactual">
-      <img src="" alt="" width="150px" height="120" id="imagenmuestra">
-    </div>
-    <div class="form-group col-lg-6 col-md-6 col-xs-12">
-      <label for="">Codigo:</label>
-      <input class="form-control" type="text" name="codigo" id="codigo" placeholder="codigo del prodcuto" required>
-      <!-- <button class="btn btn-success" type="button" onclick="generarbarcode()">Generar</button>
-      <button class="btn btn-info" type="button" onclick="imprimir()">Imprimir</button>
-      <div id="print">
-        <svg id="barcode"></svg>
-      </div> -->
+
+      <img style="padding-top:10px;" width="150px" height="120" id="imagenmuestra">
     </div>
     <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
       <button class="btn btn-primary" type="submit" id="btnGuardar"><i class="fa fa-save"></i>  Guardar</button>
