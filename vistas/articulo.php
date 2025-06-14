@@ -79,11 +79,11 @@ if ($_SESSION['almacen']==1) {
     <div class="form-group col-lg-6 col-md-6 col-xs-12">
       <label for="">Codigo:</label>
       <input class="form-control" type="text" name="codigo" id="codigo" placeholder="codigo del prodcuto" required>
-      <button class="btn btn-success" type="button" onclick="generarbarcode()">Generar</button>
+      <!-- <button class="btn btn-success" type="button" onclick="generarbarcode()">Generar</button>
       <button class="btn btn-info" type="button" onclick="imprimir()">Imprimir</button>
       <div id="print">
         <svg id="barcode"></svg>
-      </div>
+      </div> -->
     </div>
     <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
       <button class="btn btn-primary" type="submit" id="btnGuardar"><i class="fa fa-save"></i>  Guardar</button>
