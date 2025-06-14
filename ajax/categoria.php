@@ -17,9 +17,13 @@ switch ($_GET["op"]) {
 		echo $rspta ? "Datos actualizados correctamente" : "No se pudo actualizar los datos";
 	}
 		break;
-	
 
-	case 'desactivar':
+	case 'eliminar':
+    $rspta = $categoria->eliminar($idcategoria);
+    echo $rspta;
+    break;
+	
+	/*case 'desactivar':
 		$rspta=$categoria->desactivar($idcategoria);
 		echo $rspta ? "Datos desactivados correctamente" : "No se pudo desactivar los datos";
 		break;
@@ -27,7 +31,7 @@ switch ($_GET["op"]) {
 		$rspta=$categoria->activar($idcategoria);
 		echo $rspta ? "Datos activados correctamente" : "No se pudo activar los datos";
 		break;
-	
+	*/
 	case 'mostrar':
 		$rspta=$categoria->mostrar($idcategoria);
 		echo json_encode($rspta);
@@ -39,7 +43,7 @@ switch ($_GET["op"]) {
 
 		while ($reg=$rspta->fetch_object()) {
 			$data[]=array(
-            "0"=>($reg->condicion)?'<button class="btn btn-warning btn-xs" onclick="mostrar('.$reg->idcategoria.')"><i class="fa fa-pencil"></i></button>'.' '.'<button class="btn btn-danger btn-xs" onclick="desactivar('.$reg->idcategoria.')"><i class="fa fa-close"></i></button>':'<button class="btn btn-warning btn-xs" onclick="mostrar('.$reg->idcategoria.')"><i class="fa fa-pencil"></i></button>'.' '.'<button class="btn btn-primary btn-xs" onclick="activar('.$reg->idcategoria.')"><i class="fa fa-check"></i></button>',
+            "0"=>($reg->condicion)?'<button class="btn btn-warning btn-xs" onclick="mostrar('.$reg->idcategoria.')"><i class="fa fa-pencil"></i></button> '.'<button class="btn btn-danger btn-xs" onclick="eliminar('.$reg->idcategoria.')"><i class="fa fa-trash"></i></button>': '<button class="btn btn-warning btn-xs" onclick="mostrar('.$reg->idcategoria.')"><i class="fa fa-pencil"></i></button> '.'<button class="btn btn-primary btn-xs" onclick="activar('.$reg->idcategoria.')"><i class="fa fa-check"></i></button>',
             "1"=>$reg->nombre,
             "2"=>$reg->descripcion,
             "3"=>($reg->condicion)?'<span class="label bg-green">Activado</span>':'<span class="label bg-red">Desactivado</span>'

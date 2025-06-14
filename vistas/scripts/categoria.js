@@ -45,11 +45,11 @@ function listar(){
 		"aServerSide": true,//paginacion y filrado realizados por el server
 		dom: 'Bfrtip',//definimos los elementos del control de la tabla
 		buttons: [
-                  'copyHtml5',
-                  'excelHtml5',
-                  'csvHtml5',
-                  'pdf'
-		],
+                  //'copyHtml5',
+                  //'excelHtml5',
+                  //'csvHtml5',
+                  //'pdf'
+		], 
 		"ajax":
 		{
 			url:'../ajax/categoria.php?op=listar',
@@ -100,9 +100,18 @@ function mostrar(idcategoria){
 		})
 }
 
-
+function eliminar(idcategoria){
+    bootbox.confirm("¿Está seguro de eliminar esta categoría?", function(result){
+        if (result) {
+            $.post("../ajax/categoria.php?op=eliminar", {idcategoria : idcategoria}, function(e){
+                bootbox.alert(e);
+                tabla.ajax.reload();
+            });
+        }
+    })
+}
 //funcion para desactivar
-function desactivar(idcategoria){
+/*function desactivar(idcategoria){
 	bootbox.confirm("¿Esta seguro de desactivar este dato?", function(result){
 		if (result) {
 			$.post("../ajax/categoria.php?op=desactivar", {idcategoria : idcategoria}, function(e){
@@ -122,6 +131,6 @@ function activar(idcategoria){
 			});
 		}
 	})
-}
+}*/
 
 init();

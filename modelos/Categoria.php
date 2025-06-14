@@ -20,14 +20,31 @@ public function editar($idcategoria,$nombre,$descripcion){
 	WHERE idcategoria='$idcategoria'";
 	return ejecutarConsulta($sql);
 }
-public function desactivar($idcategoria){
+
+public function eliminar($idcategoria){
+    // Verificar si existen artículos asociados a la categoría
+    $sql_check = "SELECT COUNT(*) as total FROM articulo WHERE idcategoria = '$idcategoria'";
+    $result = ejecutarConsultaSimpleFila($sql_check);
+
+    if ($result['total'] > 0) {
+        // Hay artículos asociados, no permitir eliminación
+        return "No se puede eliminar la categoría porque tiene artículos asignados.";
+    }
+
+    // No hay artículos, proceder a eliminar
+    $sql = "DELETE FROM categoria WHERE idcategoria = '$idcategoria'";
+    $delete = ejecutarConsulta($sql);
+    return ($delete) ? "Se elimino la categoria de manera exitosa" : "No se pudo eliminar la categoría";
+}
+
+/* public function desactivar($idcategoria){
 	$sql="UPDATE categoria SET condicion='0' WHERE idcategoria='$idcategoria'";
 	return ejecutarConsulta($sql);
 }
 public function activar($idcategoria){
 	$sql="UPDATE categoria SET condicion='1' WHERE idcategoria='$idcategoria'";
 	return ejecutarConsulta($sql);
-}
+}*/
 
 //metodo para mostrar registros
 public function mostrar($idcategoria){
