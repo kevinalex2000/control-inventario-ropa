@@ -28,7 +28,14 @@ function limpiar(){
 	$("#imagenactual").val("");
 	$("#print").hide();
 	$("#idarticulo").val("");
+
+	// ...otros campos limpiados
+    $("#stock_s").prop("readonly", false).val(0);
+    $("#stock_m").prop("readonly", false).val(0);
+    $("#stock_l").prop("readonly", false).val(0);
+    $("#stock_xl").prop("readonly", false).val(0);
 }
+
 
 //funcion mostrar formulario
 function mostrarform(flag){
@@ -100,26 +107,44 @@ function guardaryeditar(e){
      limpiar();
 }
 
-function mostrar(idarticulo){
-	$.post("../ajax/articulo.php?op=mostrar",{idarticulo : idarticulo},
-		function(data,status)
-		{
-			data=JSON.parse(data);
-			mostrarform(true);
 
-			$("#idcategoria").val(data.idcategoria);
-			$("#idcategoria").selectpicker('refresh');
-			$("#codigo").val(data.codigo);
-			$("#nombre").val(data.nombre);
-			$("#stock").val(data.stock);
-			$("#descripcion").val(data.descripcion);
-			$("#imagenmuestra").show();
-			$("#imagenmuestra").attr("src","../files/articulos/"+data.imagen);
-			$("#imagenactual").val(data.imagen);
-			$("#idarticulo").val(data.idarticulo);
-			generarbarcode();
-		})
+function mostrar(idarticulo){
+    $.post("../ajax/articulo.php?op=mostrar",{idarticulo : idarticulo},
+        function(data,status)
+        {
+			debugger
+			
+            data=JSON.parse(data);
+            mostrarform(true);
+
+            $("#idcategoria").val(data.idcategoria);
+            $("#idcategoria").selectpicker('refresh');
+            $("#codigo").val(data.codigo);
+            $("#nombre").val(data.nombre);
+            $("#stock").val(data.stock);
+            $("#descripcion").val(data.descripcion);
+            $("#imagenmuestra").show();
+            $("#imagenmuestra").attr("src","../files/articulos/"+data.imagen);
+            $("#imagenactual").val(data.imagen);
+            $("#idarticulo").val(data.idarticulo);
+ 
+
+            // Si tu backend devuelve los campos de stock por talla, asígnalos:
+            $("#stock_s").val(data.stock_s);
+            $("#stock_m").val(data.stock_m);
+            $("#stock_l").val(data.stock_l);
+            $("#stock_xl").val(data.stock_xl);
+
+            // BLOQUEAR los campos de tallas al editar (readonly)
+            $("#stock_s").prop("readonly", true);
+            $("#stock_m").prop("readonly", true);
+            $("#stock_l").prop("readonly", true);
+            $("#stock_xl").prop("readonly", true);
+        })
 }
+
+
+
 
 
 //funcion para desactivar
@@ -155,5 +180,32 @@ function generarbarcode(){
 function imprimir(){
 	$("#print").printArea();
 }
+
+function eliminar(idarticulo){
+    bootbox.confirm("¿Está seguro de eliminar este artículo? Esta acción no se puede deshacer.", function(result){
+        if(result){
+            $.post("../ajax/articulo.php?op=eliminar", {idarticulo : idarticulo}, function(e){
+                bootbox.alert(e);
+                tabla.ajax.reload();
+            });
+        }
+    });
+}
+
+// Vista previa de imagen al seleccionar archivo
+document.getElementById('imagen').addEventListener('change', function(e){
+    const file = e.target.files[0];
+    if(file){
+        const reader = new FileReader();
+        reader.onload = function(evt){
+            document.getElementById('imagenmuestra').style.display = 'block';
+            document.getElementById('imagenmuestra').src = evt.target.result;
+        }
+        reader.readAsDataURL(file);
+    } else {
+        document.getElementById('imagenmuestra').style.display = 'none';
+        document.getElementById('imagenmuestra').src = '';
+    }
+});
 
 init();

@@ -88,19 +88,19 @@ if ($_SESSION['almacen']==1) {
         <tbody>
           <tr>
             <td>S</td>
-            <td><input type="number" class="form-control text-center" name="stock_s" min="0" value="0"></td>
+            <td><input type="number" class="form-control text-center" name="stock_s" id="stock_s" min="0" value="0" ></td>
           </tr>
           <tr>
             <td>M</td>
-            <td><input type="number" class="form-control text-center" name="stock_m" min="0" value="0"></td>
+            <td><input type="number" class="form-control text-center" name="stock_m" id="stock_m" min="0" value="0"></td>
           </tr>
           <tr>
             <td>L</td>
-            <td><input type="number" class="form-control text-center" name="stock_l" min="0" value="0"></td>
+            <td><input type="number" class="form-control text-center" name="stock_l" id="stock_l" min="0" value="0"></td>
           </tr>
           <tr>
             <td>XL</td>
-            <td><input type="number" class="form-control text-center" name="stock_xl" min="0" value="0"></td>
+            <td><input type="number" class="form-control text-center" name="stock_xl" id="stock_xl" min="0" value="0"></td>
           </tr>
         </tbody>
       </table>
@@ -109,7 +109,7 @@ if ($_SESSION['almacen']==1) {
     <div class="form-group col-lg-6 col-md-6 col-xs-12">
 
       <label for="">Imagen:</label>
-      <input class="form-control" type="file" name="imagen" id="imagen">
+      <input class="form-control" type="file" name="imagen" id="imagen" required>
       <input type="hidden" name="imagenactual" id="imagenactual">
 
       <img style="padding-top:10px;" width="150px" height="120" id="imagenmuestra">

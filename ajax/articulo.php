@@ -10,6 +10,10 @@ $nombre=isset($_POST["nombre"])? limpiarCadena($_POST["nombre"]):"";
 $stock=isset($_POST["stock"])? limpiarCadena($_POST["stock"]):"";
 $descripcion=isset($_POST["descripcion"])? limpiarCadena($_POST["descripcion"]):"";
 $imagen=isset($_POST["imagen"])? limpiarCadena($_POST["imagen"]):"";
+$stock_s = isset($_POST["stock_s"]) ? limpiarCadena($_POST["stock_s"]) : 0;
+$stock_m = isset($_POST["stock_m"]) ? limpiarCadena($_POST["stock_m"]) : 0;
+$stock_l = isset($_POST["stock_l"]) ? limpiarCadena($_POST["stock_l"]) : 0;
+$stock_xl = isset($_POST["stock_xl"]) ? limpiarCadena($_POST["stock_xl"]) : 0;
 
 switch ($_GET["op"]) {
 	case 'guardaryeditar':
@@ -24,14 +28,18 @@ switch ($_GET["op"]) {
 		}
 	}
 	if (empty($idarticulo)) {
-		$rspta=$articulo->insertar($idcategoria,$codigo,$nombre,$stock,$descripcion,$imagen);
-		echo $rspta ? "Datos registrados correctamente" : "No se pudo registrar los datos";
+		$rspta = $articulo->insertar($idcategoria, $codigo, $nombre, $stock, $descripcion, $imagen, $stock_s, $stock_m, $stock_l, $stock_xl);
+    	echo $rspta ? "Datos registrados correctamente" : "No se pudo registrar los datos";
 	}else{
-         $rspta=$articulo->editar($idarticulo,$idcategoria,$codigo,$nombre,$stock,$descripcion,$imagen);
-		echo $rspta ? "Datos actualizados correctamente" : "No se pudo actualizar los datos";
+    	$rspta = $articulo->editar($idarticulo, $idcategoria, $codigo, $nombre, $stock, $descripcion, $imagen);
+    	echo $rspta ? "Datos actualizados correctamente" : "No se pudo actualizar los datos";
 	}
 		break;
 	
+	case 'eliminar':
+    $rspta = $articulo->eliminar($idarticulo);
+    echo $rspta ? "Artículo eliminado correctamente" : "No se pudo eliminar el artículo";
+    break;
 
 	case 'desactivar':
 		$rspta=$articulo->desactivar($idarticulo);
@@ -53,7 +61,7 @@ switch ($_GET["op"]) {
 
 		while ($reg=$rspta->fetch_object()) {
 			$data[]=array(
-            "0"=>($reg->condicion)?'<button class="btn btn-warning btn-xs" onclick="mostrar('.$reg->idarticulo.')"><i class="fa fa-pencil"></i></button>'.' '.'<button class="btn btn-danger btn-xs" onclick="desactivar('.$reg->idarticulo.')"><i class="fa fa-close"></i></button>':'<button class="btn btn-warning btn-xs" onclick="mostrar('.$reg->idarticulo.')"><i class="fa fa-pencil"></i></button>'.' '.'<button class="btn btn-primary btn-xs" onclick="activar('.$reg->idarticulo.')"><i class="fa fa-check"></i></button>',
+            "0"=>($reg->condicion)?'<button class="btn btn-warning btn-xs" onclick="mostrar('.$reg->idarticulo.')"><i class="fa fa-pencil"></i></button>'.' '.'<button class="btn btn-danger btn-xs" onclick="desactivar('.$reg->idarticulo.')"><i class="fa fa-close"></i></button>':'<button class="btn btn-warning btn-xs" onclick="mostrar('.$reg->idarticulo.')"><i class="fa fa-pencil"></i></button>'.' '.'<button class="btn btn-primary btn-xs" onclick="activar('.$reg->idarticulo.')"><i class="fa fa-check"></i></button>'.'<button class="btn btn-danger btn-xs" onclick="eliminar('.$reg->idarticulo.')"><i class="fa fa-trash"></i></button>',
             "1"=>$reg->nombre,
             "2"=>$reg->categoria,
             "3"=>$reg->codigo,
