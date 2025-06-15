@@ -64,7 +64,19 @@ public function mostrar($idarticulo){
 
 //listar registros 
 public function listar(){
-	$sql="SELECT a.idarticulo,a.idcategoria,c.nombre as categoria,a.codigo, a.nombre,a.stock,a.descripcion,a.imagen,a.condicion FROM articulo a INNER JOIN Categoria c ON a.idcategoria=c.idcategoria";
+	$sql="SELECT 
+    	a.idarticulo,
+    	a.nombre,
+		cat.nombre as categoria,
+    	a.codigo,
+    	a.descripcion,
+    	a.imagen,
+		a.condicion,
+    	IFNULL(SUM(art.stock), 0) AS stock
+		FROM articulo a
+		LEFT JOIN articulo_talla art ON art.idarticulo = a.idarticulo
+		LEFT JOIN categoria cat on cat.idcategoria = a.idcategoria
+		GROUP BY a.idarticulo, a.nombre, cat.nombre, a.codigo, a.descripcion, a.imagen, a.condicion;";
 	return ejecutarConsulta($sql);
 }
 

@@ -36,10 +36,10 @@ switch ($_GET["op"]) {
 	}
 		break;
 	
-	case 'eliminar':
+	/*case 'eliminar':
     $rspta = $articulo->eliminar($idarticulo);
     echo $rspta ? "Artículo eliminado correctamente" : "No se pudo eliminar el artículo";
-    break;
+    break;*/
 
 	case 'desactivar':
 		$rspta=$articulo->desactivar($idarticulo);
