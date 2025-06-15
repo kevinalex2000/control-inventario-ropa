@@ -94,3 +94,5 @@ _ReSharper*/
 
 # Optional: include your custom folders to ignore here
 # /my-temp-folder/
+
+./files/articulos/

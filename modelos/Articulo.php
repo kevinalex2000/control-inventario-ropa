@@ -54,12 +54,37 @@ public function activar($idarticulo){
 //metodo para mostrar registros
 public function mostrar($idarticulo){
 	$sql="SELECT * FROM articulo WHERE idarticulo='$idarticulo'";
-	$sqltalla = "SELECT idarticulo, nombre as talla, stock FROM `articulo_talla` art  join talla tal ON tal.idtalla = art.idtalla WHERE idarticulo = '$idarticulo'";
+	$sqltalla = "SELECT art.idarticulo, tal.idtalla, tal.nombre as talla, art.stock FROM `articulo_talla` art  join talla tal ON tal.idtalla = art.idtalla WHERE idarticulo = '$idarticulo'";
 	$producto = ejecutarConsultaSimpleFila($sql);
-	$tallas = ejecutarConsulta($sqltalla);
-	//$producto->$tallas = $tallas;
-	return $producto;
+	$stocktallas = ejecutarConsulta($sqltalla);
 
+	$detallestock = [];
+	$totalstock = 0;
+
+	while ($fila = $stocktallas->fetch_assoc()) {
+		$detallestock[] = [
+			'idtalla' => $fila['idtalla'],
+			'talla' => $fila['talla'],
+			'stock' => (int)$fila['stock']
+		];
+
+		$totalstock += (int)$fila['stock'];
+	}
+
+	$respuesta = [
+		'idarticulo' => (int)$producto['idarticulo'],
+		'idcategoria' => (int)$producto['idcategoria'],
+		'codigo' => $producto['codigo'],
+		'nombre' => $producto['nombre'],
+		'descripcion' => $producto['descripcion'],
+		'imagen' => $producto['imagen'],
+		'condicion' => $producto['condicion'],
+		'totalstock' => $totalstock,
+		'detallestock' => $detallestock
+	];
+
+	//$producto->$tallas = $tallas;
+	return $respuesta;
 }
 
 //listar registros 

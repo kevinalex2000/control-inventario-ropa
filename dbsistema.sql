@@ -554,3 +554,10 @@ CREATE TABLE articulo_talla (
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
+
+ALTER TABLE articulo MODIFY idcategoria INT NULL;
+
+DELETE FROM  detalle_ingreso;
+DELETE FROM  detalle_venta;
+DELETE FROM  ingreso;
+DELETE FROM  venta;

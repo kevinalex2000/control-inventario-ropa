@@ -28,18 +28,17 @@ function limpiar(){
 	$("#imagenactual").val("");
 	$("#print").hide();
 	$("#idarticulo").val("");
+	$('#idcategoria').val('').selectpicker('refresh');
 
 	// ...otros campos limpiados
-    $("#stock_s").prop("readonly", false).val(0);
-    $("#stock_m").prop("readonly", false).val(0);
-    $("#stock_l").prop("readonly", false).val(0);
-    $("#stock_xl").prop("readonly", false).val(0);
+    $(".stock-talla").prop("readonly", false);
 }
 
 
 //funcion mostrar formulario
 function mostrarform(flag){
 	limpiar();
+	$("#imagen").attr("required","true");
 	if(flag){
 		$("#listadoregistros").hide();
 		$("#formularioregistros").show();
@@ -65,10 +64,27 @@ function listar(){
 		"aServerSide": true,//paginacion y filrado realizados por el server
 		dom: 'Bfrtip',//definimos los elementos del control de la tabla
 		buttons: [
-                  //'copyHtml5',
-                  'excelHtml5',
-                  //'csvHtml5',
-                  //'pdf'
+			{
+				extend: 'excelHtml5',
+				filename: function() {
+					// Obtener fecha y hora actual en formato YYYY-MM-DD_HH-MM-SS
+					var date = new Date();
+					var year = date.getFullYear();
+					var month = ("0" + (date.getMonth() + 1)).slice(-2);
+					var day = ("0" + date.getDate()).slice(-2);
+					var hours = ("0" + date.getHours()).slice(-2);
+					var minutes = ("0" + date.getMinutes()).slice(-2);
+					var seconds = ("0" + date.getSeconds()).slice(-2);
+					
+					return 'Reporte_Articulos_' + year + '-' + month + '-' + day + '_' + hours + '-' + minutes + '-' + seconds;
+				},
+				exportOptions: {
+					columns: [1, 2, 3, 4, 6,7] // Indica las columnas que SÍ quieres exportar
+				}
+			}
+			//'copyHtml5',
+			//'csvHtml5',
+			//'pdf'
 		],
 		"ajax":
 		{
@@ -112,8 +128,6 @@ function mostrar(idarticulo){
     $.post("../ajax/articulo.php?op=mostrar",{idarticulo : idarticulo},
         function(data,status)
         {
-			debugger
-			
             data=JSON.parse(data);
             mostrarform(true);
 
@@ -121,31 +135,21 @@ function mostrar(idarticulo){
             $("#idcategoria").selectpicker('refresh');
             $("#codigo").val(data.codigo);
             $("#nombre").val(data.nombre);
-            $("#stock").val(data.stock);
             $("#descripcion").val(data.descripcion);
             $("#imagenmuestra").show();
             $("#imagenmuestra").attr("src","../files/articulos/"+data.imagen);
             $("#imagenactual").val(data.imagen);
             $("#idarticulo").val(data.idarticulo);
- 
+			$("#imagen").removeAttr("required");
 
-            // Si tu backend devuelve los campos de stock por talla, asígnalos:
-            $("#stock_s").val(data.stock_s);
-            $("#stock_m").val(data.stock_m);
-            $("#stock_l").val(data.stock_l);
-            $("#stock_xl").val(data.stock_xl);
+			data.detallestock.forEach(function(item) {
+				$('[data-idtalla="'+item.idtalla+'"]').val(item.stock);				
+			});
 
             // BLOQUEAR los campos de tallas al editar (readonly)
-            $("#stock_s").prop("readonly", true);
-            $("#stock_m").prop("readonly", true);
-            $("#stock_l").prop("readonly", true);
-            $("#stock_xl").prop("readonly", true);
+            $(".stock-talla").prop("readonly", true);
         })
 }
-
-
-
-
 
 //funcion para desactivar
 function desactivar(idarticulo){
@@ -185,6 +189,7 @@ function eliminar(idarticulo){
     bootbox.confirm("¿Está seguro de eliminar este artículo? Esta acción no se puede deshacer.", function(result){
         if(result){
             $.post("../ajax/articulo.php?op=eliminar", {idarticulo : idarticulo}, function(e){
+				debugger;
                 bootbox.alert(e);
                 tabla.ajax.reload();
             });

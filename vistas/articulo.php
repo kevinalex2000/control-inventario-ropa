@@ -18,7 +18,9 @@ if ($_SESSION['almacen']==1) {
         <div class="col-md-12">
       <div class="box">
 <div class="box-header with-border">
-  <h1 class="box-title">Articulo <button class="btn btn-success" onclick="mostrarform(true)" id="btnagregar"><i class="fa fa-plus-circle"></i>Agregar</button> <a target="_blank" href="../reportes/rptarticulos.php"><button class="btn btn-info">Reporte</button></a></h1>
+  <h1 class="box-title">Articulo <button class="btn btn-success" onclick="mostrarform(true)" id="btnagregar"><i class="fa fa-plus-circle"></i>Agregar</button> 
+  <!--<a target="_blank" href="../reportes/rptarticulos.php"><button class="btn btn-info">Reporte</button></a>-->
+</h1>
   <div class="box-tools pull-right">
     
   </div>
@@ -59,7 +61,7 @@ if ($_SESSION['almacen']==1) {
       <input class="form-control" type="text" name="nombre" id="nombre" maxlength="100" placeholder="Nombre" required>
     </div>
     <div class="form-group col-lg-6 col-md-6 col-xs-12">
-      <label for="">Codigo:</label>
+      <label for="">Codigo(*):</label>
       <input class="form-control" type="text" name="codigo" id="codigo" placeholder="codigo del prodcuto" required>
       <!-- <button class="btn btn-success" type="button" onclick="generarbarcode()">Generar</button>
       <button class="btn btn-info" type="button" onclick="imprimir()">Imprimir</button>
@@ -68,8 +70,8 @@ if ($_SESSION['almacen']==1) {
       </div> -->
     </div>
     <div class="form-group col-lg-6 col-md-6 col-xs-12">
-      <label for="">Categoria(*):</label>
-      <select name="idcategoria" id="idcategoria" class="form-control selectpicker" data-Live-search="true" required></select>
+      <label for="">Categoria:</label>
+      <select name="idcategoria" id="idcategoria" class="form-control selectpicker" style="background-color: #fff" data-Live-search="true"></select>
     </div>
        
        <div class="form-group col-lg-6 col-md-6 col-xs-12">
@@ -88,19 +90,19 @@ if ($_SESSION['almacen']==1) {
         <tbody>
           <tr>
             <td>S</td>
-            <td><input type="number" class="form-control text-center" name="stock_s" id="stock_s" min="0" value="0" ></td>
+            <td><input type="number" class="form-control text-center stock-talla" data-idtalla="1" name="stock_s" id="stock_s" min="0" value="0" ></td>
           </tr>
           <tr>
             <td>M</td>
-            <td><input type="number" class="form-control text-center" name="stock_m" id="stock_m" min="0" value="0"></td>
+            <td><input type="number" class="form-control text-center stock-talla" data-idtalla="2" name="stock_m" id="stock_m" min="0" value="0"></td>
           </tr>
           <tr>
             <td>L</td>
-            <td><input type="number" class="form-control text-center" name="stock_l" id="stock_l" min="0" value="0"></td>
+            <td><input type="number" class="form-control text-center stock-talla" data-idtalla="3" name="stock_l" id="stock_l" min="0" value="0"></td>
           </tr>
           <tr>
             <td>XL</td>
-            <td><input type="number" class="form-control text-center" name="stock_xl" id="stock_xl" min="0" value="0"></td>
+            <td><input type="number" class="form-control text-center stock-talla" data-idtalla="4" name="stock_xl" id="stock_xl" min="0" value="0"></td>
           </tr>
         </tbody>
       </table>
@@ -108,7 +110,7 @@ if ($_SESSION['almacen']==1) {
     </div>
     <div class="form-group col-lg-6 col-md-6 col-xs-12">
 
-      <label for="">Imagen:</label>
+      <label for="">Imagen(*):</label>
       <input class="form-control" type="file" name="imagen" id="imagen" required>
       <input type="hidden" name="imagenactual" id="imagenactual">
 

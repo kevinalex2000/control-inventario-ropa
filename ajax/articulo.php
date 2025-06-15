@@ -18,22 +18,27 @@ $stock_xl = isset($_POST["stock_xl"]) ? limpiarCadena($_POST["stock_xl"]) : 0;
 switch ($_GET["op"]) {
 	case 'guardaryeditar':
 
-	if (!file_exists($_FILES['imagen']['tmp_name'])|| !is_uploaded_file($_FILES['imagen']['tmp_name'])) {
-		$imagen=$_POST["imagenactual"];
-	}else{
-		$ext=explode(".", $_FILES["imagen"]["name"]);
-		if ($_FILES['imagen']['type']=="image/jpg" || $_FILES['imagen']['type']=="image/jpeg" || $_FILES['imagen']['type']=="image/png") {
-			$imagen=round(microtime(true)).'.'. end($ext);
-			move_uploaded_file($_FILES["imagen"]["tmp_name"], "../files/articulos/".$imagen);
+		// Seteamos a null id categoria si viene como cadena vacia
+		if($idcategoria == "" || $idcategoria == 0){
+			$idcategoria = null;
+		}	
+
+		if (!file_exists($_FILES['imagen']['tmp_name'])|| !is_uploaded_file($_FILES['imagen']['tmp_name'])) {
+			$imagen=$_POST["imagenactual"];
+		}else{
+			$ext=explode(".", $_FILES["imagen"]["name"]);
+			if ($_FILES['imagen']['type']=="image/jpg" || $_FILES['imagen']['type']=="image/jpeg" || $_FILES['imagen']['type']=="image/png") {
+				$imagen=round(microtime(true)).'.'. end($ext);
+				move_uploaded_file($_FILES["imagen"]["tmp_name"], "../files/articulos/".$imagen);
+			}
 		}
-	}
-	if (empty($idarticulo)) {
-		$rspta = $articulo->insertar($idcategoria, $codigo, $nombre, $stock, $descripcion, $imagen, $stock_s, $stock_m, $stock_l, $stock_xl);
-    	echo $rspta ? "Datos registrados correctamente" : "No se pudo registrar los datos";
-	}else{
-    	$rspta = $articulo->editar($idarticulo, $idcategoria, $codigo, $nombre, $stock, $descripcion, $imagen);
-    	echo $rspta ? "Datos actualizados correctamente" : "No se pudo actualizar los datos";
-	}
+		if (empty($idarticulo)) {
+			$rspta = $articulo->insertar($idcategoria, $codigo, $nombre, $stock, $descripcion, $imagen, $stock_s, $stock_m, $stock_l, $stock_xl);
+			echo $rspta ? "Datos registrados correctamente" : "No se pudo registrar los datos";
+		}else{
+			$rspta = $articulo->editar($idarticulo, $idcategoria, $codigo, $nombre, $stock, $descripcion, $imagen);
+			echo $rspta ? "Datos actualizados correctamente" : "No se pudo actualizar los datos";
+		}
 		break;
 	
 	case 'eliminar':
@@ -80,11 +85,13 @@ switch ($_GET["op"]) {
 		break;
 
 		case 'selectCategoria':
+
 			require_once "../modelos/Categoria.php";
 			$categoria=new Categoria();
 
 			$rspta=$categoria->select();
 
+			echo '<option value="" default>--Seleccione--</option>';
 			while ($reg=$rspta->fetch_object()) {
 				echo '<option value=' . $reg->idcategoria.'>'.$reg->nombre.'</option>';
 			}
