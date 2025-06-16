@@ -59,20 +59,11 @@ if (!function_exists('ejecutarConsulta')) {
 
 			$stmt->execute();
 
-			// ⚠️ Verificar si hay resultado del SELECT
+			// Verificar si hay resultado del SELECT
 			if ($result = $stmt->get_result()) {
-					$data = [];
-
-					while ($row = $result->fetch_assoc()) {
-							$data[] = $row;
-					}
-
-					$result->free_result();
-					$stmt->close();
-
-					return $data; // Puede ser vacío []
+					return $result;
 			} else {
-					// ❌ El SP no devolvió ningún SELECT
+					// El SP no devolvió ningún SELECT
 					$stmt->close();
 					return null;
 			}

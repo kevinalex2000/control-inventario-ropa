@@ -18,7 +18,9 @@ if ($_SESSION['almacen']==1) {
         <div class="col-md-12">
       <div class="box">
 <div class="box-header with-border">
-  <h1 class="box-title">Articulos <button class="btn btn-success btn-sm" onclick="mostrarform(true)" id="btnagregar"><i class="fa fa-plus-circle"></i> Nuevo</button> 
+  <h1 class="box-title">
+    Articulos 
+    <button class="btn btn-success btn-sm" onclick="mostrarform(true)" id="btnagregar"><i class="fa fa-plus-circle"></i> Nuevo</button> 
   <!--<a target="_blank" href="../reportes/rptarticulos.php"><button class="btn btn-info">Reporte</button></a>-->
 </h1>
   <div class="box-tools pull-right">
@@ -42,10 +44,6 @@ if ($_SESSION['almacen']==1) {
     <label for="filtroTalla">Talla</label>
     <select id="filtroTalla" class="form-control input-sm">
       <option value="">Todas</option>
-      <option value="1">S</option>
-      <option value="2">M</option>
-      <option value="3">L</option>
-      <option value="4">XL</option>
     </select>
   </div>
 
@@ -132,7 +130,7 @@ if ($_SESSION['almacen']==1) {
     </div>
     <div class="form-group col-lg-6 col-md-6 col-xs-12">
       <label for="">Stock por tallas:</label>
-      <table class="table table-bordered table-condensed text-center" style="max-width: 300px">
+      <table id="idtblstockxtallas" class="table table-bordered table-condensed text-center" style="max-width: 300px">
         <thead>
           <tr class="active">
             <th class="text-center">Talla</th>
@@ -142,7 +140,7 @@ if ($_SESSION['almacen']==1) {
         <tbody>
           <tr>
             <td>S</td>
-            <td><input type="number" class="form-control text-center stock-talla" data-idtalla="1" name="stock_s" id="stock_s" min="0" value="0" ></td>
+            <td><input type="number" class="form-control text-center stock-talla" data-idtalla="1" name="stock_s" id="stock_s" min="0" value="0"></td>
           </tr>
           <tr>
             <td>M</td>
@@ -159,6 +157,11 @@ if ($_SESSION['almacen']==1) {
         </tbody>
       </table>
 <!--<input class="form-control" type="number" name="stock" id="stock"  required> -->
+    </div>
+    
+    <div class="form-group col-lg-6 col-md-6 col-xs-12">
+      <label for="">Precio de Venta(*):</label>
+      <input name="precio_venta" id="precio_venta" type="number" class="form-control"/>
     </div>
     <div class="form-group col-lg-6 col-md-6 col-xs-12">
 

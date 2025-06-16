@@ -11,9 +11,13 @@ class Articulo{
 
 //metodo insertar regiustro
 	public function insertar($idcategoria, $codigo, $nombre, $stock, $descripcion, $imagen, $stock_s, $stock_m, $stock_l, $stock_xl){
+		if($idcategoria== null || $idcategoria==0){
+			$idcategoria = 'NULL';
+		}
+
     // Insertar el artículo principal
     $sql="INSERT INTO articulo (idcategoria,codigo,nombre,stock,descripcion,imagen,condicion)
-          VALUES ('$idcategoria','$codigo','$nombre','$stock','$descripcion','$imagen','1')";
+          VALUES ($idcategoria,'$codigo','$nombre','$stock','$descripcion','$imagen','1')";
     $idarticulo_new = ejecutarConsulta_retornarID($sql);
 
     // Insertar stock por talla
@@ -93,7 +97,7 @@ class Articulo{
 
 	//listar registros 
 	public function listar($idcategoria, $idtalla, $condicion){
-		$sp="sp_listar_articulos ";
+		$sp="sp_listar_articulos";
 		return ejecutarSP($sp, [$idcategoria, $idtalla, $condicion]);
 	}
 

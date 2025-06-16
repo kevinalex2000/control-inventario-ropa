@@ -9,12 +9,52 @@ function init() {
     guardaryeditar(e);
   });
 
-  //cargamos los items al celect categoria
+  $('#imagen').on('change', function (e) {
+    const file = e.target.files[0];
+    const $preview = $('#imagenmuestra');
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => $preview.show().attr('src', e.target.result);
+      reader.readAsDataURL(file);
+    } else {
+      $preview.hide().attr('src', '');
+    }
+  });
+
   $.post('../ajax/articulo.php?op=selectCategoria', function (r) {
     $('#idcategoria').html(r);
     $('#idcategoria').selectpicker('refresh');
   });
   $('#imagenmuestra').hide();
+
+  $.getJSON('../ajax/talla.php', function (r) {
+    const $tbody = $('#idtblstockxtallas tbody');
+    $tbody.empty();
+
+    const $filtroTalla = $('#filtroTalla');
+
+    r.forEach((talla) => {
+      const fila = `
+        <tr>
+          <td>${talla.nombre}</td>
+          <td>
+            <input type="number" 
+              class="form-control text-center stock-talla" 
+              data-idtalla="${talla.idtalla}" 
+              name="stock_${talla.nombre}" 
+              id="stock_${talla.nombre}" 
+              min="0" 
+              value="0" />
+          </td>
+        </tr>
+      `;
+      $tbody.append(fila);
+
+      const option = `<option value="${talla.idtalla}">${talla.nombre}</option>`;
+      $filtroTalla.append(option);
+    });
+  });
 }
 
 //funcion limpiar
@@ -29,8 +69,7 @@ function limpiar() {
   $('#print').hide();
   $('#idarticulo').val('');
   $('#idcategoria').val('').selectpicker('refresh');
-
-  // ...otros campos limpiados
+  $('.stock-talla').val(0);
   $('.stock-talla').prop('readonly', false);
 }
 
@@ -207,21 +246,5 @@ function eliminar(idarticulo) {
 function buscarEnTabla(value) {
   tabla.search(value).draw();
 }
-
-// Vista previa de imagen al seleccionar archivo
-document.getElementById('imagen').addEventListener('change', function (e) {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function (evt) {
-      document.getElementById('imagenmuestra').style.display = 'block';
-      document.getElementById('imagenmuestra').src = evt.target.result;
-    };
-    reader.readAsDataURL(file);
-  } else {
-    document.getElementById('imagenmuestra').style.display = 'none';
-    document.getElementById('imagenmuestra').src = '';
-  }
-});
 
 init();

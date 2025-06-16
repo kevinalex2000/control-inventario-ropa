@@ -68,27 +68,28 @@ switch ($_GET["op"]) {
 		$rspta=$articulo->listar($idcategoria, $idtalla, $condicion);
 		$data=Array();
 
-    foreach ($rspta as $reg) {
-	$data[] = array(
-		"0" => ($reg['condicion'])
-			? '<button class="btn btn-warning btn-xs" onclick="mostrar('.$reg['idarticulo'].')"><i class="fa fa-pencil"></i></button>'
-				. ' '
-				. '<button class="btn btn-danger btn-xs" onclick="desactivar('.$reg['idarticulo'].')"><i class="fa fa-close"></i></button>'
-			: '<button class="btn btn-warning btn-xs" onclick="mostrar('.$reg['idarticulo'].')"><i class="fa fa-pencil"></i></button>'
-				. ' '
-				. '<button class="btn btn-primary btn-xs" onclick="activar('.$reg['idarticulo'].')"><i class="fa fa-check"></i></button>'
-				. '<button class="btn btn-danger btn-xs" onclick="eliminar('.$reg['idarticulo'].')"><i class="fa fa-trash"></i></button>',
-		"1" => $reg['nombre'],
-		"2" => $reg['categoria'],
-		"3" => $reg['codigo'],
-		"4" => $reg['stock'],
-		"5" => "<img src='../files/articulos/" . $reg['imagen'] . "' height='50px' width='50px'>",
-		"6" => $reg['descripcion'],
-		"7" => ($reg['condicion'])
-			? '<span class="label bg-green">Activado</span>'
-			: '<span class="label bg-red">Desactivado</span>'
-	);
-}
+    while ($reg = $rspta->fetch_object()) {
+			$data[] = array(
+						"0" => ($reg->condicion)
+								? '<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idarticulo . ')"><i class="fa fa-pencil"></i></button>'
+										. ' '
+										. '<button class="btn btn-danger btn-xs" onclick="desactivar(' . $reg->idarticulo . ')"><i class="fa fa-close"></i></button>'
+								: '<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idarticulo . ')"><i class="fa fa-pencil"></i></button>'
+										. ' '
+										. '<button class="btn btn-primary btn-xs" onclick="activar(' . $reg->idarticulo . ')"><i class="fa fa-check"></i></button>'
+										. ' '
+										. '<button class="btn btn-danger btn-xs" onclick="eliminar(' . $reg->idarticulo . ')"><i class="fa fa-trash"></i></button>',
+						"1" => $reg->nombre,
+						"2" => $reg->categoria,
+						"3" => $reg->codigo,
+						"4" => $reg->stock,
+						"5" => "<img src='../files/articulos/" . $reg->imagen . "' height='50px' width='50px'>",
+						"6" => $reg->descripcion,
+						"7" => ($reg->condicion)
+								? '<span class="label bg-green">Activado</span>'
+								: '<span class="label bg-red">Desactivado</span>'
+				);
+		}
 
 
 		$results=array(
