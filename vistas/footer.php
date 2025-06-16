@@ -8,6 +8,7 @@
 
 <!-- jQuery 3 -->
 
+<script src="scripts/utils.js"></script>
 <script src="../public/js/jquery.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
 <!-- Bootstrap 3.3.7 -->

@@ -27,18 +27,19 @@ if (strlen(session_id())<1)
 <link rel="stylesheet" href="../public/datatables/buttons.dataTables.min.css">
 <link rel="stylesheet" href="../public/datatables/responsive.dataTables.min.css">
 <link rel="stylesheet" href="../public/css/bootstrap-select.min.css">
+<link rel="stylesheet" href="../public/css/custom.css">
 
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-black sidebar-mini">
 <div class="wrapper">
 
   <header class="main-header">
     <!-- Logo -->
     <a href="escritorio.php" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b>SIS</b> V</span>
+      <span class="logo-mini"><b>GM</b></span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>SIS</b> VENTAS</span>
+      <span class="logo-lg">Import<b>GM</b></span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -52,8 +53,9 @@ if (strlen(session_id())<1)
 
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <!--
+              <span class="hidden-xs"><b><?php echo $_SESSION['login']; ?></b></span>-->
               <img src="../files/usuarios/<?php echo $_SESSION['imagen']; ?>" class="user-image" alt="User Image">
-              <span class="hidden-xs"><?php echo $_SESSION['nombre']; ?></span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
@@ -61,17 +63,12 @@ if (strlen(session_id())<1)
                 <img src="../files/usuarios/<?php echo $_SESSION['imagen']; ?>" class="img-circle" alt="User Image">
 
                 <p>
-                  angel totocayo cayllahua-Desarrollo de software
-                  <small>Agosto 2018</small>
+                  <?php echo $_SESSION['nombre']; ?>
+                  <small><?php echo $_SESSION['cargo']; ?></small>
+                  
                 </p>
-              </li>
-              <!-- Menu Footer-->
-              <li class="user-footer">
-                <div class="pull-left">
-                  <a href="#" class="btn btn-default btn-flat">Perfil</a>
-                </div>
-                <div class="pull-right">
-                  <a href="../ajax/usuario.php?op=salir" class="btn btn-default btn-flat">Salir</a>
+                <div>
+                  <a href="../ajax/usuario.php?op=salir" class="btn btn-danger">Cerrar Sesion</a>
                 </div>
               </li>
             </ul>
@@ -198,10 +195,7 @@ if ($_SESSION['consultav']==1) {
 }
         ?>     
             
-        
-        <li><a href="#"><i class="fa fa-question-circle"></i> <span>Ayuda</span><small class="label pull-right bg-yellow">PDF</small></a></li>
-        <li><a href="#"><i class="fa  fa-exclamation-circle"></i> <span>Ayuda</span><small class="label pull-right bg-yellow">IT</small></a></li>
-      </ul>
+        </ul>
     </section>
     <!-- /.sidebar -->
   </aside>

@@ -125,6 +125,7 @@ function guardaryeditar(e){
 
 
 function mostrar(idarticulo){
+	let loaderId = crearPantallaCargaUnica();
     $.post("../ajax/articulo.php?op=mostrar",{idarticulo : idarticulo},
         function(data,status)
         {
@@ -149,6 +150,10 @@ function mostrar(idarticulo){
             // BLOQUEAR los campos de tallas al editar (readonly)
             $(".stock-talla").prop("readonly", true);
         })
+		.always(function() {
+			// Eliminar la pantalla de carga cuando termina la solicitud
+			$('#' + loaderId).remove();
+		})
 }
 
 //funcion para desactivar
