@@ -18,23 +18,79 @@ if ($_SESSION['almacen']==1) {
         <div class="col-md-12">
       <div class="box">
 <div class="box-header with-border">
-  <h1 class="box-title">Articulo <button class="btn btn-success" onclick="mostrarform(true)" id="btnagregar"><i class="fa fa-plus-circle"></i>Agregar</button> 
+  <h1 class="box-title">Articulos <button class="btn btn-success btn-sm" onclick="mostrarform(true)" id="btnagregar"><i class="fa fa-plus-circle"></i> Nuevo</button> 
   <!--<a target="_blank" href="../reportes/rptarticulos.php"><button class="btn btn-info">Reporte</button></a>-->
 </h1>
   <div class="box-tools pull-right">
-    
   </div>
 </div>
 <!--box-header-->
 <!--centro-->
 <div class="panel-body table-responsive" id="listadoregistros">
+  <div class="row" style="margin-bottom: 30px;">
+  <!-- Filtro Categoría -->
+  <div class="col-md-2">
+    <label for="filtroCategoria">Categoría</label>
+    <select id="filtroCategoria" class="form-control input-sm">
+      <option value="">Todas</option>
+      <option value="camisas">Camisas</option>
+      <option value="pantalones">Pantalones</option>
+      <option value="zapatos">Zapatos</option>
+    </select>
+  </div>
+
+  <!-- Filtro Talla -->
+  <div class="col-md-2">
+    <label for="filtroTalla">Talla</label>
+    <select id="filtroTalla" class="form-control input-sm">
+      <option value="">Todas</option>
+      <option value="S">S</option>
+      <option value="M">M</option>
+      <option value="L">L</option>
+      <option value="XL">XL</option>
+    </select>
+  </div>
+
+  <!-- Filtro Estado -->
+  <div class="col-md-2">
+    <label for="filtroEstado">Estado</label>
+    <select id="filtroEstado" class="form-control input-sm">
+      <option value="">Todos</option>
+      <option value="activo">Activo</option>
+      <option value="inactivo">Inactivo</option>
+    </select>
+  </div>
+
+  <!-- Botón Excel -->
+  <div class="col-md-2" style="padding-top: 25px;">
+    <button id="btnExportExcel" class="btn btn-sm">
+      <span class="fa fa-filter"></span> Filtrar
+    </button>
+  </div>
+
+  <!-- Campo Buscar -->
+  <div class="col-md-4">
+    <label for="buscarTabla">Buscar</label>
+    <input type="text" id="buscarTabla" class="form-control input-sm" placeholder="Buscar en la tabla..." onkeyup="buscarEnTabla(this.value)">
+  </div>
+</div>
+
+<div class="row"  style="margin-bottom: 10px;">
+  <div class="col-md-12">
+    <button id="btnExportExcel" class="btn btn-sm btn-default" onclick="ExportarExcelDeTabla()">
+      <span class="fa fa-download"></span> Exportar en excel
+    </button>
+  </div>
+</div>
+
+
   <table id="tbllistado" class="table table-striped table-bordered table-condensed table-hover">
     <thead>
       <th>Opciones</th>
       <th>Nombre</th>
       <th>Categoria</th>
       <th>Codigo</th>
-      <th>Stock</th>
+      <th>Stock <button class="btn btn-sm"><i class="fa fa-filter"></i></button></th>
       <th>Imagen</th>
       <th>Descripcion</th>
       <th>Estado</th>

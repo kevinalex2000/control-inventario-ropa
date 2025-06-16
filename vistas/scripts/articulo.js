@@ -62,6 +62,7 @@ function listar(){
 	tabla=$('#tbllistado').dataTable({
 		"aProcessing": true,//activamos el procedimiento del datatable
 		"aServerSide": true,//paginacion y filrado realizados por el server
+    	"searching": true,
 		dom: 'Bfrtip',//definimos los elementos del control de la tabla
 		buttons: [
 			{
@@ -200,6 +201,10 @@ function eliminar(idarticulo){
             });
         }
     });
+}
+
+function buscarEnTabla(value) {
+	tabla.search(value).draw();
 }
 
 // Vista previa de imagen al seleccionar archivo

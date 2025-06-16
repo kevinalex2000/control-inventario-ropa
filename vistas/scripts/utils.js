@@ -22,3 +22,7 @@ function crearPantallaCargaUnica() {
 	$('body').append($loader);
 	return id;
 }
+
+function ExportarExcelDeTabla(){
+    $('.buttons-excel').click();
+}
