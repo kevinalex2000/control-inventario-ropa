@@ -561,3 +561,33 @@ DELETE FROM  detalle_ingreso;
 DELETE FROM  detalle_venta;
 DELETE FROM  ingreso;
 DELETE FROM  venta;
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_listar_articulos (
+    IN p_idcategoria INT,
+    IN p_idtalla INT,
+    IN p_condicion INT
+)
+BEGIN
+    SELECT 
+        a.idarticulo,
+        a.nombre,
+        cat.nombre AS categoria,
+        a.codigo,
+        a.descripcion,
+        a.imagen,
+        a.condicion,
+        (
+          SELECT SUM(stock) FROM articulo_talla 
+          WHERE idarticulo = a.idarticulo
+          AND (p_idtalla IS NULL OR idtalla = p_idtalla)
+        ) AS stock
+    FROM articulo a
+    LEFT JOIN categoria cat ON cat.idcategoria = a.idcategoria
+    WHERE
+        (p_condicion IS NULL OR a.condicion = p_condicion)
+        AND (p_idcategoria IS NULL OR a.idcategoria = p_idcategoria);
+END $$
+
+DELIMITER ;

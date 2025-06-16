@@ -43,7 +43,7 @@ $pdf->Ln(10);
 require_once "../modelos/Articulo.php";
 $articulo = new Articulo();
 
-$rspta = $articulo->listar();
+$rspta = $articulo->listar(NULL, NULL, NULL);
 
 //implementamos las celdas de la tabla con los registros a mostrar
 $pdf->SetWidths(array(58,50,30,12,35));

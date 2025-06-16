@@ -33,9 +33,7 @@ if ($_SESSION['almacen']==1) {
     <label for="filtroCategoria">Categoría</label>
     <select id="filtroCategoria" class="form-control input-sm">
       <option value="">Todas</option>
-      <option value="camisas">Camisas</option>
-      <option value="pantalones">Pantalones</option>
-      <option value="zapatos">Zapatos</option>
+      <option value="14">Abrigo</option>
     </select>
   </div>
 
@@ -44,10 +42,10 @@ if ($_SESSION['almacen']==1) {
     <label for="filtroTalla">Talla</label>
     <select id="filtroTalla" class="form-control input-sm">
       <option value="">Todas</option>
-      <option value="S">S</option>
-      <option value="M">M</option>
-      <option value="L">L</option>
-      <option value="XL">XL</option>
+      <option value="1">S</option>
+      <option value="2">M</option>
+      <option value="3">L</option>
+      <option value="4">XL</option>
     </select>
   </div>
 
@@ -56,14 +54,14 @@ if ($_SESSION['almacen']==1) {
     <label for="filtroEstado">Estado</label>
     <select id="filtroEstado" class="form-control input-sm">
       <option value="">Todos</option>
-      <option value="activo">Activo</option>
-      <option value="inactivo">Inactivo</option>
+      <option value="1">Activo</option>
+      <option value="0">Inactivo</option>
     </select>
   </div>
 
   <!-- Botón Excel -->
   <div class="col-md-2" style="padding-top: 25px;">
-    <button id="btnExportExcel" class="btn btn-sm">
+    <button id="btnExportExcel" class="btn btn-sm" onclick="listar()">
       <span class="fa fa-filter"></span> Filtrar
     </button>
   </div>
@@ -83,14 +81,13 @@ if ($_SESSION['almacen']==1) {
   </div>
 </div>
 
-
   <table id="tbllistado" class="table table-striped table-bordered table-condensed table-hover">
     <thead>
       <th>Opciones</th>
       <th>Nombre</th>
       <th>Categoria</th>
       <th>Codigo</th>
-      <th>Stock <button class="btn btn-sm"><i class="fa fa-filter"></i></button></th>
+      <th>Stock <span class="tallafiltrada"> </span></th>
       <th>Imagen</th>
       <th>Descripcion</th>
       <th>Estado</th>
@@ -98,11 +95,11 @@ if ($_SESSION['almacen']==1) {
     <tbody>
     </tbody>
     <tfoot>
-       <th>Opciones</th>
+      <th>Opciones</th>
       <th>Nombre</th>
       <th>Categoria</th>
       <th>Codigo</th>
-      <th>Stock</th>
+      <th>Stock <span class="tallafiltrada"> </span></th>
       <th>Imagen</th>
       <th>Descripcion</th>
       <th>Estado</th>
@@ -129,8 +126,7 @@ if ($_SESSION['almacen']==1) {
       <label for="">Categoria:</label>
       <select name="idcategoria" id="idcategoria" class="form-control selectpicker" style="background-color: #fff" data-Live-search="true"></select>
     </div>
-       
-       <div class="form-group col-lg-6 col-md-6 col-xs-12">
+    <div class="form-group col-lg-6 col-md-6 col-xs-12">
       <label for="">Descripcion</label>
       <input class="form-control" type="text" name="descripcion" id="descripcion" maxlength="256" placeholder="Descripcion">
     </div>
