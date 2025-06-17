@@ -18,12 +18,7 @@ $precio_venta = isset($_POST["precio_venta"]) ? limpiarCadena($_POST["precio_ven
 
 switch ($_GET["op"]) {
 	case 'guardaryeditar':
-
-		if ($precio_venta <= 0) {
-            echo "El precio de venta debe ser mayor a 0.";
-            exit;
-        }
-
+		
 		// Seteamos a null id categoria si viene como cadena vacia
 		if ($idcategoria == "" || $idcategoria == 0) {
 			$idcategoria = null;
