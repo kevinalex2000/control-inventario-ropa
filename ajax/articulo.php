@@ -14,9 +14,15 @@ $stock_s = isset($_POST["stock_s"]) ? limpiarCadena($_POST["stock_s"]) : 0;
 $stock_m = isset($_POST["stock_m"]) ? limpiarCadena($_POST["stock_m"]) : 0;
 $stock_l = isset($_POST["stock_l"]) ? limpiarCadena($_POST["stock_l"]) : 0;
 $stock_xl = isset($_POST["stock_xl"]) ? limpiarCadena($_POST["stock_xl"]) : 0;
+$precio_venta = isset($_POST["precio_venta"]) ? limpiarCadena($_POST["precio_venta"]) : 0;
 
 switch ($_GET["op"]) {
 	case 'guardaryeditar':
+
+		if ($precio_venta <= 0) {
+            echo "El precio de venta debe ser mayor a 0.";
+            exit;
+        }
 
 		// Seteamos a null id categoria si viene como cadena vacia
 		if($idcategoria == "" || $idcategoria == 0){
@@ -41,10 +47,10 @@ switch ($_GET["op"]) {
 		}
 		break;
 	
-	/*case 'eliminar':
+	case 'eliminar':
     $rspta = $articulo->eliminar($idarticulo);
     echo $rspta ? "Artículo eliminado correctamente" : "No se pudo eliminar el artículo";
-    break;*/
+    break;
 
 	case 'desactivar':
 		$rspta=$articulo->desactivar($idarticulo);
@@ -85,7 +91,8 @@ switch ($_GET["op"]) {
 						"4" => $reg->stock,
 						"5" => "<img src='../files/articulos/" . $reg->imagen . "' height='50px' width='50px'>",
 						"6" => $reg->descripcion,
-						"7" => ($reg->condicion)
+						"7" => $reg->precio_venta,
+						"8" => ($reg->condicion)
 								? '<span class="label bg-green">Activado</span>'
 								: '<span class="label bg-red">Desactivado</span>'
 				);
