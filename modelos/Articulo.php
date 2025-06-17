@@ -33,13 +33,13 @@ class Articulo
 		return true;
 	}
 
-	public function editar($idarticulo, $idcategoria, $codigo, $nombre, $descripcion, $imagen)
+	public function editar($idarticulo, $idcategoria, $codigo, $nombre, $descripcion, $imagen, $precioventa)
 	{
 		if ($idcategoria == null || $idcategoria == 0) {
 			$idcategoria = 'NULL';
 		}
 
-		$sql = "UPDATE articulo SET idcategoria=$idcategoria,codigo='$codigo', nombre='$nombre',descripcion='$descripcion',imagen='$imagen' 
+		$sql = "UPDATE articulo SET idcategoria=$idcategoria,codigo='$codigo', nombre='$nombre',descripcion='$descripcion',imagen='$imagen', precio_venta='$precioventa' 
 		WHERE idarticulo='$idarticulo'";
 		return ejecutarConsulta($sql);
 	}

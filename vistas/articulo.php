@@ -88,7 +88,7 @@ if (!isset($_SESSION['nombre'])) {
                     <th>Stock <span class="tallafiltrada"> </span></th>
                     <th>Imagen</th>
                     <th>Descripcion</th>
-                    <th>Precio De venta (S/)</th>
+                    <th>Precio</th>
                     <th>Estado</th>
                   </thead>
                   <tbody>
@@ -101,7 +101,7 @@ if (!isset($_SESSION['nombre'])) {
                     <th>Stock <span class="tallafiltrada"> </span></th>
                     <th>Imagen</th>
                     <th>Descripcion</th>
-                    <th>Precio De venta (S/)</th>
+                    <th>Precio</th>
                     <th>Estado</th>
                   </tfoot>
                 </table>
@@ -152,10 +152,10 @@ if (!isset($_SESSION['nombre'])) {
 
                   <div class="form-group col-lg-6 col-md-6 col-xs-12">
                     <label for="">Precio de Venta(*):</label>
-                    <input name="precio_venta" id="precio_venta" type="number" class="form-control" min = "1" step="0.01"
-                      placeholder="0.00" required/>
-                      
-                      
+                    <input name="precio_venta" id="precio_venta" type="number" class="form-control" min="1" step="0.01"
+                      placeholder="0.00" required />
+
+
                   </div>
                   <div class="form-group col-lg-6 col-md-6 col-xs-12">
 

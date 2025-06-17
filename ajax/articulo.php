@@ -18,9 +18,9 @@ function GuardarOEditar()
 	$stockxtalla = isset($_POST["stockxtalla"]) ? json_decode($_POST["stockxtalla"], true) : null;
 
 	if ($precioventa <= 0) {
-        echo "El precio de venta debe ser mayor a 0.";
-        exit;
-    }
+		echo "El precio de venta debe ser mayor a 0.";
+		exit;
+	}
 
 	if (!file_exists($_FILES['imagen']['tmp_name']) || !is_uploaded_file($_FILES['imagen']['tmp_name'])) {
 		$imagen = $_POST["imagenactual"];
@@ -36,7 +36,7 @@ function GuardarOEditar()
 		$rspta = $articulo->insertar($idcategoria, $codigo, $nombre, $descripcion, $imagen, $precioventa, $stockxtalla);
 		echo $rspta ? "Datos registrados correctamente" : "No se pudo registrar los datos";
 	} else {
-		$rspta = $articulo->editar($idarticulo, $idcategoria, $codigo, $nombre, $descripcion, $imagen);
+		$rspta = $articulo->editar($idarticulo, $idcategoria, $codigo, $nombre, $descripcion, $imagen, $precioventa);
 		echo $rspta ? "Datos actualizados correctamente" : "No se pudo actualizar los datos";
 	}
 
@@ -62,7 +62,7 @@ switch ($_GET["op"]) {
 		GuardarOEditar();
 		break;
 
-	
+
 
 	case 'eliminar':
 		$rspta = $articulo->eliminar($idarticulo);
