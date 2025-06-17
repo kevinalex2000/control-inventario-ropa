@@ -16,6 +16,17 @@ function GuardarOEditar()
 	$imagen = isset($_POST["imagen"]) ? limpiarCadena($_POST["imagen"]) : null;
 	$precioventa = isset($_POST["precio_venta"]) ? limpiarCadena($_POST["precio_venta"]) : null;
 	$stockxtalla = isset($_POST["stockxtalla"]) ? json_decode($_POST["stockxtalla"], true) : null;
+	$existe = $articulo->existeNombreOCodigo($nombre, $codigo, $idarticulo);
+	
+	if ($existe['codigo']) {
+		echo "El código ya está siendo utilizado por otro artículo";
+		exit;
+	}
+	
+	if ($existe['nombre']) {
+		echo "El nombre ya está siendo utilizado por otro artículo";
+		exit;
+	}
 
 	if ($precioventa <= 0) {
 		echo "El precio de venta debe ser mayor a 0.";
@@ -61,8 +72,14 @@ switch ($_GET["op"]) {
 	case 'guardaryeditar':
 		GuardarOEditar();
 		break;
-
-
+	
+	case 'validarNombreCodigo':
+		$nombre = isset($_POST["nombre"]) ? limpiarCadena($_POST["nombre"]) : '';
+		$codigo = isset($_POST["codigo"]) ? limpiarCadena($_POST["codigo"]) : '';
+		$idarticulo = isset($_POST["idarticulo"]) ? limpiarCadena($_POST["idarticulo"]) : '';
+		$existe = $articulo->existeNombreOCodigo($nombre, $codigo, $idarticulo);
+		echo json_encode($existe);
+		break;
 
 	case 'eliminar':
 		$rspta = $articulo->eliminar($idarticulo);
