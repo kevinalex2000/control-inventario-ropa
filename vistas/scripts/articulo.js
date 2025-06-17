@@ -165,45 +165,69 @@ function listar() {
 function guardaryeditar(e) {
   e.preventDefault(); //no se activara la accion predeterminada
 
+  var nombre = $('#nombre').val().trim();
+  var codigo = $('#codigo').val().trim();
+  var idarticulo = $('#idarticulo').val();
+
   var precio_venta = parseFloat($('#precio_venta').val());
   if (isNaN(precio_venta) || precio_venta <= 0) {
     $('#error_precio').show();
     $('#precio_venta').addClass('is-invalid').focus();
-    return false; // No envía el formulario, pero NO limpia los campos ni deshabilita el botón
+    return false;
   }
 
-  $('#btnGuardar').prop('disabled', true);
-  let formData = new FormData($('#formulario')[0]);
-  let stockxTalla = [];
-
-  $('#formulario .stock-talla').each(function () {
-    let idtalla = $(this).data('idtalla');
-    let valor = $(this).val() !== '' ? parseFloat($(this).val()) : 0;
-
-    stockxTalla.push({
-      idtalla: idtalla,
-      stock: valor,
-    });
-  });
-
-  // Agregar los datos manualmente a FormData
-  formData.append('stockxtalla', JSON.stringify(stockxTalla));
-
+  // Validar nombre/código antes de guardar
   $.ajax({
-    url: '../ajax/articulo.php?op=guardaryeditar',
+    url: '../ajax/articulo.php?op=validarNombreCodigo',
     type: 'POST',
-    data: formData,
-    contentType: false,
-    processData: false,
-    success: function (datos) {
-      bootbox.alert(datos);
-      mostrarform(false);
-      tabla.ajax.reload();
-    },
-    error: function (e) {},
-  });
+    data: { nombre: nombre, codigo: codigo, idarticulo: idarticulo },
+    dataType: 'json',
 
-  limpiar();
+    success: function(res) {
+      if(res.codigo) {
+        bootbox.alert("El código ya está siendo utilizado por otro artículo");
+        return false;
+      }
+      if(res.nombre) {
+        bootbox.alert("El nombre ya está siendo utilizado por otro artículo");
+        return false;
+      }
+      else {
+        // Ahora sí envía el formulario normalmente
+        $('#btnGuardar').prop('disabled', true);
+        let formData = new FormData($('#formulario')[0]);
+        let stockxTalla = [];
+
+        $('#formulario .stock-talla').each(function () {
+          let idtalla = $(this).data('idtalla');
+          let valor = $(this).val() !== '' ? parseFloat($(this).val()) : 0;
+
+          stockxTalla.push({
+            idtalla: idtalla,
+            stock: valor,
+          });
+        });
+
+        formData.append('stockxtalla', JSON.stringify(stockxTalla));
+
+        $.ajax({
+          url: '../ajax/articulo.php?op=guardaryeditar',
+          type: 'POST',
+          data: formData,
+          contentType: false,
+          processData: false,
+          success: function (datos) {
+            bootbox.alert(datos);
+            mostrarform(false);
+            tabla.ajax.reload();
+          },
+          error: function (e) {},
+        });
+
+        limpiar();
+      }
+    }
+  });
 }
 
 function mostrar(idarticulo) {
