@@ -172,7 +172,7 @@ if (!isset($_SESSION['nombre'])) {
                   <div class="form-group col-lg-6 col-md-6 col-xs-12">
                     <label for="">Precio de Venta(*):</label>
                     <input name="precio_venta" id="precio_venta" type="number" class="form-control" min="0" step="0.01"
-                      placeholder="0.00" />
+                      placeholder="0.00" required/>
                       <span class="help-block" id="error_precio" style="color: red; display: none;">El precio debe ser mayor a 0</span>
                   </div>
                   <div class="form-group col-lg-6 col-md-6 col-xs-12">
