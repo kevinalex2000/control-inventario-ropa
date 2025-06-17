@@ -157,6 +157,7 @@ function listar() {
     })
     .DataTable();
 }
+
 //funcion para guardaryeditar
 function guardaryeditar(e) {
   e.preventDefault(); //no se activara la accion predeterminada
@@ -167,14 +168,14 @@ function guardaryeditar(e) {
     $('#precio_venta').addClass('is-invalid').focus();
     return false; // No envía el formulario, pero NO limpia los campos ni deshabilita el botón
   }
-  
+
   $('#btnGuardar').prop('disabled', true);
   let formData = new FormData($('#formulario')[0]);
   let stockxTalla = [];
 
   $('#formulario .stock-talla').each(function () {
     let idtalla = $(this).data('idtalla');
-    let valor = parseFloat($(this).val());
+    let valor = $(this).val() !== '' ? parseFloat($(this).val()) : 0;
 
     stockxTalla.push({
       idtalla: idtalla,
@@ -182,27 +183,21 @@ function guardaryeditar(e) {
     });
   });
 
-  let data = {
-    idarticulo: formData.get('idarticulo'),
-    nombre: formData.get('nombre'),
-    codigo: formData.get('codigo'),
-    idcategoria: parseInt(formData.get('idcategoria')),
-    descripcion: formData.get('descripcion'),
-    precioventa: parseFloat(formData.get('precio_venta')),
-    imagen: formData.get('imagen'),
-    stockxtalla: stockxTalla,
-  };
+  // Agregar los datos manualmente a FormData
+  formData.append('stockxtalla', JSON.stringify(stockxTalla));
 
   $.ajax({
     url: '../ajax/articulo.php?op=guardaryeditar',
     type: 'POST',
-    data: data,
-    contentType: 'application/json',
+    data: formData,
+    contentType: false,
+    processData: false,
     success: function (datos) {
       bootbox.alert(datos);
       mostrarform(false);
       tabla.ajax.reload();
     },
+    error: function (e) {},
   });
 
   limpiar();
@@ -276,7 +271,6 @@ function eliminar(idarticulo) {
     function (result) {
       if (result) {
         $.post('../ajax/articulo.php?op=eliminar', { idarticulo: idarticulo }, function (e) {
-          debugger;
           bootbox.alert(e);
           tabla.ajax.reload();
         });

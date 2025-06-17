@@ -7,23 +7,14 @@ function GuardarOEditar()
 {
 	global $articulo;
 
-	$jsonData = file_get_contents('php://input');
-	$data = json_decode($jsonData, true);
-
-	$idarticulo = $data['idarticulo'];
-	$idcategoria = $data['idcategoria'];
-	$codigo = $data['codigo'];
-	$nombre = $data['nombre'];
-	$descripcion = $data['descripcion'];
-	$imagen = $data['imagen'];
-	$nombre = $data['nombre'];
-	$stockxtalla = $data["stockxtalla"];
-	$precioventa = $data["precioventa"];
-
-
-	if ($idcategoria == "" || $idcategoria == 0) {
-		$idcategoria = null;
-	}
+	$idarticulo = isset($_POST["idarticulo"]) ? limpiarCadena($_POST["idarticulo"]) : null;
+	$idcategoria = isset($_POST["idcategoria"]) ? limpiarCadena($_POST["idcategoria"]) : null;
+	$codigo = isset($_POST["codigo"]) ? limpiarCadena($_POST["codigo"]) : null;
+	$nombre = isset($_POST["nombre"]) ? limpiarCadena($_POST["nombre"]) : null;
+	$descripcion = isset($_POST["descripcion"]) ? limpiarCadena($_POST["descripcion"]) : null;
+	$imagen = isset($_POST["imagen"]) ? limpiarCadena($_POST["imagen"]) : null;
+	$precioventa = isset($_POST["precio_venta"]) ? limpiarCadena($_POST["precio_venta"]) : null;
+	$stockxtalla = isset($_POST["stockxtalla"]) ? json_decode($_POST["stockxtalla"], true) : null;
 
 	if (!file_exists($_FILES['imagen']['tmp_name']) || !is_uploaded_file($_FILES['imagen']['tmp_name'])) {
 		$imagen = $_POST["imagenactual"];
@@ -34,6 +25,7 @@ function GuardarOEditar()
 			move_uploaded_file($_FILES["imagen"]["tmp_name"], "../files/articulos/" . $imagen);
 		}
 	}
+
 	if (empty($idarticulo)) {
 		$rspta = $articulo->insertar($idcategoria, $codigo, $nombre, $descripcion, $imagen, $precioventa, $stockxtalla);
 		echo $rspta ? "Datos registrados correctamente" : "No se pudo registrar los datos";
