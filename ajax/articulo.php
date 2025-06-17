@@ -51,9 +51,15 @@ $stock_s = isset($_POST["stock_s"]) ? limpiarCadena($_POST["stock_s"]) : 0;
 $stock_m = isset($_POST["stock_m"]) ? limpiarCadena($_POST["stock_m"]) : 0;
 $stock_l = isset($_POST["stock_l"]) ? limpiarCadena($_POST["stock_l"]) : 0;
 $stock_xl = isset($_POST["stock_xl"]) ? limpiarCadena($_POST["stock_xl"]) : 0;
+$precio_venta = isset($_POST["precio_venta"]) ? limpiarCadena($_POST["precio_venta"]) : 0;
 
 switch ($_GET["op"]) {
 	case 'guardaryeditar':
+
+		if ($precio_venta <= 0) {
+            echo "El precio de venta debe ser mayor a 0.";
+            exit;
+        }
 
 		// Seteamos a null id categoria si viene como cadena vacia
 		if ($idcategoria == "" || $idcategoria == 0) {
@@ -78,10 +84,10 @@ switch ($_GET["op"]) {
 		}
 		break;
 
-	/*case 'eliminar':
-		$rspta = $articulo->eliminar($idarticulo);
-		echo $rspta ? "Artículo eliminado correctamente" : "No se pudo eliminar el artículo";
-		break;*/
+	case 'eliminar':
+    $rspta = $articulo->eliminar($idarticulo);
+    echo $rspta ? "Artículo eliminado correctamente" : "No se pudo eliminar el artículo";
+    break;
 
 	case 'desactivar':
 		$rspta = $articulo->desactivar($idarticulo);
@@ -107,25 +113,27 @@ switch ($_GET["op"]) {
 
 		while ($reg = $rspta->fetch_object()) {
 			$data[] = array(
-				"0" => ($reg->condicion)
-					? '<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idarticulo . ')"><i class="fa fa-pencil"></i></button>'
-					. ' '
-					. '<button class="btn btn-danger btn-xs" onclick="desactivar(' . $reg->idarticulo . ')"><i class="fa fa-close"></i></button>'
-					: '<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idarticulo . ')"><i class="fa fa-pencil"></i></button>'
-					. ' '
-					. '<button class="btn btn-primary btn-xs" onclick="activar(' . $reg->idarticulo . ')"><i class="fa fa-check"></i></button>'
-					. ' '
-					. '<button class="btn btn-danger btn-xs" onclick="eliminar(' . $reg->idarticulo . ')"><i class="fa fa-trash"></i></button>',
-				"1" => $reg->nombre,
-				"2" => $reg->categoria,
-				"3" => $reg->codigo,
-				"4" => $reg->stock,
-				"5" => "<img src='../files/articulos/" . $reg->imagen . "' height='50px' width='50px'>",
-				"6" => $reg->descripcion,
-				"7" => ($reg->condicion)
-					? '<span class="label bg-green">Activado</span>'
-					: '<span class="label bg-red">Desactivado</span>'
-			);
+				
+						"0" => ($reg->condicion)
+								? '<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idarticulo . ')"><i class="fa fa-pencil"></i></button>'
+										. ' '
+										. '<button class="btn btn-danger btn-xs" onclick="desactivar(' . $reg->idarticulo . ')"><i class="fa fa-close"></i></button>'
+								: '<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idarticulo . ')"><i class="fa fa-pencil"></i></button>'
+										. ' '
+										. '<button class="btn btn-primary btn-xs" onclick="activar(' . $reg->idarticulo . ')"><i class="fa fa-check"></i></button>'
+										. ' '
+										. '<button class="btn btn-danger btn-xs" onclick="eliminar(' . $reg->idarticulo . ')"><i class="fa fa-trash"></i></button>',
+						"1" => $reg->nombre,
+						"2" => $reg->categoria,
+						"3" => $reg->codigo,
+						"4" => $reg->stock,
+						"5" => "<img src='../files/articulos/" . $reg->imagen . "' height='50px' width='50px'>",
+						"6" => $reg->descripcion,
+						"7" => $reg->precio_venta,
+						"8" => ($reg->condicion)
+								? '<span class="label bg-green">Activado</span>'
+								: '<span class="label bg-red">Desactivado</span>'
+				);
 		}
 
 

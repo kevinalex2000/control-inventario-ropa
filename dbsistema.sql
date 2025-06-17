@@ -540,6 +540,10 @@ INSERT INTO talla(idTalla, nombre) VALUES
 (3, 'L'),
 (4, 'XL');
 
+INSERT INTO talla(idTalla, nombre)  VALUES
+(5, 'XXL')
+(6, 'XXXL');
+
 CREATE TABLE articulo_talla (
     idarticulo_talla INT AUTO_INCREMENT PRIMARY KEY,
     idarticulo INT NOT NULL,
@@ -578,6 +582,7 @@ BEGIN
         a.descripcion,
         a.imagen,
         a.condicion,
+        a.precio_venta,
         (
           SELECT SUM(stock) FROM articulo_talla 
           WHERE idarticulo = a.idarticulo
@@ -594,3 +599,4 @@ DELIMITER ;
 
 ALTER TABLE articulo
 ADD COLUMN precio_venta DECIMAL(10,2) NOT NULL DEFAULT 0.00;
+

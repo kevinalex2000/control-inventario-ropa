@@ -80,50 +80,49 @@ if (!isset($_SESSION['nombre'])) {
                     </button>
                   </div>
                 </div>
-
-                <table id="tbllistado" class="table table-striped table-bordered table-condensed table-hover">
-                  <thead>
-                    <th>Opciones</th>
-                    <th>Nombre</th>
-                    <th>Categoria</th>
-                    <th>Codigo</th>
-                    <th>Stock <span class="tallafiltrada"> </span></th>
-                    <th>Imagen</th>
-                    <th>Descripcion</th>
-                    <th>Estado</th>
-                  </thead>
-                  <tbody>
-                  </tbody>
-                  <tfoot>
-                    <th>Opciones</th>
-                    <th>Nombre</th>
-                    <th>Categoria</th>
-                    <th>Codigo</th>
-                    <th>Stock <span class="tallafiltrada"> </span></th>
-                    <th>Imagen</th>
-                    <th>Descripcion</th>
-                    <th>Estado</th>
-                  </tfoot>
-                </table>
-              </div>
-              <div class="panel-body" id="formularioregistros">
-                <form action="" name="formulario" id="formulario" method="POST">
-                  <div class="form-group col-lg-6 col-md-6 col-xs-12">
-                    <label for="">Nombre(*):</label>
-                    <input class="form-control" type="hidden" name="idarticulo" id="idarticulo">
-                    <input class="form-control" type="text" name="nombre" id="nombre" maxlength="100" placeholder="Nombre"
-                      required>
-                  </div>
-                  <div class="form-group col-lg-6 col-md-6 col-xs-12">
-                    <label for="">Codigo(*):</label>
-                    <input class="form-control" type="text" name="codigo" id="codigo" placeholder="codigo del prodcuto"
-                      required>
-                    <!-- <button class="btn btn-success" type="button" onclick="generarbarcode()">Generar</button>
+  <table id="tbllistado" class="table table-striped table-bordered table-condensed table-hover">
+    <thead>
+      <th>Opciones</th>
+      <th>Nombre</th>
+      <th>Categoria</th>
+      <th>Codigo</th>
+      <th>Stock <span class="tallafiltrada"> </span></th>
+      <th>Imagen</th>
+      <th>Descripcion</th>
+      <th>Precio De venta (S/)</th>
+      <th>Estado</th>
+    </thead>
+    <tbody>
+    </tbody>
+    <tfoot>
+      <th>Opciones</th>
+      <th>Nombre</th>
+      <th>Categoria</th>
+      <th>Codigo</th>
+      <th>Stock <span class="tallafiltrada"> </span></th>
+      <th>Imagen</th>
+      <th>Descripcion</th>
+      <th>Precio De venta (S/)</th>
+      <th>Estado</th>
+    </tfoot>
+  </table>
+</div>
+<div class="panel-body" id="formularioregistros">
+  <form action="" name="formulario" id="formulario" method="POST">
+    <div class="form-group col-lg-6 col-md-6 col-xs-12">
+      <label for="">Nombre(*):</label>
+      <input class="form-control" type="hidden" name="idarticulo" id="idarticulo">
+      <input class="form-control" type="text" name="nombre" id="nombre" maxlength="100" placeholder="Nombre" required>
+    </div>
+    <div class="form-group col-lg-6 col-md-6 col-xs-12">
+      <label for="">Codigo(*):</label>
+      <input class="form-control" type="text" name="codigo" id="codigo" placeholder="codigo del prodcuto" required>
+      <!-- <button class="btn btn-success" type="button" onclick="generarbarcode()">Generar</button>
       <button class="btn btn-info" type="button" onclick="imprimir()">Imprimir</button>
       <div id="print">
         <svg id="barcode"></svg>
       </div> -->
-                  </div>
+                </div>
                   <div class="form-group col-lg-6 col-md-6 col-xs-12">
                     <label for="">Categoria:</label>
                     <select name="idcategoria" id="idcategoria" class="form-control selectpicker"

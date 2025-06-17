@@ -25,7 +25,10 @@ function init() {
   $.post('../ajax/articulo.php?op=selectCategoria', function (r) {
     $('#idcategoria').html(r);
     $('#idcategoria').selectpicker('refresh');
+    $('#filtroCategoria').html('<option value="">Todas</option>' + r.replace('--Seleccione--', 'Todas'));
+
   });
+  
   $('#imagenmuestra').hide();
 
   $.getJSON('../ajax/talla.php', function (r) {
@@ -54,6 +57,17 @@ function init() {
       const option = `<option value="${talla.idtalla}">${talla.nombre}</option>`;
       $filtroTalla.append(option);
     });
+  });
+
+  $('#precio_venta').on('input', function () {
+    let precio = parseFloat($(this).val());
+    if (isNaN(precio) || precio <= 0) {
+      $('#error_precio').show();
+      $(this).addClass('is-invalid');
+    } else {
+      $('#error_precio').hide();
+      $(this).removeClass('is-invalid');
+    }
   });
 }
 
@@ -116,7 +130,7 @@ function listar() {
           extend: 'excelHtml5',
           filename: ArmarNombreDeArchivo('Reporte_Articulos'),
           exportOptions: {
-            columns: [1, 2, 3, 4, 6, 7], // Indica las columnas que SÍ quieres exportar
+            columns: [1, 2, 3, 4, 6, 7, 8], // Indica las columnas que SÍ quieres exportar
           },
         },
         //'copyHtml5',
