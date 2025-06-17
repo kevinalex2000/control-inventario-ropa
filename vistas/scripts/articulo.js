@@ -283,8 +283,4 @@ function eliminar(idarticulo) {
   );
 }
 
-function buscarEnTabla(value) {
-  tabla.search(value).draw();
-}
-
 init();

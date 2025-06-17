@@ -8,7 +8,7 @@ if (!isset($_SESSION['nombre'])) {
 
   require 'header.php';
   if ($_SESSION['almacen'] == 1) {
-    ?>
+?>
     <div class="content-wrapper">
       <!-- Main content -->
       <section class="content">
@@ -34,7 +34,7 @@ if (!isset($_SESSION['nombre'])) {
                   <!-- Filtro Categoría -->
                   <div class="col-md-2">
                     <label for="filtroCategoria">Categoría</label>
-                    <select id="filtroCategoria" class="form-control input-sm">
+                    <select id="filtroCategoria" class="form-control input-sm ">
                       <option value="">Todas</option>
                     </select>
                   </div>
@@ -68,7 +68,7 @@ if (!isset($_SESSION['nombre'])) {
                   <div class="col-md-4">
                     <label for="buscarTabla">Buscar</label>
                     <input type="text" id="buscarTabla" class="form-control input-sm" placeholder="Buscar en la tabla..."
-                      onkeyup="buscarEnTabla(this.value)">
+                      onkeyup="buscarEnTabla(this.value, tabla)">
                   </div>
                 </div>
 
@@ -126,8 +126,7 @@ if (!isset($_SESSION['nombre'])) {
                   </div>
                   <div class="form-group col-lg-6 col-md-6 col-xs-12">
                     <label for="">Categoria:</label>
-                    <select name="idcategoria" id="idcategoria" class="form-control selectpicker"
-                      style="background-color: #fff" data-Live-search="true"></select>
+                    <select name="idcategoria" id="idcategoria" class="form-control selectpicker"></select>
                   </div>
                   <div class="form-group col-lg-6 col-md-6 col-xs-12">
                     <label for="">Descripcion</label>
@@ -183,17 +182,17 @@ if (!isset($_SESSION['nombre'])) {
       </section>
       <!-- /.content -->
     </div>
-    <?php
+  <?php
   } else {
     require 'noacceso.php';
   }
   require 'footer.php'
-    ?>
+  ?>
   <script src="../public/js/JsBarcode.all.min.js"></script>
   <script src="../public/js/jquery.PrintArea.js"></script>
   <script src="scripts/articulo.js"></script>
 
-  <?php
+<?php
 }
 
 ob_end_flush();

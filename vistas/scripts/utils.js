@@ -41,3 +41,7 @@ function ArmarNombreDeArchivo(prefijo) {
     prefijo + '_' + year + '-' + month + '-' + day + '_' + hours + '-' + minutes + '-' + seconds
   );
 }
+
+function buscarEnTabla(valor, tabla) {
+  tabla.search(valor).draw();
+}

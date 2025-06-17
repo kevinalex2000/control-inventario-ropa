@@ -1,35 +1,38 @@
-.user-header{
-    height: auto !important;
-    padding: 25px !important;
-    border-radius: 8px !important;
+.user-header {
+  height: auto !important;
+  padding: 25px !important;
+  border-radius: 8px !important;
 }
 
 .dataTables_filter {
-    display: none !important;
+  display: none !important;
 }
 
-
-.dataTable{
-    margin-left: 0px !important;
-    margin-right: 0px !important;
+.dataTable {
+  margin-left: 0px !important;
+  margin-right: 0px !important;
 }
 
-.dt-buttons{
-    display: none !important;
+.dt-buttons {
+  display: none !important;
 }
 
-.btn-secondary{
-    background-color: #979797;
-    border-color: #a5a5a5;
-    color: #fff;
+.btn-secondary {
+  background-color: #979797;
+  border-color: #a5a5a5;
+  color: #fff;
 }
 
-.btn-secondary:hover{
-    background-color: #858080;
-    border-color: #3b3b3b;
-    color: #fff;
+.btn-secondary:hover {
+  background-color: #858080;
+  border-color: #3b3b3b;
+  color: #fff;
 }
 
-.box-header{
-    padding: 15px !important;
+.box-header {
+  padding: 15px !important;
+}
+
+.bootstrap-select .btn-default {
+  background-color: #fdfdfd !important;
 }
