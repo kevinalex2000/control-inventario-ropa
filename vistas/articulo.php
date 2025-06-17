@@ -173,14 +173,15 @@ if (!isset($_SESSION['nombre'])) {
                     <label for="">Precio de Venta(*):</label>
                     <input name="precio_venta" id="precio_venta" type="number" class="form-control" min="0" step="0.01"
                       placeholder="0.00" />
+                      <span class="help-block" id="error_precio" style="color: red; display: none;">El precio debe ser mayor a 0</span>
                   </div>
                   <div class="form-group col-lg-6 col-md-6 col-xs-12">
 
                     <label for="">Imagen(*):</label>
-                    <input class="form-control" type="file" name="imagen" id="imagen" required>
+                    <input class="form-control" type="file" name="imagen" id="imagen" accept="image/*" required>
                     <input type="hidden" name="imagenactual" id="imagenactual">
-
                     <img style="padding-top:10px;" width="150px" height="120" id="imagenmuestra">
+                    
                   </div>
                   <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <button class="btn btn-primary" type="submit" id="btnGuardar"><i class="fa fa-save"></i>
