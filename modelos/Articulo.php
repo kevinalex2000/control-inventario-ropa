@@ -12,38 +12,34 @@ class Articulo
 	}
 
 	//metodo insertar regiustro
-	public function insertar($idcategoria, $codigo, $nombre, $descripcion, $imagen)
+	public function insertar($idcategoria, $codigo, $nombre, $descripcion, $imagen, $precioventa, $stockxtallas)
 	{
 		if ($idcategoria == null || $idcategoria == 0) {
 			$idcategoria = 'NULL';
 		}
 
 		// Insertar el artículo principal
-		$sql = "INSERT INTO articulo (idcategoria,codigo,nombre,descripcion,imagen,condicion)
-          VALUES ($idcategoria,'$codigo','$nombre','$descripcion','$imagen','1')";
+		$sql = "INSERT INTO articulo (idcategoria,codigo,nombre,descripcion,imagen,condicion,precio_venta)
+          VALUES ($idcategoria,'$codigo','$nombre','$descripcion','$imagen','1','$precioventa')";
 		$idarticulo_new = ejecutarConsulta_retornarID($sql);
 
-		// Insertar stock por talla
-		$sql_s = "INSERT INTO articulo_talla (idarticulo, idtalla, stock) VALUES ('$idarticulo_new', 1, '$stock_s')";
-		$sql_m = "INSERT INTO articulo_talla (idarticulo, idtalla, stock) VALUES ('$idarticulo_new', 2, '$stock_m')";
-		$sql_l = "INSERT INTO articulo_talla (idarticulo, idtalla, stock) VALUES ('$idarticulo_new', 3, '$stock_l')";
-		$sql_xl = "INSERT INTO articulo_talla (idarticulo, idtalla, stock) VALUES ('$idarticulo_new', 4, '$stock_xl')";
-
-		ejecutarConsulta($sql_s);
-		ejecutarConsulta($sql_m);
-		ejecutarConsulta($sql_l);
-		ejecutarConsulta($sql_xl);
+		foreach ($stockxtallas as $stockTalla) {
+			$idtalla = $stockTalla['idtalla'];
+			$stock = $stockTalla['stock'];
+			$sql_stockxtalla = "INSERT INTO articulo_talla (idarticulo, idtalla, stock) VALUES ('$idarticulo_new', $idtalla, '$stock')";
+			ejecutarConsulta($sql_stockxtalla);
+		}
 
 		return true;
 	}
 
-	public function editar($idarticulo, $idcategoria, $codigo, $nombre, $stock, $descripcion, $imagen)
+	public function editar($idarticulo, $idcategoria, $codigo, $nombre, $descripcion, $imagen)
 	{
 		if ($idcategoria == null || $idcategoria == 0) {
 			$idcategoria = 'NULL';
 		}
 
-		$sql = "UPDATE articulo SET idcategoria=$idcategoria,codigo='$codigo', nombre='$nombre',stock='$stock',descripcion='$descripcion',imagen='$imagen' 
+		$sql = "UPDATE articulo SET idcategoria=$idcategoria,codigo='$codigo', nombre='$nombre',descripcion='$descripcion',imagen='$imagen' 
 		WHERE idarticulo='$idarticulo'";
 		return ejecutarConsulta($sql);
 	}

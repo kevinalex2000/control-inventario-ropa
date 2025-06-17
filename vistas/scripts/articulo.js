@@ -25,10 +25,11 @@ function init() {
   $.post('../ajax/articulo.php?op=selectCategoria', function (r) {
     $('#idcategoria').html(r);
     $('#idcategoria').selectpicker('refresh');
-    $('#filtroCategoria').html('<option value="">Todas</option>' + r.replace('--Seleccione--', 'Todas'));
-
+    $('#filtroCategoria').html(
+      '<option value="">Todas</option>' + r.replace('--Seleccione--', 'Todas')
+    );
   });
-  
+
   $('#imagenmuestra').hide();
 
   $.getJSON('../ajax/talla.php', function (r) {
@@ -180,7 +181,7 @@ function guardaryeditar(e) {
     codigo: formData.get('codigo'),
     idcategoria: parseInt(formData.get('idcategoria')),
     descripcion: formData.get('descripcion'),
-    precio_venta: parseFloat(formData.get('precio_venta')),
+    precioventa: parseFloat(formData.get('precio_venta')),
     imagen: formData.get('imagen'),
     stockxtalla: stockxTalla,
   };
