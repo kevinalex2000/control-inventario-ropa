@@ -48,8 +48,11 @@ function init() {
               data-idtalla="${talla.idtalla}" 
               name="stock_${talla.nombre}" 
               id="stock_${talla.nombre}" 
+              step="1"
               min="0" 
-              value="0" />
+              placeholder="0"
+              oninput="this.value = Math.floor(this.value)"
+              />
           </td>
         </tr>
       `;
@@ -84,7 +87,8 @@ function limpiar() {
   $('#print').hide();
   $('#idarticulo').val('');
   $('#idcategoria').val('').selectpicker('refresh');
-  $('.stock-talla').val(0);
+  $('#precio_venta').val('');
+  $('.stock-talla').val('');
   $('.stock-talla').prop('readonly', false);
 }
 
