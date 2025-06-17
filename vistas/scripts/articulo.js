@@ -161,20 +161,34 @@ function listar() {
 function guardaryeditar(e) {
   e.preventDefault(); //no se activara la accion predeterminada
 
-  var precio_venta = parseFloat($('#precio_venta').val());
-  if (isNaN(precio_venta) || precio_venta <= 0) {
-    $('#error_precio').show();
-    $('#precio_venta').addClass('is-invalid').focus();
-    return false; // No envía el formulario, pero NO limpia los campos ni deshabilita el botón
-    
-  }
   $('#btnGuardar').prop('disabled', true);
-  var formData = new FormData($('#formulario')[0]);
-  
+  let formData = new FormData($('#formulario')[0]);
+  let stockxTalla = [];
+
+  $('#formulario .stock-talla').each(function () {
+    let idtalla = $(this).data('idtalla');
+    let valor = parseFloat($(this).val());
+
+    stockxTalla.push({
+      idtalla: idtalla,
+      stock: valor,
+    });
+  });
+
+  let data = {
+    nombre: formData.get('nombre'),
+    codigo: formData.get('codigo'),
+    idcategoria: parseInt(formData.get('idcategoria')),
+    descripcion: formData.get('descripcion'),
+    precio_venta: parseFloat(formData.get('precio_venta')),
+    imagen: formData.get('imagen'),
+    stockxtalla: stockxTalla,
+  };
+
   $.ajax({
     url: '../ajax/articulo.php?op=guardaryeditar',
     type: 'POST',
-    data: formData,
+    data: data,
     contentType: false,
     processData: false,
 

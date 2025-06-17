@@ -1,15 +1,15 @@
-<?php 
+<?php
 require_once "../modelos/Articulo.php";
 
-$articulo=new Articulo();
+$articulo = new Articulo();
 
-$idarticulo=isset($_POST["idarticulo"])? limpiarCadena($_POST["idarticulo"]):"";
-$idcategoria=isset($_POST["idcategoria"])? limpiarCadena($_POST["idcategoria"]):"";
-$codigo=isset($_POST["codigo"])? limpiarCadena($_POST["codigo"]):"";
-$nombre=isset($_POST["nombre"])? limpiarCadena($_POST["nombre"]):"";
-$stock=isset($_POST["stock"])? limpiarCadena($_POST["stock"]):"";
-$descripcion=isset($_POST["descripcion"])? limpiarCadena($_POST["descripcion"]):"";
-$imagen=isset($_POST["imagen"])? limpiarCadena($_POST["imagen"]):"";
+$idarticulo = isset($_POST["idarticulo"]) ? limpiarCadena($_POST["idarticulo"]) : "";
+$idcategoria = isset($_POST["idcategoria"]) ? limpiarCadena($_POST["idcategoria"]) : "";
+$codigo = isset($_POST["codigo"]) ? limpiarCadena($_POST["codigo"]) : "";
+$nombre = isset($_POST["nombre"]) ? limpiarCadena($_POST["nombre"]) : "";
+$stock = isset($_POST["stock"]) ? limpiarCadena($_POST["stock"]) : "";
+$descripcion = isset($_POST["descripcion"]) ? limpiarCadena($_POST["descripcion"]) : "";
+$imagen = isset($_POST["imagen"]) ? limpiarCadena($_POST["imagen"]) : "";
 $stock_s = isset($_POST["stock_s"]) ? limpiarCadena($_POST["stock_s"]) : 0;
 $stock_m = isset($_POST["stock_m"]) ? limpiarCadena($_POST["stock_m"]) : 0;
 $stock_l = isset($_POST["stock_l"]) ? limpiarCadena($_POST["stock_l"]) : 0;
@@ -25,44 +25,44 @@ switch ($_GET["op"]) {
         }
 
 		// Seteamos a null id categoria si viene como cadena vacia
-		if($idcategoria == "" || $idcategoria == 0){
+		if ($idcategoria == "" || $idcategoria == 0) {
 			$idcategoria = null;
-		}	
+		}
 
-		if (!file_exists($_FILES['imagen']['tmp_name'])|| !is_uploaded_file($_FILES['imagen']['tmp_name'])) {
-			$imagen=$_POST["imagenactual"];
-		}else{
-			$ext=explode(".", $_FILES["imagen"]["name"]);
-			if ($_FILES['imagen']['type']=="image/jpg" || $_FILES['imagen']['type']=="image/jpeg" || $_FILES['imagen']['type']=="image/png") {
-				$imagen=round(microtime(true)).'.'. end($ext);
-				move_uploaded_file($_FILES["imagen"]["tmp_name"], "../files/articulos/".$imagen);
+		if (!file_exists($_FILES['imagen']['tmp_name']) || !is_uploaded_file($_FILES['imagen']['tmp_name'])) {
+			$imagen = $_POST["imagenactual"];
+		} else {
+			$ext = explode(".", $_FILES["imagen"]["name"]);
+			if ($_FILES['imagen']['type'] == "image/jpg" || $_FILES['imagen']['type'] == "image/jpeg" || $_FILES['imagen']['type'] == "image/png") {
+				$imagen = round(microtime(true)) . '.' . end($ext);
+				move_uploaded_file($_FILES["imagen"]["tmp_name"], "../files/articulos/" . $imagen);
 			}
 		}
 		if (empty($idarticulo)) {
 			$rspta = $articulo->insertar($idcategoria, $codigo, $nombre, $stock, $descripcion, $imagen, $stock_s, $stock_m, $stock_l, $stock_xl);
 			echo $rspta ? "Datos registrados correctamente" : "No se pudo registrar los datos";
-		}else{
+		} else {
 			$rspta = $articulo->editar($idarticulo, $idcategoria, $codigo, $nombre, $stock, $descripcion, $imagen);
 			echo $rspta ? "Datos actualizados correctamente" : "No se pudo actualizar los datos";
 		}
 		break;
-	
+
 	case 'eliminar':
     $rspta = $articulo->eliminar($idarticulo);
     echo $rspta ? "Artículo eliminado correctamente" : "No se pudo eliminar el artículo";
     break;
 
 	case 'desactivar':
-		$rspta=$articulo->desactivar($idarticulo);
+		$rspta = $articulo->desactivar($idarticulo);
 		echo $rspta ? "Datos desactivados correctamente" : "No se pudo desactivar los datos";
 		break;
 	case 'activar':
-		$rspta=$articulo->activar($idarticulo);
+		$rspta = $articulo->activar($idarticulo);
 		echo $rspta ? "Datos activados correctamente" : "No se pudo activar los datos";
 		break;
-	
+
 	case 'mostrar':
-		$rspta=$articulo->mostrar($idarticulo);
+		$rspta = $articulo->mostrar($idarticulo);
 		echo json_encode($rspta);
 		break;
 
@@ -71,11 +71,12 @@ switch ($_GET["op"]) {
 		$idtalla = isset($_GET["idtalla"]) ? limpiarCadena($_GET["idtalla"]) : null;
 		$condicion = isset($_GET["condicion"]) ? limpiarCadena($_GET["condicion"]) : null;
 
-		$rspta=$articulo->listar($idcategoria, $idtalla, $condicion);
-		$data=Array();
+		$rspta = $articulo->listar($idcategoria, $idtalla, $condicion);
+		$data = array();
 
-    while ($reg = $rspta->fetch_object()) {
+		while ($reg = $rspta->fetch_object()) {
 			$data[] = array(
+				
 						"0" => ($reg->condicion)
 								? '<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idarticulo . ')"><i class="fa fa-pencil"></i></button>'
 										. ' '
@@ -99,26 +100,27 @@ switch ($_GET["op"]) {
 		}
 
 
-		$results=array(
-			"sEcho"=>1,//info para datatables
-			"iTotalRecords"=>count($data),//enviamos el total de registros al datatable
-			"iTotalDisplayRecords"=>count($data),//enviamos el total de registros a visualizar
-			"aaData"=>$data); 
+		$results = array(
+			"sEcho" => 1,//info para datatables
+			"iTotalRecords" => count($data),//enviamos el total de registros al datatable
+			"iTotalDisplayRecords" => count($data),//enviamos el total de registros a visualizar
+			"aaData" => $data
+		);
 
 		echo json_encode($results);
 		break;
 
-		case 'selectCategoria':
+	case 'selectCategoria':
 
-			require_once "../modelos/Categoria.php";
-			$categoria=new Categoria();
+		require_once "../modelos/Categoria.php";
+		$categoria = new Categoria();
 
-			$rspta=$categoria->select();
+		$rspta = $categoria->select();
 
-			echo '<option value="" default>--Seleccione--</option>';
-			while ($reg=$rspta->fetch_object()) {
-				echo '<option value=' . $reg->idcategoria.'>'.$reg->nombre.'</option>';
-			}
-			break;
+		echo '<option value="" default>--Seleccione--</option>';
+		while ($reg = $rspta->fetch_object()) {
+			echo '<option value=' . $reg->idcategoria . '>' . $reg->nombre . '</option>';
+		}
+		break;
 }
- ?>
+?>
