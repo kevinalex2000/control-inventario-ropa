@@ -5,6 +5,7 @@ $articulo = new Articulo();
 
 function GuardarOEditar()
 {
+
 	global $articulo;
 
 	$idarticulo = isset($_POST["idarticulo"]) ? limpiarCadena($_POST["idarticulo"]) : null;
@@ -15,6 +16,11 @@ function GuardarOEditar()
 	$imagen = isset($_POST["imagen"]) ? limpiarCadena($_POST["imagen"]) : null;
 	$precioventa = isset($_POST["precio_venta"]) ? limpiarCadena($_POST["precio_venta"]) : null;
 	$stockxtalla = isset($_POST["stockxtalla"]) ? json_decode($_POST["stockxtalla"], true) : null;
+
+	if ($precioventa <= 0) {
+        echo "El precio de venta debe ser mayor a 0.";
+        exit;
+    }
 
 	if (!file_exists($_FILES['imagen']['tmp_name']) || !is_uploaded_file($_FILES['imagen']['tmp_name'])) {
 		$imagen = $_POST["imagenactual"];
@@ -33,6 +39,8 @@ function GuardarOEditar()
 		$rspta = $articulo->editar($idarticulo, $idcategoria, $codigo, $nombre, $descripcion, $imagen);
 		echo $rspta ? "Datos actualizados correctamente" : "No se pudo actualizar los datos";
 	}
+
+
 }
 
 $idarticulo = isset($_POST["idarticulo"]) ? limpiarCadena($_POST["idarticulo"]) : "";
@@ -49,9 +57,12 @@ $stock_xl = isset($_POST["stock_xl"]) ? limpiarCadena($_POST["stock_xl"]) : 0;
 $precio_venta = isset($_POST["precio_venta"]) ? limpiarCadena($_POST["precio_venta"]) : 0;
 
 switch ($_GET["op"]) {
+
 	case 'guardaryeditar':
 		GuardarOEditar();
 		break;
+
+	
 
 	case 'eliminar':
 		$rspta = $articulo->eliminar($idarticulo);
