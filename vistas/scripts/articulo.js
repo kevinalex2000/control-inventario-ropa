@@ -23,11 +23,8 @@ function init() {
   });
 
   $.post('../ajax/articulo.php?op=selectCategoria', function (r) {
-    $('#idcategoria').html(r);
+    $('#filtroCategoria').html(r.replace('--Seleccione--', 'Todas'));
     $('#idcategoria').selectpicker('refresh');
-    $('#filtroCategoria').html(
-      '<option value="">Todas</option>' + r.replace('--Seleccione--', 'Todas')
-    );
   });
 
   $('#imagenmuestra').hide();
