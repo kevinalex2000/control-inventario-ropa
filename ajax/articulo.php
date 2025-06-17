@@ -3,6 +3,43 @@ require_once "../modelos/Articulo.php";
 
 $articulo = new Articulo();
 
+function GuardarOEditar()
+{
+	global $articulo;
+
+	$jsonData = file_get_contents('php://input');
+	$data = json_decode($jsonData, true);
+
+	$idcategoria = $data['idcategoria'];
+	$codigo = $data['codigo'];
+	$nombre = $data['nombre'];
+	$descripcion = $data['descripcion'];
+	$imagen = $data['imagen'];
+	$nombre = $data['nombre'];
+
+
+	if ($idcategoria == "" || $idcategoria == 0) {
+		$idcategoria = null;
+	}
+
+	if (!file_exists($_FILES['imagen']['tmp_name']) || !is_uploaded_file($_FILES['imagen']['tmp_name'])) {
+		$imagen = $_POST["imagenactual"];
+	} else {
+		$ext = explode(".", $_FILES["imagen"]["name"]);
+		if ($_FILES['imagen']['type'] == "image/jpg" || $_FILES['imagen']['type'] == "image/jpeg" || $_FILES['imagen']['type'] == "image/png") {
+			$imagen = round(microtime(true)) . '.' . end($ext);
+			move_uploaded_file($_FILES["imagen"]["tmp_name"], "../files/articulos/" . $imagen);
+		}
+	}
+	if (empty($idarticulo)) {
+		$rspta = $articulo->insertar($idcategoria, $codigo, $nombre, $descripcion, $imagen);
+		echo $rspta ? "Datos registrados correctamente" : "No se pudo registrar los datos";
+	} else {
+		$rspta = $articulo->editar($idarticulo, $idcategoria, $codigo, $nombre, $descripcion, $imagen);
+		echo $rspta ? "Datos actualizados correctamente" : "No se pudo actualizar los datos";
+	}
+}
+
 $idarticulo = isset($_POST["idarticulo"]) ? limpiarCadena($_POST["idarticulo"]) : "";
 $idcategoria = isset($_POST["idcategoria"]) ? limpiarCadena($_POST["idcategoria"]) : "";
 $codigo = isset($_POST["codigo"]) ? limpiarCadena($_POST["codigo"]) : "";

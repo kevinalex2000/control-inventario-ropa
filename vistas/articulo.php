@@ -145,26 +145,6 @@ if (!isset($_SESSION['nombre'])) {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>S</td>
-                          <td><input type="number" class="form-control text-center stock-talla" data-idtalla="1"
-                              name="stock_s" id="stock_s" min="0" value="0"></td>
-                        </tr>
-                        <tr>
-                          <td>M</td>
-                          <td><input type="number" class="form-control text-center stock-talla" data-idtalla="2"
-                              name="stock_m" id="stock_m" min="0" value="0"></td>
-                        </tr>
-                        <tr>
-                          <td>L</td>
-                          <td><input type="number" class="form-control text-center stock-talla" data-idtalla="3"
-                              name="stock_l" id="stock_l" min="0" value="0"></td>
-                        </tr>
-                        <tr>
-                          <td>XL</td>
-                          <td><input type="number" class="form-control text-center stock-talla" data-idtalla="4"
-                              name="stock_xl" id="stock_xl" min="0" value="0"></td>
-                        </tr>
                       </tbody>
                     </table>
                     <!--<input class="form-control" type="number" name="stock" id="stock"  required> -->
