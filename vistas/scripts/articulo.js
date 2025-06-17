@@ -82,6 +82,7 @@ function limpiar() {
   $('#imagenmuestra').attr('src', '');
   $('#imagenmuestra').hide();
   $('#imagenactual').val('');
+  $('#imagen').val('');
   $('#print').hide();
   $('#idarticulo').val('');
   $('#idcategoria').val('').selectpicker('refresh');
