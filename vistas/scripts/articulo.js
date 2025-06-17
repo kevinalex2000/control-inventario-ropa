@@ -222,6 +222,7 @@ function mostrar(idarticulo) {
     $('#imagenmuestra').attr('src', '../files/articulos/' + data.imagen);
     $('#imagenactual').val(data.imagen);
     $('#idarticulo').val(data.idarticulo);
+    $('#precio_venta').val(data.precioventa);
     $('#imagen').removeAttr('required');
 
     data.detallestock.forEach(function (item) {

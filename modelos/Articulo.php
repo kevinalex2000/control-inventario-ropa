@@ -91,6 +91,7 @@ class Articulo
 			'descripcion' => $producto['descripcion'],
 			'imagen' => $producto['imagen'],
 			'condicion' => $producto['condicion'],
+			'precioventa' => $producto['precio_venta'],
 			'totalstock' => $totalstock,
 			'detallestock' => $detallestock
 		];
