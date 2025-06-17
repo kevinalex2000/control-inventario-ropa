@@ -161,7 +161,7 @@ if (!isset($_SESSION['nombre'])) {
 
                     <label for="">Imagen(*):</label>
                     <input class="form-control" type="file" name="imagen" id="imagen" accept="image/*" required>
-                    <input type="text" name="imagenactual" id="imagenactual">
+                    <input type="hidden" name="imagenactual" id="imagenactual">
                     <img style="padding-top:10px;" width="150px" height="120" id="imagenmuestra">
 
                   </div>
