@@ -25,10 +25,11 @@ function init() {
   $.post('../ajax/articulo.php?op=selectCategoria', function (r) {
     $('#idcategoria').html(r);
     $('#idcategoria').selectpicker('refresh');
-    $('#filtroCategoria').html('<option value="">Todas</option>' + r.replace('--Seleccione--', 'Todas'));
-
+    $('#filtroCategoria').html(
+      '<option value="">Todas</option>' + r.replace('--Seleccione--', 'Todas')
+    );
   });
-  
+
   $('#imagenmuestra').hide();
 
   $.getJSON('../ajax/talla.php', function (r) {
@@ -140,7 +141,6 @@ function listar() {
       ajax: {
         url: '../ajax/articulo.php?op=listar',
         data: function (d) {
-          // Agrega tus filtros personalizados al objeto "d"
           d.idcategoria = $('#filtroCategoria').val();
           d.idtalla = valorFiltroTalla;
           d.condicion = $('#filtroEstado').val();
@@ -183,11 +183,12 @@ function guardaryeditar(e) {
   });
 
   let data = {
+    idarticulo: formData.get('idarticulo'),
     nombre: formData.get('nombre'),
     codigo: formData.get('codigo'),
     idcategoria: parseInt(formData.get('idcategoria')),
     descripcion: formData.get('descripcion'),
-    precio_venta: parseFloat(formData.get('precio_venta')),
+    precioventa: parseFloat(formData.get('precio_venta')),
     imagen: formData.get('imagen'),
     stockxtalla: stockxTalla,
   };
@@ -196,9 +197,7 @@ function guardaryeditar(e) {
     url: '../ajax/articulo.php?op=guardaryeditar',
     type: 'POST',
     data: data,
-    contentType: false,
-    processData: false,
-
+    contentType: 'application/json',
     success: function (datos) {
       bootbox.alert(datos);
       mostrarform(false);

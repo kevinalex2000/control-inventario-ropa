@@ -541,7 +541,7 @@ INSERT INTO talla(idTalla, nombre) VALUES
 (4, 'XL');
 
 INSERT INTO talla(idTalla, nombre)  VALUES
-(5, 'XXL')
+(5, 'XXL'),
 (6, 'XXXL');
 
 CREATE TABLE articulo_talla (
