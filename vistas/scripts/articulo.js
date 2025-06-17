@@ -23,8 +23,9 @@ function init() {
   });
 
   $.post('../ajax/articulo.php?op=selectCategoria', function (r) {
-    $('#filtroCategoria').html(r.replace('--Seleccione--', 'Todas'));
+    $('#idcategoria').html(r);
     $('#idcategoria').selectpicker('refresh');
+    $('#filtroCategoria').html(r.replace('--Seleccione--', 'Todas'));
   });
 
   $('#imagenmuestra').hide();
