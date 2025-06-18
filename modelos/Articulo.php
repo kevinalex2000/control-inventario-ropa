@@ -6,10 +6,7 @@ class Articulo
 {
 
 	//implementamos nuestro constructor
-	public function __construct()
-	{
-
-	}
+	public function __construct() {}
 
 	//metodo insertar regiustro
 	public function insertar($idcategoria, $codigo, $nombre, $descripcion, $imagen, $precioventa, $stockxtallas)
@@ -35,20 +32,20 @@ class Articulo
 
 	public function existeNombreOCodigo($nombre, $codigo, $idarticulo = null)
 	{
-		 // Verificar código repetido
+		// Verificar código repetido
 		$sqlCodigo = "SELECT idarticulo FROM articulo WHERE codigo='$codigo'";
 		if ($idarticulo) {
 			$sqlCodigo .= " AND idarticulo != '$idarticulo'";
 		}
 		$existeCodigo = ejecutarConsultaSimpleFila($sqlCodigo);
-		
+
 		// Verificar nombre repetido
 		$sqlNombre = "SELECT idarticulo FROM articulo WHERE nombre='$nombre'";
 		if ($idarticulo) {
 			$sqlNombre .= " AND idarticulo != '$idarticulo'";
 		}
 		$existeNombre = ejecutarConsultaSimpleFila($sqlNombre);
-		
+
 		return [
 			'codigo' => $existeCodigo ? true : false,
 			'nombre' => $existeNombre ? true : false
@@ -132,7 +129,10 @@ class Articulo
 	//listar registros activos
 	public function listarActivos()
 	{
-		$sql = "SELECT a.idarticulo,a.idcategoria,c.nombre as categoria,a.codigo, a.nombre,a.stock,a.descripcion,a.imagen,a.condicion FROM articulo a INNER JOIN Categoria c ON a.idcategoria=c.idcategoria WHERE a.condicion='1'";
+		$sql = "
+			SELECT a.idarticulo,a.idcategoria,c.nombre as categoria,a.codigo, a.nombre,a.stock,a.descripcion,a.imagen,a.condicion 
+			FROM articulo a 
+			INNER JOIN Categoria c ON a.idcategoria=c.idcategoria WHERE a.condicion='1'";
 		return ejecutarConsulta($sql);
 	}
 
@@ -143,5 +143,3 @@ class Articulo
 		return ejecutarConsulta($sql);
 	}
 }
-
-?>
