@@ -110,8 +110,6 @@ function listarArticulos() {
         dataType: 'json',
       },
       columns: [
-
-
         { data: 0 }, // Botón opciones
         {
           data: null,
@@ -141,7 +139,7 @@ function listarArticulos() {
         { data: 3 }, // Código
         { data: 4 }, // Stock
         { data: 5 }, // Imagen
-		{ data: 6 , "visible": false} //idarticulo
+        { data: 6, visible: false }, //idarticulo
       ],
       iDisplayLength: 5,
     });
@@ -225,8 +223,7 @@ function marcarImpuesto() {
 }
 
 function agregarDetalle(idarticulo, articulo, imagen, precio_venta) {
-
-  var selectTalla = $('.select-talla[data-idarticulo="'+ idarticulo +'"]');
+  var selectTalla = $('.select-talla[data-idarticulo="' + idarticulo + '"]');
   var idtalla = selectTalla.val();
   var nombreTalla = selectTalla.find('option:selected').text();
 
@@ -234,71 +231,116 @@ function agregarDetalle(idarticulo, articulo, imagen, precio_venta) {
     alert('Debe seleccionar una talla para el producto');
     return;
   }
+  
+  // Buscar si ya existe una fila con este artículo y talla
+  var existe = false;
+  $('#detalles tbody tr').each(function () {
+    var $tr = $(this);
+    var articuloFila = $tr.find('input[name="idarticulo[]"]').val();
+    var tallaFila = $tr.find('input[name="talla[]"]').val();
+
+    if (articuloFila == idarticulo && tallaFila == idtalla) {
+      // Si existe, suma 1 a la cantidad
+      var $cantidadInput = $tr.find('input.cantidad');
+      var nuevaCantidad = parseInt($cantidadInput.val() || 0) + 1;
+      $cantidadInput.val(nuevaCantidad);
+
+      // Forzar el evento para recalcular subtotal y total
+      $cantidadInput.trigger('input');
+      existe = true;
+      return false; // salir del each
+    }
+  });
+
+  if (existe) return; // No agregar nueva fila si ya se sumó
 
   var cantidad = 1;
   var precio_compra = '';
-  
-  if (idarticulo != "") {
-        var subtotal = 0;
-        var fila = '<tr class="filas" id="fila' + cont + '">' +
-            '<td><button type="button" class="btn btn-danger" onclick="eliminarDetalle(' + cont + ')">X</button></td>' +
-            '<td><img src="../files/articulos/' + imagen + '" width="50" height = "50"></td>' +
-            '<td><input type="hidden" name="idarticulo[]" value="' + idarticulo + '">' + articulo + '</td>' +
-            '<td><input type="hidden" name="talla[]" value="' + idtalla + '">' + nombreTalla + '</td>' +
-            '<td><input type="number" name="cantidad[]" class="cantidad" value="' + cantidad + '" min="1" style="width:70px;"></td>' +
-            '<td><input type="number" name="precio_compra[]" class="precio-compra" value="' + precio_compra + '" min="0" step="0.01" placeholder="0.00" style="width:90px;"></td>' +
-            '<td><input type="text" name="precio_venta[]" class="precio-venta" value="' + precio_venta + '" readonly style="width:90px;background:#eee;"></td>' +
-            '<td><span id="subtotal' + cont + '" name="subtotal" class="subtotal">0.00</span></td>' +
-            '</tr>';
-        cont++;
-        detalles++;
-        $('#detalles tbody').append(fila);
-        recalcularEventosDetalle();
-        evaluar();
+
+  if (idarticulo != '') {
+    var subtotal = 0;
+    var fila =
+      '<tr class="filas" id="fila' +
+      cont +
+      '">' +
+      '<td><button type="button" class="btn btn-danger" onclick="eliminarDetalle(' +
+      cont +
+      ')">X</button></td>' +
+      '<td><img src="../files/articulos/' +
+      imagen +
+      '" width="50" height = "50"></td>' +
+      '<td><input type="hidden" name="idarticulo[]" value="' +
+      idarticulo +
+      '">' +
+      articulo +
+      '</td>' +
+      '<td><input type="hidden" name="talla[]" value="' +
+      idtalla +
+      '">' +
+      nombreTalla +
+      '</td>' +
+      '<td><input type="number" name="cantidad[]" class="cantidad" value="' +
+      cantidad +
+      '" min="1" style="width:70px;"></td>' +
+      '<td><input type="number" name="precio_compra[]" class="precio-compra" value="' +
+      precio_compra +
+      '" min="0" step="0.01" placeholder="0.00" style="width:90px;"></td>' +
+      '<td><input type="text" name="precio_venta[]" class="precio-venta" value="' +
+      precio_venta +
+      '" readonly style="width:90px;background:#eee;"></td>' +
+      '<td><span id="subtotal' +
+      cont +
+      '" name="subtotal" class="subtotal">0.00</span></td>' +
+      '</tr>';
+    cont++;
+    detalles++;
+    $('#detalles tbody').append(fila);
+    recalcularEventosDetalle();
+    evaluar();
   } else {
     alert('error al ingresar el detalle, revisar las datos del articulo ');
   }
 }
 
 function recalcularEventosDetalle() {
-    // Cálculo automático de subtotal y total
-    $('#detalles').off('input', '.cantidad, .precio-compra');
-    $('#detalles').on('input', '.cantidad, .precio-compra', function () {
-        var $tr = $(this).closest('tr');
-        var cantidad = parseFloat($tr.find('.cantidad').val()) || 0;
-        var precioCompra = parseFloat($tr.find('.precio-compra').val()) || 0;
-        if (precioCompra < 0) precioCompra = 0;
-        var subtotal = (cantidad * precioCompra).toFixed(2);
-        $tr.find('.subtotal').text(subtotal);
-        recalcularTotales();
-    });
+  // Cálculo automático de subtotal y total
+  $('#detalles').off('input', '.cantidad, .precio-compra');
+  $('#detalles').on('input', '.cantidad, .precio-compra', function () {
+    var $tr = $(this).closest('tr');
+    var cantidad = parseFloat($tr.find('.cantidad').val()) || 0;
+    var precioCompra = parseFloat($tr.find('.precio-compra').val()) || 0;
+    if (precioCompra < 0) precioCompra = 0;
+    var subtotal = (cantidad * precioCompra).toFixed(2);
+    $tr.find('.subtotal').text(subtotal);
+    recalcularTotales();
+  });
 
-    $('#detalles').off('click', '.btn-danger');
-    $('#detalles').on('click', '.btn-danger', function () {
-        $(this).closest('tr').remove();
-        recalcularTotales();
-        detalles--;
-        evaluar();
-    });
+  $('#detalles').off('click', '.btn-danger');
+  $('#detalles').on('click', '.btn-danger', function () {
+    $(this).closest('tr').remove();
+    recalcularTotales();
+    detalles--;
+    evaluar();
+  });
 }
 
 function recalcularTotales() {
-    var total = 0;
-    $('.subtotal').each(function () {
-        total += parseFloat($(this).text()) || 0;
-    });
-    $("#total").html("S/. " + total.toFixed(2));
-    $("#total_compra").val(total.toFixed(2));
-    evaluar();
+  var total = 0;
+  $('.subtotal').each(function () {
+    total += parseFloat($(this).text()) || 0;
+  });
+  $('#total').html('S/. ' + total.toFixed(2));
+  $('#total_compra').val(total.toFixed(2));
+  evaluar();
 }
 
 function evaluar() {
-    if (detalles > 0) {
-        $("#btnGuardar").show();
-    } else {
-        $("#btnGuardar").hide();
-        cont = 0;
-    }
+  if (detalles > 0) {
+    $('#btnGuardar').show();
+  } else {
+    $('#btnGuardar').hide();
+    cont = 0;
+  }
 }
 
 function modificarSubtotales() {
