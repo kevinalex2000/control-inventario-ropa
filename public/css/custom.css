@@ -41,3 +41,13 @@ table td,
 table th {
   vertical-align: middle !important;
 }
+
+.bootstrap-select .selected.active a {
+  background-color: #e1e3e9 !important;
+  color: #333 !important;
+}
+
+.head-black thead {
+  background-color: #222d32 !important;
+  color: #fff !important;
+}

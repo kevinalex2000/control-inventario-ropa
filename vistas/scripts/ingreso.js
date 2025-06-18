@@ -12,18 +12,20 @@ function init() {
   });
 
   //cargamos los items al select proveedor
-  $.get('../ajax/persona.php?op=listar&idtipopersona=2', function (r) {
-    const proveedores = JSON.parse(r);
-    const $selectProveedor = $('#idproveedor');
+  $.getJSON('../ajax/persona.php?op=listar&idtipopersona=2', function (r) {
+    const selectProveedor = $('#idproveedor');
+    const filtroproveedor = $('#filtroProveedor');
 
-    $.each(proveedores, function (index, proveedor) {
+    r.forEach((proveedor) => {
       const numdoc =
         proveedor.numdocumento !== ''
           ? proveedor.tipodocumento + ': ' + proveedor.numdocumento
           : 'Sin doc';
       const texto = (numdoc + ' - ' + proveedor.nombre).toUpperCase();
       const option = `<option value="${proveedor.idpersona}">${texto}</option>`;
-      $selectProveedor.append(option);
+
+      filtroproveedor.append(option);
+      selectProveedor.append(option);
     });
 
     $('#idproveedor').selectpicker('refresh');

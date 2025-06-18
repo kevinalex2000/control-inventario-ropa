@@ -33,6 +33,50 @@ if (!isset($_SESSION['nombre'])) {
               <!--box-header-->
               <!--centro-->
               <div class="panel-body table-responsive" id="listadoregistros">
+
+                <div class="row" style="margin-bottom: 30px;">
+                  <!-- Filtro Categoría -->
+                  <div class="col-md-2">
+                    <label for="filtroCategoria">Desde</label>
+                    <input class="form-control" type="date" name="fecha_desde" id="fecha_desde" required>
+                  </div>
+
+                  <!-- Filtro Talla -->
+                  <div class="col-md-2">
+                    <label for="filtroTalla">Hasta</label>
+                    <input class="form-control" type="date" name="fecha_hasta" id="fecha_hasta" required>
+                  </div>
+
+                  <!-- Filtro Estado -->
+                  <div class="col-md-2">
+                    <label for="filtroProveedor">Proveedor</label>
+                    <select id="filtroProveedor" class="form-control input-sm">
+                      <option value="">Todos</option>
+                    </select>
+                  </div>
+
+                  <!-- Botón Excel -->
+                  <div class="col-md-2" style="padding-top: 25px;">
+                    <button id="btnExportExcel" class="btn btn-sm" onclick="listar()">
+                      <span class="fa fa-filter"></span> Filtrar
+                    </button>
+                  </div>
+
+                  <!-- Campo Buscar -->
+                  <div class="col-md-4">
+                    <label for="buscarTabla">Buscar</label>
+                    <input type="text" id="buscarTabla" class="form-control input-sm" placeholder="Buscar en la tabla..."
+                      onkeyup="buscarEnTabla(this.value, tabla)">
+                  </div>
+                </div>
+
+                <div class="row" style="margin-bottom: 10px;">
+                  <div class="col-md-12">
+                    <button id="btnExportExcel" class="btn btn-sm btn-default" onclick="ExportarExcelDeTabla()">
+                      <span class="fa fa-download"></span> Exportar en excel
+                    </button>
+                  </div>
+                </div>
                 <table id="tbllistado" class="table table-striped table-bordered table-condensed table-hover">
                   <thead>
                     <th>Opciones</th>
@@ -101,8 +145,8 @@ if (!isset($_SESSION['nombre'])) {
                     </a>
                   </div>
                   <div class="form-group col-lg-12 col-md-12 col-xs-12">
-                    <table id="detalles" class="table table-striped table-bordered table-condensed  table-hover">
-                      <thead style="background-color:#222d32; color: #fff;">
+                    <table id="detalles" class="table table-striped table-bordered table-condensed table-hover head-black">
+                      <thead>
                         <th>Opciones</th>
                         <th>Imagen</th>
                         <th>Articulo</th>

@@ -31,10 +31,10 @@ function init() {
   $('#imagenmuestra').hide();
 
   $.getJSON('../ajax/talla.php', function (r) {
-    const $tbody = $('#idtblstockxtallas tbody');
-    $tbody.empty();
+    const tbody = $('#idtblstockxtallas tbody');
+    tbody.empty();
 
-    const $filtroTalla = $('#filtroTalla');
+    const filtroTalla = $('#filtroTalla');
 
     r.forEach((talla) => {
       const fila = `
@@ -54,10 +54,10 @@ function init() {
           </td>
         </tr>
       `;
-      $tbody.append(fila);
+      tbody.append(fila);
 
       const option = `<option value="${talla.idtalla}">${talla.nombre}</option>`;
-      $filtroTalla.append(option);
+      filtroTalla.append(option);
     });
   });
 
