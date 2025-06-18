@@ -64,6 +64,7 @@ if (!isset($_SESSION['nombre'])) {
                     <label for="">Proveedor(*):</label>
                     <input class="form-control" type="hidden" name="idingreso" id="idingreso">
                     <select name="idproveedor" id="idproveedor" class="form-control selectpicker" data-live-search="true" required>
+                      <option value="">--Seleccione--</option>
                     </select>
                   </div>
                   <div class="form-group col-lg-4 col-md-4 col-xs-12">

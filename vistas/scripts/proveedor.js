@@ -52,7 +52,7 @@ function listar() {
       dom: 'Bfrtip', //definimos los elementos del control de la tabla
       buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdf'],
       ajax: {
-        url: '../ajax/persona.php?op=listarp',
+        url: '../ajax/persona.php?op=listar?idtipopersona=2',
         type: 'get',
         dataType: 'json',
         error: function (e) {
@@ -60,8 +60,18 @@ function listar() {
         },
       },
       bDestroy: true,
-      iDisplayLength: 5, //paginacion
+      iDisplayLength: 20, //paginacion
       order: [[0, 'desc']], //ordenar (columna, orden)
+      columns: [
+        { data: 'idpersona' },
+        { data: 'tipopersona' },
+        { data: 'nombre' },
+        { data: 'tipodocumento' },
+        { data: 'numdocumento' },
+        { data: 'direccion' },
+        { data: 'telefono' },
+        { data: 'email' },
+      ],
     })
     .DataTable();
 }

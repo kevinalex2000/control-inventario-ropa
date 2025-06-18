@@ -97,40 +97,29 @@ switch ($_GET["op"]) {
 		echo json_encode($results);
 		break;
 
-	case 'selectProveedor':
-		require_once "../modelos/Persona.php";
-		$persona = new Persona();
-
-		$rspta = $persona->listarp();
-
-		while ($reg = $rspta->fetch_object()) {
-			echo '<option value='.$reg->idpersona.'>'.$reg->nombre.'</option>';
-		}
-		break;
-	
 	case 'listarArticulos':
 		require_once "../modelos/Articulo.php";
-		$articulo=new Articulo();
-		$rspta=$articulo->listar(null, null, 1);
-		$data=Array();
+		$articulo = new Articulo();
+		$rspta = $articulo->listar(null, null, 1);
+		$data = array();
 
-		while ($reg=$rspta->fetch_object()) {
-			$data[]=array(
-            "0"=>'<button class="btn btn-warning" onclick="agregarDetalle('.$reg->idarticulo.',\''.$reg->nombre.'\')"><span class="fa fa-plus"></span></button>',
-            "1"=>$reg->nombre,
-            "2"=>$reg->categoria,
-            "3"=>$reg->codigo,
-            "4"=>$reg->stock,
-            "5"=>"<img src='../files/articulos/".$reg->imagen."' height='50px' width='50px'>"
+		while ($reg = $rspta->fetch_object()) {
+			$data[] = array(
+				"0" => '<button class="btn btn-warning" onclick="agregarDetalle(' . $reg->idarticulo . ',\'' . $reg->nombre . '\')"><span class="fa fa-plus"></span></button>',
+				"1" => $reg->nombre,
+				"2" => $reg->categoria,
+				"3" => $reg->codigo,
+				"4" => $reg->stock,
+				"5" => "<img src='../files/articulos/" . $reg->imagen . "' height='50px' width='50px'>"
+			);
+		}
+
+		$results = array(
+			"sEcho" => 1, //info para datatables
+			"iTotalRecords" => count($data), //enviamos el total de registros al datatable
+			"iTotalDisplayRecords" => count($data), //enviamos el total de registros a visualizar
+			"aaData" => $data
 		);
-	}
-
-	$results=array(
-		"sEcho"=>1,//info para datatables
-        "iTotalRecords"=>count($data),//enviamos el total de registros al datatable
-        "iTotalDisplayRecords"=>count($data),//enviamos el total de registros a visualizar
-        "aaData"=>$data); 
 		echo json_encode($results);
 		break;
-	}
- ?>
+}
