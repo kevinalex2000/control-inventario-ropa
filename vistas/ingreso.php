@@ -140,7 +140,7 @@ if (!isset($_SESSION['nombre'])) {
 
     <!--Modal-->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -150,6 +150,7 @@ if (!isset($_SESSION['nombre'])) {
             <table id="tblarticulos" class="table table-striped table-bordered table-condensed table-hover">
               <thead>
                 <th>Opciones</th>
+                <th>Talla</th>
                 <th>Nombre</th>
                 <th>Categoria</th>
                 <th>Código</th>
@@ -161,6 +162,7 @@ if (!isset($_SESSION['nombre'])) {
               </tbody>
               <tfoot>
                 <th>Opciones</th>
+                <th>Talla</th>
                 <th>Nombre</th>
                 <th>Categoria</th>
                 <th>Código</th>
