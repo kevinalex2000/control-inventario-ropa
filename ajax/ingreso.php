@@ -81,11 +81,9 @@ switch ($_GET["op"]) {
 				"0" => ($reg->estado == 'Aceptado') ? '<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idingreso . ')"><i class="fa fa-eye"></i></button>' . ' ' . '<button class="btn btn-danger btn-xs" onclick="anular(' . $reg->idingreso . ')"><i class="fa fa-close"></i></button>' : '<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idingreso . ')"><i class="fa fa-eye"></i></button>',
 				"1" => $reg->fecha,
 				"2" => $reg->proveedor,
-				"3" => $reg->usuario,
-				"4" => $reg->tipo_comprobante,
-				"5" => $reg->serie_comprobante . '-' . $reg->num_comprobante,
-				"6" => $reg->total_compra,
-				"7" => ($reg->estado == 'Aceptado') ? '<span class="label bg-green">Aceptado</span>' : '<span class="label bg-red">Anulado</span>'
+				"3" => $reg->total_compra,
+				"4" => $reg->usuario,
+				"5" => ($reg->estado == 'Aceptado') ? '<span class="label bg-green">Aceptado</span>' : '<span class="label bg-red">Anulado</span>'
 			);
 		}
 		$results = array(
