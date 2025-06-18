@@ -1,3 +1,4 @@
+var listaTallas = [];
 var tabla;
 
 //funcion que se ejecuta al inicio
@@ -99,27 +100,47 @@ function listar(){
 	}).DataTable();
 }
 
-function listarArticulos(){
-	tabla=$('#tblarticulos').dataTable({
-		"aProcessing": true,//activamos el procedimiento del datatable
-		"aServerSide": true,//paginacion y filrado realizados por el server
-		dom: 'Bfrtip',//definimos los elementos del control de la tabla
-		buttons: [
+function cargarTallas(callback) {
+	$.getJSON("../ajax/talla.php", function(data) {
+		listaTallas = data;
+		if (typeof callback === "function") callback();
+	});
+}
 
-		],
-		"ajax":
-		{
-			url:'../ajax/ingreso.php?op=listarArticulos',
-			type: "get",
-			dataType : "json",
-			error:function(e){
-				console.log(e.responseText);
-			}
-		},
-		"bDestroy":true,
-		"iDisplayLength":5,//paginacion
-		"order":[[0,"desc"]]//ordenar (columna, orden)
-	}).DataTable();
+function listarArticulos() {
+  cargarTallas(function () {
+    $('#tblarticulos').DataTable({
+      "destroy": true,
+      "aProcessing": true,
+      "aServerSide": true,
+      "ajax": {
+        url: '../ajax/ingreso.php?op=listarArticulos',
+        type: "get",
+        dataType: "json"
+      },
+      "columns": [
+        { "data": 0 }, // Botón opciones
+        {
+          "data": null,
+          "render": function () {
+            var select = '<select class="form-control input-sm select-talla" style="width: 115px;">';
+			select += '<option value="">--Seleccione--</option>';
+            for (var i = 0; i < listaTallas.length; i++) {
+              select += '<option value="' + listaTallas[i].idtalla + '">' + listaTallas[i].nombre + '</option>';
+            }
+            select += '</select>';
+            return select;
+          }
+        },
+        { "data": 1 }, // Nombre
+        { "data": 2 }, // Categoria
+        { "data": 3 }, // Código
+        { "data": 4 }, // Stock
+        { "data": 5 }  // Imagen
+      ],
+      "iDisplayLength": 5
+    });
+  });
 }
 //funcion para guardaryeditar
 function guardaryeditar(e){
@@ -202,7 +223,13 @@ function marcarImpuesto(){
 	}
 }
 
-function agregarDetalle(idarticulo,articulo){
+function agregarDetalle(idarticulo, btn){
+	var articulo = $(btn).data('nombre'); // <-- Ahora sí tienes el nombre
+	var $tr = $(btn).closest('tr');
+  	var selectTalla = $tr.find('.select-talla');
+  	var idtalla = selectTalla.val();
+  	var nombreTalla = selectTalla.find('option:selected').text();
+
 	var cantidad=1;
 	var precio_compra=1;
 	var precio_venta=1;

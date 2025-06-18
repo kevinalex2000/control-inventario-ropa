@@ -97,22 +97,21 @@ switch ($_GET["op"]) {
 		echo json_encode($results);
 		break;
 
-		case 'selectProveedor':
-			require_once "../modelos/Persona.php";
-			$persona = new Persona();
+	case 'selectProveedor':
+		require_once "../modelos/Persona.php";
+		$persona = new Persona();
 
-			$rspta = $persona->listarp();
+		$rspta = $persona->listarp();
 
-			while ($reg = $rspta->fetch_object()) {
-				echo '<option value='.$reg->idpersona.'>'.$reg->nombre.'</option>';
-			}
-			break;
-
-			case 'listarArticulos':
-			require_once "../modelos/Articulo.php";
-			$articulo=new Articulo();
-
-				$rspta=$articulo->listarActivos();
+		while ($reg = $rspta->fetch_object()) {
+			echo '<option value='.$reg->idpersona.'>'.$reg->nombre.'</option>';
+		}
+		break;
+	
+	case 'listarArticulos':
+		require_once "../modelos/Articulo.php";
+		$articulo=new Articulo();
+		$rspta=$articulo->listar(null, null, 1);
 		$data=Array();
 
 		while ($reg=$rspta->fetch_object()) {
@@ -123,16 +122,15 @@ switch ($_GET["op"]) {
             "3"=>$reg->codigo,
             "4"=>$reg->stock,
             "5"=>"<img src='../files/articulos/".$reg->imagen."' height='50px' width='50px'>"
-          
-              );
-		}
-		$results=array(
-             "sEcho"=>1,//info para datatables
-             "iTotalRecords"=>count($data),//enviamos el total de registros al datatable
-             "iTotalDisplayRecords"=>count($data),//enviamos el total de registros a visualizar
-             "aaData"=>$data); 
-		echo json_encode($results);
+		);
+	}
 
-				break;
-}
+	$results=array(
+		"sEcho"=>1,//info para datatables
+        "iTotalRecords"=>count($data),//enviamos el total de registros al datatable
+        "iTotalDisplayRecords"=>count($data),//enviamos el total de registros a visualizar
+        "aaData"=>$data); 
+		echo json_encode($results);
+		break;
+	}
  ?>
