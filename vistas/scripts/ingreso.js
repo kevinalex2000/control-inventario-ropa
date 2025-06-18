@@ -247,6 +247,28 @@ function agregarDetalle(idarticulo, articulo, imagen, precio_venta) {
     alert('Debe seleccionar una talla para el producto');
     return;
   }
+  
+  // Buscar si ya existe una fila con este artículo y talla
+  var existe = false;
+  $('#detalles tbody tr').each(function () {
+    var $tr = $(this);
+    var articuloFila = $tr.find('input[name="idarticulo[]"]').val();
+    var tallaFila = $tr.find('input[name="talla[]"]').val();
+
+    if (articuloFila == idarticulo && tallaFila == idtalla) {
+      // Si existe, suma 1 a la cantidad
+      var $cantidadInput = $tr.find('input.cantidad');
+      var nuevaCantidad = parseInt($cantidadInput.val() || 0) + 1;
+      $cantidadInput.val(nuevaCantidad);
+
+      // Forzar el evento para recalcular subtotal y total
+      $cantidadInput.trigger('input');
+      existe = true;
+      return false; // salir del each
+    }
+  });
+
+  if (existe) return; // No agregar nueva fila si ya se sumó
 
   var cantidad = 1;
   var precio_compra = '';
