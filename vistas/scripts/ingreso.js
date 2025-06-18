@@ -122,12 +122,19 @@ function listarArticulos() {
         dataType: 'json',
       },
       columns: [
+
+
         { data: 0 }, // Botón opciones
         {
           data: null,
-          render: function () {
+          render: function (data, type, row, meta) {
+            // data = toda la fila como array u objeto según tu backend
+            var idarticulo = data[6]; // <-- aquí obtienes el código del artículo
+            // Si necesitas usarlo (por ejemplo, en el select):
             var select =
-              '<select class="form-control input-sm select-talla" style="width: 115px;">';
+              '<select class="form-control input-sm select-talla" style="width: 115px;" data-idarticulo="' +
+              idarticulo +
+              '">';
             select += '<option value="">--Seleccione--</option>';
             for (var i = 0; i < listaTallas.length; i++) {
               select +=
@@ -146,6 +153,7 @@ function listarArticulos() {
         { data: 3 }, // Código
         { data: 4 }, // Stock
         { data: 5 }, // Imagen
+		{ data: 6 , "visible": false} //idarticulo
       ],
       iDisplayLength: 5,
     });
@@ -228,54 +236,81 @@ function marcarImpuesto() {
   }
 }
 
-function agregarDetalle(idarticulo, btn) {
-  var articulo = $(btn).data('nombre'); // <-- Ahora sí tienes el nombre
-  var $tr = $(btn).closest('tr');
-  var selectTalla = $tr.find('.select-talla');
+function agregarDetalle(idarticulo, articulo, imagen, precio_venta) {
+
+  var selectTalla = $('.select-talla[data-idarticulo="'+ idarticulo +'"]');
   var idtalla = selectTalla.val();
   var nombreTalla = selectTalla.find('option:selected').text();
 
-  var cantidad = 1;
-  var precio_compra = 1;
-  var precio_venta = 1;
+  if (idtalla == '') {
+    alert('Debe seleccionar una talla para el producto');
+    return;
+  }
 
-  if (idarticulo != '') {
-    var subtotal = cantidad * precio_compra;
-    var fila =
-      '<tr class="filas" id="fila' +
-      cont +
-      '">' +
-      '<td><button type="button" class="btn btn-danger" onclick="eliminarDetalle(' +
-      cont +
-      ')">X</button></td>' +
-      '<td><input type="hidden" name="idarticulo[]" value="' +
-      idarticulo +
-      '">' +
-      articulo +
-      '</td>' +
-      '<td><input type="number" name="cantidad[]" id="cantidad[]" value="' +
-      cantidad +
-      '"></td>' +
-      '<td><input type="number" name="precio_compra[]" id="precio_compra[]" value="' +
-      precio_compra +
-      '"></td>' +
-      '<td><input type="number" name="precio_venta[]" value="' +
-      precio_venta +
-      '"></td>' +
-      '<td><span id="subtotal' +
-      cont +
-      '" name="subtotal">' +
-      subtotal +
-      '</span></td>' +
-      '<td><button type="button" onclick="modificarSubtotales()" class="btn btn-info"><i class="fa fa-refresh"></i></button></td>' +
-      '</tr>';
-    cont++;
-    detalles++;
-    $('#detalles').append(fila);
-    modificarSubtotales();
+  var cantidad = 1;
+  var precio_compra = '';
+  
+  if (idarticulo != "") {
+        var subtotal = 0;
+        var fila = '<tr class="filas" id="fila' + cont + '">' +
+            '<td><button type="button" class="btn btn-danger" onclick="eliminarDetalle(' + cont + ')">X</button></td>' +
+            '<td><img src="../files/articulos/' + imagen + '" width="50" height = "50"></td>' +
+            '<td><input type="hidden" name="idarticulo[]" value="' + idarticulo + '">' + articulo + '</td>' +
+            '<td><input type="hidden" name="talla[]" value="' + idtalla + '">' + nombreTalla + '</td>' +
+            '<td><input type="number" name="cantidad[]" class="cantidad" value="' + cantidad + '" min="1" style="width:70px;"></td>' +
+            '<td><input type="number" name="precio_compra[]" class="precio-compra" value="' + precio_compra + '" min="0" step="0.01" placeholder="0.00" style="width:90px;"></td>' +
+            '<td><input type="text" name="precio_venta[]" class="precio-venta" value="' + precio_venta + '" readonly style="width:90px;background:#eee;"></td>' +
+            '<td><span id="subtotal' + cont + '" name="subtotal" class="subtotal">0.00</span></td>' +
+            '</tr>';
+        cont++;
+        detalles++;
+        $('#detalles tbody').append(fila);
+        recalcularEventosDetalle();
+        evaluar();
   } else {
     alert('error al ingresar el detalle, revisar las datos del articulo ');
   }
+}
+
+function recalcularEventosDetalle() {
+    // Cálculo automático de subtotal y total
+    $('#detalles').off('input', '.cantidad, .precio-compra');
+    $('#detalles').on('input', '.cantidad, .precio-compra', function () {
+        var $tr = $(this).closest('tr');
+        var cantidad = parseFloat($tr.find('.cantidad').val()) || 0;
+        var precioCompra = parseFloat($tr.find('.precio-compra').val()) || 0;
+        if (precioCompra < 0) precioCompra = 0;
+        var subtotal = (cantidad * precioCompra).toFixed(2);
+        $tr.find('.subtotal').text(subtotal);
+        recalcularTotales();
+    });
+
+    $('#detalles').off('click', '.btn-danger');
+    $('#detalles').on('click', '.btn-danger', function () {
+        $(this).closest('tr').remove();
+        recalcularTotales();
+        detalles--;
+        evaluar();
+    });
+}
+
+function recalcularTotales() {
+    var total = 0;
+    $('.subtotal').each(function () {
+        total += parseFloat($(this).text()) || 0;
+    });
+    $("#total").html("S/. " + total.toFixed(2));
+    $("#total_compra").val(total.toFixed(2));
+    evaluar();
+}
+
+function evaluar() {
+    if (detalles > 0) {
+        $("#btnGuardar").show();
+    } else {
+        $("#btnGuardar").hide();
+        cont = 0;
+    }
 }
 
 function modificarSubtotales() {

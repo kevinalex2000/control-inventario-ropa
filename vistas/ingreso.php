@@ -102,7 +102,9 @@ if (!isset($_SESSION['nombre'])) {
                     <table id="detalles" class="table table-striped table-bordered table-condensed table-hover">
                       <thead style="background-color:#A9D0F5">
                         <th>Opciones</th>
+                        <th>Imagen</th>
                         <th>Articulo</th>
+                        <th>Talla</th>
                         <th>Cantidad</th>
                         <th>Precio Compra</th>
                         <th>Precio Venta</th>
@@ -114,9 +116,11 @@ if (!isset($_SESSION['nombre'])) {
                         <th></th>
                         <th></th>
                         <th></th>
+                        <th></th>
+                        <th></th>
                         <th>
                           <h4 id="total">S/. 0.00</h4><input type="hidden" name="total_compra" id="total_compra">
-                        </th>
+                      </th>
                       </tfoot>
                       <tbody>
 
@@ -157,6 +161,7 @@ if (!isset($_SESSION['nombre'])) {
                 <th>Código</th>
                 <th>Stock</th>
                 <th>Imagen</th>
+                <th>ID Artículo</th>
               </thead>
               <tbody>
 
@@ -169,6 +174,7 @@ if (!isset($_SESSION['nombre'])) {
                 <th>Código</th>
                 <th>Stock</th>
                 <th>Imagen</th>
+                <th>ID Artículo</th>
               </tfoot>
             </table>
           </div>
