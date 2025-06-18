@@ -11,7 +11,7 @@ if (!isset($_SESSION['nombre'])) {
 
   if ($_SESSION['compras'] == 1) {
 
-?>
+    ?>
     <div class="content-wrapper">
       <!-- Main content -->
       <section class="content">
@@ -58,12 +58,13 @@ if (!isset($_SESSION['nombre'])) {
                   </tfoot>
                 </table>
               </div>
-              <div class="panel-body" style="height: 400px;" id="formularioregistros">
+              <div class="panel-body" id="formularioregistros">
                 <form action="" name="formulario" id="formulario" method="POST">
                   <div class="form-group col-lg-8 col-md-8 col-xs-12">
                     <label for="">Proveedor(*):</label>
                     <input class="form-control" type="hidden" name="idingreso" id="idingreso">
-                    <select name="idproveedor" id="idproveedor" class="form-control selectpicker" data-live-search="true" required>
+                    <select name="idproveedor" id="idproveedor" class="form-control selectpicker" data-live-search="true"
+                      required>
                       <option value="">--Seleccione--</option>
                     </select>
                   </div>
@@ -95,12 +96,13 @@ if (!isset($_SESSION['nombre'])) {
 -->
                   <div class="form-group col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <a data-toggle="modal" href="#myModal">
-                      <button id="btnAgregarArt" type="button" class="btn btn-primary"><span class="fa fa-plus"></span>Agregar Articulos</button>
+                      <button id="btnAgregarArt" type="button" class="btn btn-default"><i class="fa fa-plus"></i> Agregar
+                        articulos</button>
                     </a>
                   </div>
                   <div class="form-group col-lg-12 col-md-12 col-xs-12">
-                    <table id="detalles" class="table table-striped table-bordered table-condensed table-hover">
-                      <thead style="background-color:#A9D0F5">
+                    <table id="detalles" class="table table-striped table-bordered table-condensed  table-hover">
+                      <thead style="background-color:#222d32; color: #fff;">
                         <th>Opciones</th>
                         <th>Imagen</th>
                         <th>Articulo</th>
@@ -120,7 +122,7 @@ if (!isset($_SESSION['nombre'])) {
                         <th></th>
                         <th>
                           <h4 id="total">S/. 0.00</h4><input type="hidden" name="total_compra" id="total_compra">
-                      </th>
+                        </th>
                       </tfoot>
                       <tbody>
 
@@ -128,8 +130,10 @@ if (!isset($_SESSION['nombre'])) {
                     </table>
                   </div>
                   <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <button class="btn btn-primary" type="submit" id="btnGuardar"><i class="fa fa-save"></i> Guardar</button>
-                    <button class="btn btn-danger" onclick="cancelarform()" type="button" id="btnCancelar"><i class="fa fa-arrow-circle-left"></i> Cancelar</button>
+                    <button class="btn btn-primary" type="submit" id="btnGuardar"><i class="fa fa-save"></i>
+                      Guardar</button>
+                    <button class="btn btn-danger" onclick="cancelarform()" type="button" id="btnCancelar"><i
+                        class="fa fa-arrow-circle-left"></i> Cancelar</button>
                   </div>
                 </form>
               </div>
@@ -152,7 +156,16 @@ if (!isset($_SESSION['nombre'])) {
             <h4 class="modal-title">Seleccione un Articulo</h4>
           </div>
           <div class="modal-body">
-            <table id="tblarticulos" class="table table-striped table-bordered table-condensed table-hover">
+            <div class="row">
+              <!-- Campo Buscar -->
+              <div class="col-md-12 form-group form-inline" style="text-align:right;">
+                <label for="buscarTabla">Buscar:</label>
+                <input type="text" id="buscarTabla" class="form-control input-sm" placeholder="Buscar en la tabla..."
+                  onkeyup="buscarEnTabla(this.value, tablaArticulos)">
+              </div>
+            </div>
+            <table id="tblarticulos" class="table table-striped table-bordered table-condensed table-hover dataTable"
+              style="width:100%">
               <thead>
                 <th>Opciones</th>
                 <th>Talla</th>
@@ -185,7 +198,7 @@ if (!isset($_SESSION['nombre'])) {
       </div>
     </div>
     <!-- fin Modal-->
-  <?php
+    <?php
   } else {
     require 'noacceso.php';
   }
@@ -193,7 +206,7 @@ if (!isset($_SESSION['nombre'])) {
   require 'footer.php';
   ?>
   <script src="scripts/ingreso.js"></script>
-<?php
+  <?php
 }
 
 ob_end_flush();

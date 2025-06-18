@@ -1,10 +1,10 @@
-  <footer class="main-footer">
-    <div class="pull-right hidden-xs">
-      <b>Version</b> 0.0.1
-    </div>
-    <strong>Copyright &copy; 2025 NeicerKr.</strong> Todo los derechos
-    reservados.
-  </footer>
+<footer class="main-footer">
+  <div class="pull-right hidden-xs">
+    <b>Version</b> 0.0.1
+  </div>
+  <strong>Copyright &copy; 2025 InventaKode.</strong> Todo los derechos
+  reservados.
+</footer>
 
 <!-- jQuery 3 -->
 
@@ -28,4 +28,5 @@
 <script src="../public/js/bootbox.min.js"></script>
 <script src="../public/js/bootstrap-select.min.js"></script>
 </body>
+
 </html>

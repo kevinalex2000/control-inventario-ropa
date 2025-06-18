@@ -48,27 +48,32 @@ function listar() {
   tabla = $('#tbllistado')
     .dataTable({
       aProcessing: true, //activamos el procedimiento del datatable
-      aServerSide: true, //paginacion y filrado realizados por el server
+      aServerSide: false,
       dom: 'Bfrtip', //definimos los elementos del control de la tabla
       buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdf'],
       ajax: {
-        url: '../ajax/persona.php?op=listar?idtipopersona=2',
+        url: '../ajax/persona.php?op=listar&idtipopersona=2',
         type: 'get',
         dataType: 'json',
-        error: function (e) {
-          console.log(e.responseText);
-        },
+        dataSrc: '',
       },
       bDestroy: true,
       iDisplayLength: 20, //paginacion
       order: [[0, 'desc']], //ordenar (columna, orden)
       columns: [
-        { data: 'idpersona' },
-        { data: 'tipopersona' },
+        {
+          data: null,
+          render: function (data, type, row) {
+            console.log(row);
+            let render = `
+            <button class="btn btn-warning btn-xs" onclick="mostrar(${row.idpersona})"><i class="fa fa-pencil"></i></button>
+            <button class="btn btn-danger btn-xs" onclick="eliminar(${row.idpersona})"><i class="fa fa-trash"></i></button>`;
+            return render;
+          },
+        },
         { data: 'nombre' },
         { data: 'tipodocumento' },
         { data: 'numdocumento' },
-        { data: 'direccion' },
         { data: 'telefono' },
         { data: 'email' },
       ],
