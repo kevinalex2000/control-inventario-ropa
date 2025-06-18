@@ -155,7 +155,7 @@ function listar() {
         },
       },
       bDestroy: true,
-      iDisplayLength: 5, //paginacion
+      iDisplayLength: 20, //paginacion
       order: [[0, 'desc']], //ordenar (columna, orden)
     })
     .DataTable();
@@ -183,16 +183,15 @@ function guardaryeditar(e) {
     data: { nombre: nombre, codigo: codigo, idarticulo: idarticulo },
     dataType: 'json',
 
-    success: function(res) {
-      if(res.codigo) {
-        bootbox.alert("El código ya está siendo utilizado por otro artículo");
+    success: function (res) {
+      if (res.codigo) {
+        bootbox.alert('El código ya está siendo utilizado por otro artículo');
         return false;
       }
-      if(res.nombre) {
-        bootbox.alert("El nombre ya está siendo utilizado por otro artículo");
+      if (res.nombre) {
+        bootbox.alert('El nombre ya está siendo utilizado por otro artículo');
         return false;
-      }
-      else {
+      } else {
         // Ahora sí envía el formulario normalmente
         $('#btnGuardar').prop('disabled', true);
         let formData = new FormData($('#formulario')[0]);
@@ -226,7 +225,7 @@ function guardaryeditar(e) {
 
         limpiar();
       }
-    }
+    },
   });
 }
 

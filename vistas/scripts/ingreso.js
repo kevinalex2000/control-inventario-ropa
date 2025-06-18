@@ -1,5 +1,6 @@
 var listaTallas = [];
 var tabla;
+var tablaArticulos;
 
 //funcion que se ejecuta al inicio
 function init() {
@@ -11,8 +12,20 @@ function init() {
   });
 
   //cargamos los items al select proveedor
-  $.post('../ajax/ingreso.php?op=selectProveedor', function (r) {
-    $('#idproveedor').html(r);
+  $.get('../ajax/persona.php?op=listar&idtipopersona=2', function (r) {
+    const proveedores = JSON.parse(r);
+    const $selectProveedor = $('#idproveedor');
+
+    $.each(proveedores, function (index, proveedor) {
+      const numdoc =
+        proveedor.numdocumento !== ''
+          ? proveedor.tipodocumento + ': ' + proveedor.numdocumento
+          : 'Sin doc';
+      const texto = (numdoc + ' - ' + proveedor.nombre).toUpperCase();
+      const option = `<option value="${proveedor.idpersona}">${texto}</option>`;
+      $selectProveedor.append(option);
+    });
+
     $('#idproveedor').selectpicker('refresh');
   });
 }
@@ -100,7 +113,7 @@ function cargarTallas(callback) {
 
 function listarArticulos() {
   cargarTallas(function () {
-    $('#tblarticulos').DataTable({
+    tablaArticulos = $('#tblarticulos').DataTable({
       destroy: true,
       aProcessing: true,
       aServerSide: true,
@@ -110,7 +123,7 @@ function listarArticulos() {
         dataType: 'json',
       },
       columns: [
-        { data: 0 }, // Botón opciones
+        { data: 0, orderable: false }, // Botón opciones
         {
           data: null,
           render: function (data, type, row, meta) {
@@ -118,10 +131,10 @@ function listarArticulos() {
             var idarticulo = data[6]; // <-- aquí obtienes el código del artículo
             // Si necesitas usarlo (por ejemplo, en el select):
             var select =
-              '<select class="form-control input-sm select-talla" style="width: 115px;" data-idarticulo="' +
+              '<select class="form-control input-sm select-talla" style="width: 80px;" data-idarticulo="' +
               idarticulo +
               '">';
-            select += '<option value="">--Seleccione--</option>';
+            select += '<option value="">-</option>';
             for (var i = 0; i < listaTallas.length; i++) {
               select +=
                 '<option value="' +
@@ -141,7 +154,8 @@ function listarArticulos() {
         { data: 5 }, // Imagen
         { data: 6, visible: false }, //idarticulo
       ],
-      iDisplayLength: 5,
+      iDisplayLength: 10,
+      lengthChange: false,
     });
   });
 }

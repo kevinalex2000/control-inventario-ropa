@@ -6,17 +6,11 @@ class Talla
 {
 
   //implementamos nuestro constructor
-  public function __construct()
-  {
-
-  }
+  public function __construct() {}
 
   public function listar(): bool|mysqli_result
   {
     $sql = "SELECT idtalla, nombre FROM talla";
     return ejecutarConsulta($sql);
   }
-
 }
-
-?>

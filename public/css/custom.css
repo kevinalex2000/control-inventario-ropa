@@ -36,3 +36,8 @@
 .bootstrap-select .btn-default {
   background-color: #fdfdfd !important;
 }
+
+table td,
+table th {
+  vertical-align: middle !important;
+}

@@ -8,7 +8,7 @@ if (!isset($_SESSION['nombre'])) {
 
   require 'header.php';
   if ($_SESSION['compras'] == 1) {
-?>
+    ?>
     <div class="content-wrapper">
       <!-- Main content -->
       <section class="content">
@@ -32,22 +32,28 @@ if (!isset($_SESSION['nombre'])) {
               <div class="panel-body table-responsive" id="listadoregistros">
                 <table id="tbllistado" class="table table-striped table-bordered table-condensed table-hover">
                   <thead>
-                    <th>Opciones</th>
-                    <th>Nombre</th>
-                    <th>Documento</th>
-                    <th>Número</th>
-                    <th>Teléfono</th>
-                    <th>Email</th>
+                    <tr>
+                      <th>Opciones</th>
+                      <th>Nombre</th>
+                      <th>Documento</th>
+                      <th>Número</th>
+                      <th>Teléfono</th>
+                      <th>Email</th>
+
+                    </tr>
                   </thead>
                   <tbody>
                   </tbody>
                   <tfoot>
-                    <th>Opciones</th>
-                    <th>Nombre</th>
-                    <th>Documento</th>
-                    <th>Número</th>
-                    <th>Teléfono</th>
-                    <th>Email</th>
+                    <tr>
+
+                      <th>Opciones</th>
+                      <th>Nombre</th>
+                      <th>Documento</th>
+                      <th>Número</th>
+                      <th>Teléfono</th>
+                      <th>Email</th>
+                    </tr>
                   </tfoot>
                 </table>
               </div>
@@ -57,7 +63,8 @@ if (!isset($_SESSION['nombre'])) {
                     <label for="">Nombre(*)</label>
                     <input class="form-control" type="hidden" name="idpersona" id="idpersona">
                     <input class="form-control" type="hidden" name="tipo_persona" id="tipo_persona" value="Proveedor">
-                    <input class="form-control" type="text" name="nombre" id="nombre" maxlength="100" placeholder="Nombre del proveedor" required>
+                    <input class="form-control" type="text" name="nombre" id="nombre" maxlength="100"
+                      placeholder="Nombre del proveedor" required>
                   </div>
                   <div class="form-group col-lg-6 col-md-6 col-xs-12">
                     <label for="">Tipo Documento</label>
@@ -70,24 +77,29 @@ if (!isset($_SESSION['nombre'])) {
                   </div>
                   <div class="form-group col-lg-6 col-md-6 col-xs-12">
                     <label for="">Número Documento</label>
-                    <input class="form-control" type="text" name="num_documento" id="num_documento" maxlength="20" placeholder="Número de Documento">
+                    <input class="form-control" type="text" name="num_documento" id="num_documento" maxlength="20"
+                      placeholder="Número de Documento">
                   </div>
                   <div class="form-group col-lg-6 col-md-6 col-xs-12">
                     <label for="">Direccion</label>
-                    <input class="form-control" type="text" name="direccion" id="direccion" maxlength="70" placeholder="Direccion">
+                    <input class="form-control" type="text" name="direccion" id="direccion" maxlength="70"
+                      placeholder="Direccion">
                   </div>
                   <div class="form-group col-lg-6 col-md-6 col-xs-12">
                     <label for="">Telefono</label>
-                    <input class="form-control" type="text" name="telefono" id="telefono" maxlength="20" placeholder="Número de Telefono">
+                    <input class="form-control" type="text" name="telefono" id="telefono" maxlength="20"
+                      placeholder="Número de Telefono">
                   </div>
                   <div class="form-group col-lg-6 col-md-6 col-xs-12">
                     <label for="">Email</label>
                     <input class="form-control" type="email" name="email" id="email" maxlength="50" placeholder="Email">
                   </div>
                   <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <button class="btn btn-primary" type="submit" id="btnGuardar"><i class="fa fa-save"></i> Guardar</button>
+                    <button class="btn btn-primary" type="submit" id="btnGuardar"><i class="fa fa-save"></i>
+                      Guardar</button>
 
-                    <button class="btn btn-danger" onclick="cancelarform()" type="button"><i class="fa fa-arrow-circle-left"></i> Cancelar</button>
+                    <button class="btn btn-danger" onclick="cancelarform()" type="button"><i
+                        class="fa fa-arrow-circle-left"></i> Cancelar</button>
                   </div>
                 </form>
               </div>
@@ -100,14 +112,14 @@ if (!isset($_SESSION['nombre'])) {
       </section>
       <!-- /.content -->
     </div>
-  <?php
+    <?php
   } else {
     require 'noacceso.php';
   }
   require 'footer.php';
   ?>
   <script src="scripts/proveedor.js"></script>
-<?php
+  <?php
 }
 
 ob_end_flush();
