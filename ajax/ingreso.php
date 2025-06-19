@@ -5,6 +5,70 @@ if (strlen(session_id()) < 1)
 
 $ingreso = new Ingreso();
 
+function listarDetalle()
+{
+	global $ingreso;
+	$idingreso = $_GET['id'];
+
+	$rspta = $ingreso->listarDetalle(idingreso: $idingreso);
+	$data = array();
+
+	while ($reg = $rspta->fetch_object()) {
+		$data[] = array(
+			"idingreso" => $reg->idingreso,
+			"idarticulo" => $reg->idarticulo,
+			"articulo" => $reg->articulo,
+			"talla" => $reg->talla,
+			"imagen" => $reg->imagen,
+			"cantidad" => $reg->cantidad,
+			"preciocompra" => $reg->precio_compra,
+			"subtotal" => $reg->precio_compra * $reg->cantidad
+		);
+	}
+
+	return json_encode($data);
+}
+
+function guardar()
+{
+	global $ingreso;
+
+	$idusuario = $_SESSION["idusuario"];
+	$input = file_get_contents('php://input');
+	$data = json_decode($input, true);
+
+	$idproveedor = $data['idproveedor'];
+	$fechahora = $data['fechahora'];
+	$totalcompra = 0;
+	$detalleingreso = [];
+
+	foreach ($data['detalle'] as $item) {
+		$idarticulo = $item['idarticulo'];
+		$preciocompra = $item['preciocompra'];
+		$cantidad = $item['cantidad'];
+		$idtalla = $item['idtalla'];
+		$subtotal = floatval($preciocompra) * floatval($cantidad);
+		$totalcompra += $subtotal;
+		array_push($detalleingreso, [
+			'preciocompra' => $preciocompra,
+			'cantidad' => $cantidad,
+			'idarticulo' => $idarticulo,
+			'idtalla' => $idtalla,
+		]);
+	}
+
+	$rspta = $ingreso->insertar(
+		$idusuario,
+		$idproveedor,
+		$fechahora,
+		$totalcompra,
+		$detalleingreso
+	);
+
+	return $rspta ? "Datos registrados correctamente" : "Error al registrar los datos";
+}
+
+
 $idingreso = isset($_POST["idingreso"]) ? limpiarCadena($_POST["idingreso"]) : "";
 $idproveedor = isset($_POST["idproveedor"]) ? limpiarCadena($_POST["idproveedor"]) : "";
 $idusuario = $_SESSION["idusuario"];
@@ -17,12 +81,8 @@ $total_compra = isset($_POST["total_compra"]) ? limpiarCadena($_POST["total_comp
 
 
 switch ($_GET["op"]) {
-	case 'guardaryeditar':
-		if (empty($idingreso)) {
-			$rspta = $ingreso->insertar($idproveedor, $idusuario, $tipo_comprobante, $serie_comprobante, $num_comprobante, $fecha_hora, $impuesto, $total_compra, $_POST["idarticulo"], $_POST["cantidad"], $_POST["precio_compra"], $_POST["precio_venta"]);
-			echo $rspta ? "Datos registrados correctamente" : "No se pudo registrar los datos";
-		} else {
-		}
+	case 'guardar':
+		echo (guardar());
 		break;
 
 
@@ -37,41 +97,7 @@ switch ($_GET["op"]) {
 		break;
 
 	case 'listarDetalle':
-		//recibimos el idingreso
-		$id = $_GET['id'];
-
-		$rspta = $ingreso->listarDetalle($id);
-		$total = 0;
-		echo ' <thead>
-        <th>Opciones</th>
-        <th>Imagen</th>
-        <th>Articulo</th>
-        <th>Talla</th>
-        <th>Cantidad</th>
-        <th>Precio Compra</th>
-        <th>Subtotal</th>
-       </thead>';
-		while ($reg = $rspta->fetch_object()) {
-			echo '<tr class="filas">
-			<td></td>
-			<td> <img src= "../files/articulos/' . $reg->imagen . '" width="50px" height="50"></td>
-			<td>' . $reg->articulo . '</td>
-			<td>' . $reg->talla . '</td>
-			<td>' . $reg->cantidad . '</td>
-			<td>' . $reg->precio_compra . '</td>
-			<td>' . $reg->precio_compra * $reg->cantidad . '</td>
-			</tr>';
-			$total = $total + ($reg->precio_compra * $reg->cantidad);
-		}
-		echo '<tfoot>
-         <th>TOTAL</th>
-         <th></th>
-         <th></th>
-         <th></th>
-         <th></th>
-		 <th></th>
-         <th><h4 id="total">S/. ' . $total . '</h4><input type="hidden" name="total_compra" id="total_compra"></th>
-       </tfoot>';
+		echo (listarDetalle());
 		break;
 
 	case 'listar':

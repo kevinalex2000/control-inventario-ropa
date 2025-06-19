@@ -2,6 +2,10 @@ var listaTallas = [];
 var tabla;
 var tablaArticulos;
 
+var impuesto = 18;
+var cont = 0;
+var cantFilasDetalles = 0;
+
 //funcion que se ejecuta al inicio
 function init() {
   mostrarform(false);
@@ -41,7 +45,7 @@ function limpiar() {
   $('#impuesto').val('');
 
   $('#total_compra').val('');
-  $('.filas').remove();
+  $('#detalles tbody').html('');
   $('#total').html('0');
 
   //obtenemos la fecha actual
@@ -63,13 +67,13 @@ function mostrarform(flag) {
   if (flag) {
     $('#listadoregistros').hide();
     $('#formularioregistros').show();
-    //$("#btnGuardar").prop("disabled",false);
     $('#btnagregar').hide();
     listarArticulos();
 
-    $('#btnGuardar').hide();
+    $('#btnGuardar').prop('disabled', true);
+    $('#btnGuardar').show();
     $('#btnCancelar').show();
-    detalles = 0;
+    cantFilasDetalles = 0;
     $('#btnAgregarArt').show();
   } else {
     $('#listadoregistros').show();
@@ -164,17 +168,50 @@ function listarArticulos() {
 }
 //funcion para guardaryeditar
 function guardaryeditar(e) {
-  e.preventDefault(); //no se activara la accion predeterminada
-  //$("#btnGuardar").prop("disabled",true);
+  e.preventDefault();
+  let valid = true;
+  let mensaje = '';
+
   var formData = new FormData($('#formulario')[0]);
 
-  $.ajax({
-    url: '../ajax/ingreso.php?op=guardaryeditar',
-    type: 'POST',
-    data: formData,
-    contentType: false,
-    processData: false,
+  let json = {
+    idproveedor: formData.get('idproveedor'),
+    fechahora: formData.get('fecha_hora'),
+    detalle: [],
+  };
 
+  let idsarticulos = formData.getAll('idarticulo[]');
+  let idstallas = formData.getAll('idtalla[]');
+  let cantidades = formData.getAll('cantidad[]');
+  let precioscompra = formData.getAll('precio_compra[]');
+
+  idsarticulos.forEach((idarticulo, index) => {
+    json.detalle.push({
+      idtalla: idstallas[index],
+      cantidad: cantidades[index],
+      preciocompra: precioscompra[index],
+      idarticulo: idsarticulos[index],
+    });
+
+    if (precioscompra[index] == '' || precioscompra[index] < 0) {
+      mensaje =
+        'El precio de compra del producto nro [' +
+        (index + 1) +
+        '] tiene un valor invalido o no tiene valor.';
+      valid = false;
+    }
+  });
+
+  if (!valid) {
+    alert(mensaje);
+    return;
+  }
+
+  $.ajax({
+    url: '../ajax/ingreso.php?op=guardar',
+    type: 'POST',
+    data: JSON.stringify(json),
+    contentType: 'application/json',
     success: function (datos) {
       bootbox.alert(datos);
       mostrarform(false);
@@ -186,28 +223,52 @@ function guardaryeditar(e) {
 }
 
 function mostrar(idingreso) {
+  mostrarform(true);
 
-  $.post('../ajax/ingreso.php?op=mostrar', { idingreso: idingreso }, function (data, status) {
-    data = JSON.parse(data);
-    mostrarform(true);
+  $.post(
+    '../ajax/ingreso.php?op=mostrar',
+    {
+      idingreso: idingreso,
+    },
+    function (data, status) {
+      data = JSON.parse(data);
+      $('#idproveedor').val(data.idproveedor);
+      $('#idproveedor').selectpicker('refresh');
+      $('#tipo_comprobante').val(data.tipo_comprobante);
+      $('#tipo_comprobante').selectpicker('refresh');
+      $('#serie_comprobante').val(data.serie_comprobante);
+      $('#num_comprobante').val(data.num_comprobante);
+      $('#fecha_hora').val(data.fecha);
+      $('#impuesto').val(data.impuesto);
+      $('#idingreso').val(data.idingreso);
 
-    $('#idproveedor').val(data.idproveedor);
-    $('#idproveedor').selectpicker('refresh');
-    $('#tipo_comprobante').val(data.tipo_comprobante);
-    $('#tipo_comprobante').selectpicker('refresh');
-    $('#serie_comprobante').val(data.serie_comprobante);
-    $('#num_comprobante').val(data.num_comprobante);
-    $('#fecha_hora').val(data.fecha);
-    $('#impuesto').val(data.impuesto);
-    $('#idingreso').val(data.idingreso);
+      //ocultar y mostrar los botones
+      $('#btnGuardar').hide();
+      $('#btnCancelar').show();
+      $('#btnAgregarArt').hide();
+    }
+  );
 
-    //ocultar y mostrar los botones
-    $('#btnGuardar').hide();
-    $('#btnCancelar').show();
-    $('#btnAgregarArt').hide();
-  });
-  $.post('../ajax/ingreso.php?op=listarDetalle&id=' + idingreso, function (r) {
-    $('#detalles').html(r);
+  console.log(idingreso);
+  $.getJSON('../ajax/ingreso.php?op=listarDetalle&id=' + idingreso, function (data) {
+    $('#detalles tbody').html('');
+    let total = 0;
+    data.forEach(function (item, index) {
+      tr = `
+      <tr class="filas">
+        <td></td>
+        <td> <img src= "../files/articulos/${item.imagen}" width="50px" height="50px"></td>
+        <td>${item.articulo}</td>
+        <td>${item.talla}</td>
+        <td>${item.cantidad}</td>
+        <td>${item.preciocompra}</td>
+        <td>${item.subtotal}</td>
+      </tr>`;
+      $('#detalles tbody').append(tr);
+      total += parseFloat(item.subtotal);
+    });
+
+    $('#total').text(total);
   });
 }
 
@@ -223,12 +284,6 @@ function anular(idingreso) {
   });
 }
 
-//declaramos variables necesarias para trabajar con las compras y sus detalles
-var impuesto = 18;
-var cont = 0;
-var detalles = 0;
-
-$('#btnGuardar').hide();
 $('#tipo_comprobante').change(marcarImpuesto);
 
 function marcarImpuesto() {
@@ -255,7 +310,7 @@ function agregarDetalle(idarticulo, articulo, imagen, precio_venta) {
   $('#detalles tbody tr').each(function () {
     var $tr = $(this);
     var articuloFila = $tr.find('input[name="idarticulo[]"]').val();
-    var tallaFila = $tr.find('input[name="talla[]"]').val();
+    var tallaFila = $tr.find('input[name="idtalla[]"]').val();
 
     if (articuloFila == idarticulo && tallaFila == idtalla) {
       // Si existe, suma 1 a la cantidad
@@ -278,7 +333,7 @@ function agregarDetalle(idarticulo, articulo, imagen, precio_venta) {
   if (idarticulo != '') {
     var subtotal = 0;
     var fila =
-      '<tr class="filas" id="fila' +
+      '<tr id="fila' +
       cont +
       '">' +
       '<td><button type="button" class="btn btn-danger" onclick="eliminarDetalle(' +
@@ -292,7 +347,7 @@ function agregarDetalle(idarticulo, articulo, imagen, precio_venta) {
       '">' +
       articulo +
       '</td>' +
-      '<td><input type="hidden" name="talla[]" value="' +
+      '<td><input type="hidden" name="idtalla[]" value="' +
       idtalla +
       '">' +
       nombreTalla +
@@ -303,15 +358,17 @@ function agregarDetalle(idarticulo, articulo, imagen, precio_venta) {
       '<td><input type="number" name="precio_compra[]" class="precio-compra" value="' +
       precio_compra +
       '" min="0" step="0.01" placeholder="0.00" style="width:90px;"></td>' +
+      /*+
       '<td><input type="text" name="precio_venta[]" class="precio-venta" value="' +
       precio_venta +
-      '" readonly style="width:90px;background:#eee;"></td>' +
+      '" readonly style="width:90px;background:#eee;"></td>' */
       '<td><span id="subtotal' +
       cont +
       '" name="subtotal" class="subtotal">0.00</span></td>' +
       '</tr>';
     cont++;
-    detalles++;
+    cantFilasDetalles++;
+
     $('#detalles tbody').append(fila);
     recalcularEventosDetalle();
     evaluar();
@@ -322,6 +379,7 @@ function agregarDetalle(idarticulo, articulo, imagen, precio_venta) {
 
 function recalcularEventosDetalle() {
   // Cálculo automático de subtotal y total
+
   $('#detalles').off('input', '.cantidad, .precio-compra');
   $('#detalles').on('input', '.cantidad, .precio-compra', function () {
     var $tr = $(this).closest('tr');
@@ -347,16 +405,16 @@ function recalcularTotales() {
   $('.subtotal').each(function () {
     total += parseFloat($(this).text()) || 0;
   });
-  $('#total').html('S/. ' + total.toFixed(2));
+  $('#total').html(total.toFixed(2));
   $('#total_compra').val(total.toFixed(2));
   evaluar();
 }
 
 function evaluar() {
-  if (detalles > 0) {
-    $('#btnGuardar').show();
+  if (cantFilasDetalles > 0) {
+    $('#btnGuardar').prop('disabled', false);
   } else {
-    $('#btnGuardar').hide();
+    $('#btnGuardar').prop('disabled', true);
     cont = 0;
   }
 }
@@ -387,22 +445,13 @@ function calcularTotales() {
   }
   $('#total').html('S/.' + total);
   $('#total_compra').val(total);
-  evaluar();
-}
-
-function evaluar() {
-  if (detalles > 0) {
-    $('#btnGuardar').show();
-  } else {
-    $('#btnGuardar').hide();
-    cont = 0;
-  }
 }
 
 function eliminarDetalle(indice) {
   $('#fila' + indice).remove();
   calcularTotales();
-  detalles = detalles - 1;
+  cantFilasDetalles -= 1;
+  evaluar();
 }
 
 init();

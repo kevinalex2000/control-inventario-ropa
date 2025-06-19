@@ -6,24 +6,30 @@ class Ingreso
 
 
 	//implementamos nuestro constructor
-	public function __construct() {}
+	public function __construct()
+	{
+	}
 
 	//metodo insertar registro
-	public function insertar($idproveedor, $idusuario, $tipo_comprobante, $serie_comprobante, $num_comprobante, $fecha_hora, $impuesto, $total_compra, $idarticulo, $cantidad, $precio_compra, $precio_venta)
+	public function insertar($idusuario, $idpersona, $fechahora, $totalcompra, $detalleingreso)
 	{
-		$sql = "INSERT INTO ingreso (idproveedor,idusuario,tipo_comprobante,serie_comprobante,num_comprobante,fecha_hora,impuesto,total_compra,estado) VALUES ('$idproveedor','$idusuario','$tipo_comprobante','$serie_comprobante','$num_comprobante','$fecha_hora','$impuesto','$total_compra','Aceptado')";
-		//return ejecutarConsulta($sql);
+		$sql = "INSERT INTO ingreso (idproveedor,idusuario,fecha_hora,total_compra,estado) VALUES ('$idpersona','$idusuario','$fechahora','$totalcompra','Aceptado')";
 		$idingresonew = ejecutarConsulta_retornarID($sql);
-		$num_elementos = 0;
 		$sw = true;
-		while ($num_elementos < count($idarticulo)) {
 
-			$sql_detalle = "INSERT INTO detalle_ingreso (idingreso,idarticulo,cantidad,precio_compra,precio_venta) VALUES('$idingresonew','$idarticulo[$num_elementos]','$cantidad[$num_elementos]','$precio_compra[$num_elementos]','$precio_venta[$num_elementos]')";
+		foreach ($detalleingreso as $item) {
+			$idarticulo = $item['idarticulo'];
+			$preciocompra = $item['preciocompra'];
+			$cantidad = $item['cantidad'];
+			$idtalla = $item['idtalla'];
 
+			$sql_detalle = "INSERT INTO detalle_ingreso (idingreso,idarticulo,cantidad,precio_compra, idtalla) VALUES('$idingresonew','$idarticulo','$cantidad','$preciocompra','$idtalla')";
 			ejecutarConsulta($sql_detalle) or $sw = false;
 
-			$num_elementos = $num_elementos + 1;
+			$sql_actualizarstock = "UPDATE articulo_talla SET stock=stock+$cantidad WHERE idarticulo=$idarticulo AND idtalla=$idtalla";
+			ejecutarConsulta($sql_actualizarstock) or $sw = false;
 		}
+
 		return $sw;
 	}
 
@@ -47,7 +53,9 @@ class Ingreso
 
 	public function listarDetalle($idingreso)
 	{
-		$sql = "SELECT di.idingreso,di.idarticulo, t.nombre as talla, a.nombre as articulo, a.imagen, di.cantidad, di.precio_compra, di.precio_venta 
+		$sql = "SELECT di.idingreso,
+		di.idarticulo, t.nombre as talla, a.nombre as articulo, 
+		a.imagen, di.cantidad, di.precio_compra, di.precio_venta 
 		FROM detalle_ingreso di 
 		INNER JOIN articulo a ON di.idarticulo=a.idarticulo 
 		INNER JOIN talla t ON t.idtalla = di.idtalla
