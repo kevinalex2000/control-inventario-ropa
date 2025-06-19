@@ -234,12 +234,14 @@ function mostrar(idingreso) {
       data = JSON.parse(data);
       $('#idproveedor').val(data.idproveedor);
       $('#idproveedor').selectpicker('refresh');
-      $('#tipo_comprobante').val(data.tipo_comprobante);
-      $('#tipo_comprobante').selectpicker('refresh');
-      $('#serie_comprobante').val(data.serie_comprobante);
-      $('#num_comprobante').val(data.num_comprobante);
-      $('#fecha_hora').val(data.fecha);
-      $('#impuesto').val(data.impuesto);
+      $('#idproveedor').prop('disabled', true); // ← Desactiva el select
+
+      // Haz lo mismo con otros campos:
+      $('#fecha_hora').prop('readonly', true);
+      $('#tipo_comprobante').prop('disabled', true);
+      $('#serie_comprobante').prop('readonly', true);
+      $('#num_comprobante').prop('readonly', true);
+      $('#impuesto').prop('readonly', true);
       $('#idingreso').val(data.idingreso);
 
       //ocultar y mostrar los botones
