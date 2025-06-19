@@ -30,6 +30,13 @@ if (!isset($_SESSION['nombre'])) {
               <!--box-header-->
               <!--centro-->
               <div class="panel-body table-responsive" id="listadoregistros">
+                <div class="row" style="margin-bottom: 10px;">
+                  <!-- Campo Buscar -->
+                  <div class="col-md-12">
+                    <input type="text" id="buscarTabla" class="form-control" placeholder="Buscar en la tabla..."
+                      onkeyup="buscarEnTabla(this.value, tabla)">
+                  </div>
+                </div>
                 <table id="tbllistado" class="table table-striped table-bordered table-condensed table-hover">
                   <thead>
                     <tr>
