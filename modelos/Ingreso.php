@@ -32,10 +32,43 @@ class Ingreso
 
 		return $sw;
 	}
+	public function listar_ingre($fechadesde, $fechahasta, $idproveedor)
+	{
+		$sp = "sp_listar_ingresos";
+		return ejecutarSP($sp, [$fechadesde, $fechahasta, $idproveedor]);
+	}
+
 
 	public function anular($idingreso)
 	{
-		$sql = "UPDATE ingreso SET estado='Anulado' WHERE idingreso='$idingreso'";
+		// Obtener la fecha del ingreso
+		$sqlFecha = "SELECT DATE(fecha_hora) as fecha FROM ingreso WHERE idingreso='$idingreso'";
+		$rsptaFecha = ejecutarConsultaSimpleFila($sqlFecha);
+
+		$fechaIngreso = $rsptaFecha['fecha'];
+		$fechaHoy = date('Y-m-d');
+
+		// Si ya pasó el día, no permitir
+		if ($fechaIngreso != $fechaHoy) {
+			return false; // O puedes devolver un mensaje especial
+		}
+
+		// Obtener detalles del ingreso
+		$sqlDetalle = "SELECT idarticulo, idtalla, cantidad FROM detalle_ingreso WHERE idingreso='$idingreso'";
+		$rsptaDetalle = ejecutarConsulta($sqlDetalle);
+
+		// Restar el stock de cada artículo/talla
+		while ($reg = $rsptaDetalle->fetch_object()) {
+			$idarticulo = $reg->idarticulo;
+			$idtalla = $reg->idtalla;
+			$cantidad = $reg->cantidad;
+
+			$sqlUpdateStock = "UPDATE articulo_talla SET stock = stock - $cantidad WHERE idarticulo = $idarticulo AND idtalla = $idtalla";
+			ejecutarConsulta($sqlUpdateStock);
+		}
+
+		// Cambiar el estado a anulado solo si es aceptado
+		$sql = "UPDATE ingreso SET estado='Anulado' WHERE idingreso='$idingreso' AND estado='Aceptado'";
 		return ejecutarConsulta($sql);
 	}
 
