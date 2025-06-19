@@ -130,10 +130,9 @@ if (strlen(session_id()) < 1)
           }
           ?>
 
-          <!--
-               <?php
-               if ($_SESSION['ventas'] == 1) {
-                 echo '<li class="treeview">
+          <?php
+          if ($_SESSION['ventas'] == 1) {
+            echo '<li class="treeview">
           <a href="#">
             <i class="fa fa-shopping-cart"></i> <span>Ventas</span>
             <span class="pull-right-container">
@@ -145,9 +144,10 @@ if (strlen(session_id()) < 1)
             <li><a href="cliente.php"><i class="fa fa-circle-o"></i> clientes</a></li>
           </ul>
         </li>';
-               }
-               ?>
+          }
+          ?>
 
+          <!--
                              <?php
                              if ($_SESSION['acceso'] == 1) {
                                echo '  <li class="treeview">
