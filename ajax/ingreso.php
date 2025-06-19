@@ -37,9 +37,6 @@ switch ($_GET["op"]) {
 		break;
 
 	case 'listarDetalle':
-		//recibimos el idingreso
-		$id = $_GET['id'];
-
 		$rspta = $ingreso->listarDetalle($id);
 		$total = 0;
 		echo ' <thead>
