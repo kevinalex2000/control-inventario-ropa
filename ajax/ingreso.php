@@ -49,7 +49,6 @@ switch ($_GET["op"]) {
         <th>Talla</th>
         <th>Cantidad</th>
         <th>Precio Compra</th>
-        <th>Precio Venta</th>
         <th>Subtotal</th>
        </thead>';
 		while ($reg = $rspta->fetch_object()) {
@@ -60,7 +59,6 @@ switch ($_GET["op"]) {
 			<td>' . $reg->talla . '</td>
 			<td>' . $reg->cantidad . '</td>
 			<td>' . $reg->precio_compra . '</td>
-			<td>' . $reg->precio_venta . '</td>
 			<td>' . $reg->precio_compra * $reg->cantidad . '</td>
 			</tr>';
 			$total = $total + ($reg->precio_compra * $reg->cantidad);
@@ -71,7 +69,6 @@ switch ($_GET["op"]) {
          <th></th>
          <th></th>
          <th></th>
-		 <th></th>
 		 <th></th>
          <th><h4 id="total">S/. ' . $total . '</h4><input type="hidden" name="total_compra" id="total_compra"></th>
        </tfoot>';
@@ -84,7 +81,7 @@ switch ($_GET["op"]) {
 		while ($reg = $rspta->fetch_object()) {
 			$data[] = array(
 				"0" => ($reg->estado == 'Aceptado') ? '<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idingreso . ')"><i class="fa fa-eye"></i></button>' . ' ' . '<button class="btn btn-danger btn-xs" onclick="anular(' . $reg->idingreso . ')"><i class="fa fa-close"></i></button>' : '<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idingreso . ')"><i class="fa fa-eye"></i></button>',
-				"1" => $reg->fecha,
+				"1" => $reg->fecha_registro,
 				"2" => $reg->proveedor,
 				"3" => $reg->total_compra,
 				"4" => $reg->usuario,
