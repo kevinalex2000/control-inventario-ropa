@@ -50,7 +50,7 @@ class Ingreso
 		$sql = "SELECT di.idingreso,di.idarticulo, t.nombre as talla, a.nombre as articulo, a.imagen, di.cantidad, di.precio_compra, di.precio_venta 
 		FROM detalle_ingreso di 
 		INNER JOIN articulo a ON di.idarticulo=a.idarticulo 
-		INNER JOIN talla t ON t.idtalla = di.idtalla
+		INNER JOIN talla t ON t.idtalla = di.idtalla  
 		WHERE di.idingreso='$idingreso'";
 		return ejecutarConsulta($sql);
 	}

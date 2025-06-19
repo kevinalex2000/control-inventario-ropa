@@ -16,6 +16,7 @@ $impuesto = isset($_POST["impuesto"]) ? limpiarCadena($_POST["impuesto"]) : "";
 $total_compra = isset($_POST["total_compra"]) ? limpiarCadena($_POST["total_compra"]) : "";
 
 
+
 switch ($_GET["op"]) {
 	case 'guardaryeditar':
 		if (empty($idingreso)) {
@@ -37,6 +38,9 @@ switch ($_GET["op"]) {
 		break;
 
 	case 'listarDetalle':
+		//recibimos el idingreso
+		$id = $_GET['id'];
+
 		$rspta = $ingreso->listarDetalle($id);
 		$total = 0;
 		echo ' <thead>

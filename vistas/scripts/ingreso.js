@@ -249,7 +249,7 @@ function agregarDetalle(idarticulo, articulo, imagen, precio_venta) {
     alert('Debe seleccionar una talla para el producto');
     return;
   }
-
+  
   // Buscar si ya existe una fila con este artículo y talla
   var existe = false;
   $('#detalles tbody tr').each(function () {
