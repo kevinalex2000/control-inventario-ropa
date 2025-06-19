@@ -606,7 +606,6 @@ ADD COLUMN fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP;
 ALTER TABLE detalle_ingreso 
 ADD COLUMN idtalla INT AFTER idarticulo, 
 ADD CONSTRAINT fk_detalle_ingreso_talla FOREIGN KEY (idtalla) REFERENCES talla(idtalla);
-
 DELIMITER $$
 
 CREATE PROCEDURE sp_listar_ingresos (
@@ -630,6 +629,6 @@ BEGIN
     WHERE i.fecha_registro >= p_fechadesde
       AND i.fecha_registro < DATE_ADD(p_fechahasta, INTERVAL 1 DAY)
       AND (p_idproveedor IS NULL OR p.idpersona = p_idproveedor);
-END;
+END $$
 
 DELIMITER ;
