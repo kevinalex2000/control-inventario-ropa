@@ -57,7 +57,7 @@ if (!isset($_SESSION['nombre'])) {
 
                   <!-- Botón Excel -->
                   <div class="col-md-2" style="padding-top: 25px;">
-                    <button id="btnExportExcel" class="btn btn-sm" onclick="listar()">
+                    <button id="btnExportExcel" class="btn btn-sm" onclick="listarConFiltro()">
                       <span class="fa fa-filter"></span> Filtrar
                     </button>
                   </div>

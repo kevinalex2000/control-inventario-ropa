@@ -234,12 +234,14 @@ function mostrar(idingreso) {
       data = JSON.parse(data);
       $('#idproveedor').val(data.idproveedor);
       $('#idproveedor').selectpicker('refresh');
-      $('#tipo_comprobante').val(data.tipo_comprobante);
-      $('#tipo_comprobante').selectpicker('refresh');
-      $('#serie_comprobante').val(data.serie_comprobante);
-      $('#num_comprobante').val(data.num_comprobante);
-      $('#fecha_hora').val(data.fecha);
-      $('#impuesto').val(data.impuesto);
+      $('#idproveedor').prop('disabled', true); // ← Desactiva el select
+
+      // Haz lo mismo con otros campos:
+      $('#fecha_hora').prop('readonly', true);
+      $('#tipo_comprobante').prop('disabled', true);
+      $('#serie_comprobante').prop('readonly', true);
+      $('#num_comprobante').prop('readonly', true);
+      $('#impuesto').prop('readonly', true);
       $('#idingreso').val(data.idingreso);
 
       //ocultar y mostrar los botones
@@ -269,6 +271,39 @@ function mostrar(idingreso) {
     });
 
     $('#total').text(total);
+  });
+}
+
+function listarConFiltro() {
+  var fechaDesde = $('#fecha_desde').val();
+  var fechaHasta = $('#fecha_hasta').val();
+  var idProveedor = $('#filtroProveedor').val();
+
+  if (!fechaDesde) fechaDesde = null;
+  if (!fechaHasta) fechaHasta = null;
+  if (!idProveedor) idProveedor = null;
+
+  tabla = $('#tbllistado').DataTable({
+    destroy: true,
+    aProcessing: true,
+    aServerSide: true,
+    dom: 'Bfrtip',
+    buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdf'],
+    ajax: {
+      url: '../ajax/ingreso.php?op=listarFiltro',
+      type: 'POST',
+      dataType: 'json',
+      data: {
+        fecha_desde: fechaDesde,
+        fecha_hasta: fechaHasta,
+        idproveedor: idProveedor,
+      },
+      error: function (e) {
+        console.log(e.responseText);
+      },
+    },
+    iDisplayLength: 5,
+    order: [[0, 'desc']],
   });
 }
 
