@@ -600,3 +600,36 @@ DELIMITER ;
 ALTER TABLE articulo
 ADD COLUMN precio_venta DECIMAL(10,2) NOT NULL DEFAULT 0.00;
 
+ALTER TABLE ingreso 
+ADD COLUMN fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP;
+
+ALTER TABLE detalle_ingreso 
+ADD COLUMN idtalla INT AFTER idarticulo, 
+ADD CONSTRAINT fk_detalle_ingreso_talla FOREIGN KEY (idtalla) REFERENCES talla(idtalla);
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_listar_ingresos (
+    IN p_fechadesde DATE,
+    IN p_fechahasta DATE,
+    IN p_idproveedor INT
+)
+BEGIN
+    SELECT 
+    	i.idingreso,
+        p.idpersona,
+        p.nombre,
+        u.idusuario,
+        u.nombre,
+        i.fecha_hora,
+        i.estado,
+        i.fecha_registro
+    FROM ingreso i
+    LEFT JOIN persona p ON p.idpersona = i.idproveedor
+    LEFT JOIN usuario u ON u.idusuario = i.idusuario
+    WHERE i.fecha_registro >= p_fechadesde
+      AND i.fecha_registro < DATE_ADD(p_fechahasta, INTERVAL 1 DAY)
+      AND (p_idproveedor IS NULL OR p.idpersona = p_idproveedor);
+END;
+
+DELIMITER ;
