@@ -652,7 +652,8 @@ BEGIN
         u.nombre AS usuario,
         i.fecha_hora,
         i.estado,
-        i.fecha_registro
+        i.fecha_registro,
+        i.total_compra
     FROM ingreso i
     LEFT JOIN persona p ON p.idpersona = i.idproveedor
     LEFT JOIN usuario u ON u.idusuario = i.idusuario
