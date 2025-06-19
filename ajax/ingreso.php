@@ -42,9 +42,11 @@ switch ($_GET["op"]) {
 
 		$rspta = $ingreso->listarDetalle($id);
 		$total = 0;
-		echo ' <thead style="background-color:#A9D0F5">
+		echo ' <thead>
         <th>Opciones</th>
+        <th>Imagen</th>
         <th>Articulo</th>
+        <th>Talla</th>
         <th>Cantidad</th>
         <th>Precio Compra</th>
         <th>Precio Venta</th>
@@ -53,12 +55,13 @@ switch ($_GET["op"]) {
 		while ($reg = $rspta->fetch_object()) {
 			echo '<tr class="filas">
 			<td></td>
-			<td>' . $reg->nombre . '</td>
+			<td> <img src= "../files/articulos/' . $reg->imagen . '" width="50px" height="50"></td>
+			<td>' . $reg->articulo . '</td>
+			<td>' . $reg->talla . '</td>
 			<td>' . $reg->cantidad . '</td>
 			<td>' . $reg->precio_compra . '</td>
 			<td>' . $reg->precio_venta . '</td>
 			<td>' . $reg->precio_compra * $reg->cantidad . '</td>
-			<td></td>
 			</tr>';
 			$total = $total + ($reg->precio_compra * $reg->cantidad);
 		}
@@ -68,6 +71,8 @@ switch ($_GET["op"]) {
          <th></th>
          <th></th>
          <th></th>
+		 <th></th>
+		 <th></th>
          <th><h4 id="total">S/. ' . $total . '</h4><input type="hidden" name="total_compra" id="total_compra"></th>
        </tfoot>';
 		break;
