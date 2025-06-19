@@ -150,4 +150,30 @@ switch ($_GET["op"]) {
 		);
 		echo json_encode($results);
 		break;
+
+	case 'listarFiltro':
+		$fechadesde = !empty($_POST['fecha_desde']) ? $_POST['fecha_desde'] : null;
+		$fechahasta = !empty($_POST['fecha_hasta']) ? $_POST['fecha_hasta'] : null;
+		$idproveedor = !empty($_POST['idproveedor']) ? $_POST['idproveedor'] : null;
+
+		$rspta = $ingreso->listar_ingre($fechadesde, $fechahasta, $idproveedor);
+
+		$data = array();
+		while ($reg = $rspta->fetch_object()) {
+			$data[] = array(
+				"0" => '<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idingreso . ')"><i class="fa fa-eye"></i></button>',
+				"1" => $reg->fecha_registro,
+				"2" => $reg->proveedor,
+				"3" => "", // Si no hay total_compra
+				"4" => $reg->usuario,
+				"5" => $reg->estado
+			);
+		}
+		$results = array(
+			"sEcho" => 1,
+			"iTotalRecords" => count($data),
+			"iTotalDisplayRecords" => count($data),
+			"aaData" => $data
+		);
+		echo json_encode($results);
 }

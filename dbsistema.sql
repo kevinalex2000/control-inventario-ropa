@@ -617,9 +617,9 @@ BEGIN
     SELECT 
     	i.idingreso,
         p.idpersona,
-        p.nombre,
+        p.nombre as proveedor,
         u.idusuario,
-        u.nombre,
+        u.nombre as usuario,
         i.fecha_hora,
         i.estado,
         i.fecha_registro
@@ -631,5 +631,35 @@ BEGIN
       AND (p_idproveedor IS NULL OR p.idpersona = p_idproveedor);
 END $$
 
+DELIMITER ;
+CALL sp_listar_ingresos('2025-06-01', '2025-06-18', NULL);
+
+New PROCEDURE PARA QUE SE ESCOGA POR SEPARADO EL FILTRO
+
+DELIMITER $$
+
+CREATE PROCEDURE sp_listar_ingresos (
+    IN p_fechadesde DATE,
+    IN p_fechahasta DATE,
+    IN p_idproveedor INT
+)
+BEGIN
+    SELECT 
+        i.idingreso,
+        p.idpersona,
+        p.nombre AS proveedor,
+        u.idusuario,
+        u.nombre AS usuario,
+        i.fecha_hora,
+        i.estado,
+        i.fecha_registro
+    FROM ingreso i
+    LEFT JOIN persona p ON p.idpersona = i.idproveedor
+    LEFT JOIN usuario u ON u.idusuario = i.idusuario
+    WHERE 
+        (p_fechadesde IS NULL OR i.fecha_registro >= p_fechadesde)
+        AND (p_fechahasta IS NULL OR i.fecha_registro < DATE_ADD(p_fechahasta, INTERVAL 1 DAY))
+        AND (p_idproveedor IS NULL OR p.idpersona = p_idproveedor);
+END $$
 DELIMITER ;
 CALL sp_listar_ingresos('2025-06-01', '2025-06-18', NULL);

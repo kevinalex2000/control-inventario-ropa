@@ -274,6 +274,39 @@ function mostrar(idingreso) {
   });
 }
 
+function listarConFiltro() {
+  var fechaDesde = $('#fecha_desde').val();
+  var fechaHasta = $('#fecha_hasta').val();
+  var idProveedor = $('#filtroProveedor').val();
+
+  if (!fechaDesde) fechaDesde = null;
+  if (!fechaHasta) fechaHasta = null;
+  if (!idProveedor) idProveedor = null;
+
+  tabla = $('#tbllistado').DataTable({
+    destroy: true,
+    aProcessing: true,
+    aServerSide: true,
+    dom: 'Bfrtip',
+    buttons: ['copyHtml5', 'excelHtml5', 'csvHtml5', 'pdf'],
+    ajax: {
+      url: '../ajax/ingreso.php?op=listarFiltro',
+      type: 'POST',
+      dataType: 'json',
+      data: {
+        fecha_desde: fechaDesde,
+        fecha_hasta: fechaHasta,
+        idproveedor: idProveedor,
+      },
+      error: function (e) {
+        console.log(e.responseText);
+      },
+    },
+    iDisplayLength: 5,
+    order: [[0, 'desc']],
+  });
+}
+
 //funcion para desactivar
 function anular(idingreso) {
   bootbox.confirm('¿Esta seguro de desactivar este dato?', function (result) {
@@ -306,7 +339,7 @@ function agregarDetalle(idarticulo, articulo, imagen, precio_venta) {
     alert('Debe seleccionar una talla para el producto');
     return;
   }
-  
+
   // Buscar si ya existe una fila con este artículo y talla
   var existe = false;
   $('#detalles tbody tr').each(function () {
