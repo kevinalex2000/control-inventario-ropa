@@ -110,7 +110,7 @@ if (!isset($_SESSION['nombre'])) {
                   </div>
                   <div class="form-group col-lg-4 col-md-4 col-xs-12">
                     <label for="">Fecha(*): </label>
-                    <input class="form-control" type="date" name="fecha_hora" id="fecha_hora" required>
+                    <input class="form-control" type="date" name="fecha_hora" id="fecha_hora" readonly>
                   </div>
                   <!--
      <div class="form-group col-lg-6 col-md-6 col-xs-12">
@@ -149,24 +149,22 @@ if (!isset($_SESSION['nombre'])) {
                         <th>Talla</th>
                         <th>Cantidad</th>
                         <th>Precio Compra</th>
-                        <th>Precio Venta</th>
                         <th>Subtotal</th>
                       </thead>
-                      <tfoot>
-                        <th>TOTAL</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th>
-                          <h4 id="total">S/. 0.00</h4><input type="hidden" name="total_compra" id="total_compra">
-                        </th>
-                      </tfoot>
                       <tbody>
 
                       </tbody>
+                      <tfoot>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>Total (S/)</th>
+                        <th>
+                          <div id="total">S/. 0.00</div><input type="hidden" name="total_compra" id="total_compra">
+                        </th>
+                      </tfoot>
                     </table>
                   </div>
                   <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
