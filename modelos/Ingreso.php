@@ -37,13 +37,21 @@ class Ingreso
 	//metodo para mostrar registros
 	public function mostrar($idingreso)
 	{
-		$sql = "SELECT i.idingreso,DATE(i.fecha_hora) as fecha,i.idproveedor,p.nombre as proveedor,u.idusuario,u.nombre as usuario, i.tipo_comprobante,i.serie_comprobante,i.num_comprobante,i.total_compra,i.impuesto,i.estado FROM ingreso i INNER JOIN persona p ON i.idproveedor=p.idpersona INNER JOIN usuario u ON i.idusuario=u.idusuario WHERE idingreso='$idingreso'";
+		$sql = "SELECT i.idingreso,DATE(i.fecha_hora) as fecha,i.idproveedor,p.nombre as proveedor,u.idusuario,u.nombre as usuario, i.tipo_comprobante,i.serie_comprobante,i.num_comprobante,i.total_compra,i.impuesto,i.estado 
+		FROM ingreso i
+		INNER JOIN persona p ON i.idproveedor=p.idpersona 
+		INNER JOIN usuario u ON i.idusuario=u.idusuario 
+		WHERE idingreso='$idingreso'";
 		return ejecutarConsultaSimpleFila($sql);
 	}
 
 	public function listarDetalle($idingreso)
 	{
-		$sql = "SELECT di.idingreso,di.idarticulo,a.nombre,di.cantidad,di.precio_compra,di.precio_venta FROM detalle_ingreso di INNER JOIN articulo a ON di.idarticulo=a.idarticulo WHERE di.idingreso='$idingreso'";
+		$sql = "SELECT di.idingreso,di.idarticulo, t.nombre as talla, a.nombre as articulo, a.imagen, di.cantidad, di.precio_compra, di.precio_venta 
+		FROM detalle_ingreso di 
+		INNER JOIN articulo a ON di.idarticulo=a.idarticulo 
+		INNER JOIN talla t ON t.idtalla = di.idtalla
+		WHERE di.idingreso='$idingreso'";
 		return ejecutarConsulta($sql);
 	}
 
