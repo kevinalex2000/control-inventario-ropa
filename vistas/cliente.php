@@ -42,7 +42,7 @@ if (!isset($_SESSION['nombre'])) {
                     <th>Opciones</th>
                     <th>Nombre</th>
                     <th>Documento</th>
-                    <th>Número</th>
+                    <th>Numero</th>
                     <th>Teléfono</th>
                     <th>Email</th>
                   </thead>
@@ -87,8 +87,8 @@ if (!isset($_SESSION['nombre'])) {
                   </div>
                   <div class="form-group col-lg-6 col-md-6 col-xs-12">
                     <label for="">Teléfono(*)</label>
-                    <input class="form-control" type="text" name="telefono" id="telefono" maxlength="20"
-                      placeholder="Número de Telefono">
+                    <input class="form-control" type="number" name="telefono" id="telefono" maxlength="20"
+                      placeholder="Número de Telefono" required>
                   </div>
                   <div class="form-group col-lg-6 col-md-6 col-xs-12">
                     <label for="">Email</label>
