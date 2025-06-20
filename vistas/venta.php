@@ -69,9 +69,12 @@ if (!isset($_SESSION['nombre'])) {
                         <option value="">--Seleccione--</option>
                       </select>
                       <span class="input-group-btn">
-                        <button class="btn btn-default" style="margin-left: 10px;">
-                          <i class="fa fa-user-plus"></i> Creación rapida
-                        </button>
+                        <a data-toggle="modal" href="#modalCliente">
+
+                          <button class="btn btn-default" style="margin-left: 10px;">
+                            <i class="fa fa-user-plus"></i> Creación rapida
+                          </button>
+                        </a>
                       </span>
 
                     </div>
@@ -145,14 +148,15 @@ if (!isset($_SESSION['nombre'])) {
 
                   <div class="form-group col-md-3 form-inline">
                     <label for="">Cancelación: </label>
-                    <select name="tipo_comprobante" id="tipo_comprobante" class="form-control selectpicker" required>
+                    <select name="tipocancelacion" id="tipocancelacion" class="form-control selectpicker" required
+                      onchange="evaluarAbono()">
                       <option value="1">Total</option>
                       <option value="2">Parcial</option>
                     </select>
                   </div>
-                  <div class="col-md-3">
-                    <label for="">Abono: </label>
-                    <input class="form-control" type="number" placeholder="-">
+                  <div class="col-md-3" id="colAbono" style="display: none">
+                    <label for="">Abono(*): </label>
+                    <input name="abono" id="abono" class="form-control" type="number" placeholder="-">
                   </div>
                   <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding-top:25px;">
                     <button class="btn btn-primary" type="button" id="btnRealizarVenta" disabled><i class="fa fa-money"></i>
@@ -243,6 +247,41 @@ if (!isset($_SESSION['nombre'])) {
           <div class="modal-footer">
             <button class="btn btn-default" type="button" data-dismiss="modal">Cerrar</button>
           </div>
+        </div>
+      </div>
+    </div>
+    <!-- fin Modal-->
+
+    <!---->
+    <div class="modal fade" id="modalCliente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form id="formCreacionRapidaCliente" method="POST">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">Creación rápida de cliente</h4>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <input type="hidden" name="tipo_persona" class="form-control" value="Cliente">
+                <!-- Filtro Categoría -->
+                <div class="col-md-12 form-group">
+                  <label for="filtroCategoria">Nombre:</label>
+                  <input type="text" placeholder="Nombre del cliente" name="nombre" class="form-control">
+                </div>
+                <!-- Filtro Talla -->
+                <div class="col-md-12 form-group">
+                  <label for="filtroTalla">Teléfono(*):</label>
+                  <input type="phone" placeholder="Número de Telefono" name="telefono" id="telefonoCreacionRapida"
+                    class="form-control" maxlength="20" required>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-primary" type="submit">Crear</button>
+              <button class="btn btn-default" type="button" data-dismiss="modal">Cerrar</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
