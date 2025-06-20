@@ -5,6 +5,53 @@ if (strlen(session_id()) < 1)
 
 $venta = new Venta();
 
+
+function guardar()
+{
+	global $venta;
+
+	$idusuario = $_SESSION["idusuario"];
+	$input = file_get_contents('php://input');
+	$data = json_decode($input, true);
+
+	$idcliente = $data['idcliente'];
+	$fechahora = $data['fechahora'];
+	$idtipocancelacion = (int) $data['idtipocancelacion'];
+	$adelanto = $data['adelanto'];
+	$totalventa = 0;
+	$detalleventa = [];
+
+	foreach ($data['detalle'] as $item) {
+		$idarticulo = $item['idarticulo'];
+		$preciocompra = $item['precioventa'];
+		$cantidad = $item['cantidad'];
+		$idtalla = $item['idtalla'];
+		$descuento = $item['descuento'];
+		$subtotal = (floatval($preciocompra) * floatval($cantidad)) - $descuento;
+		$totalventa += $subtotal;
+		array_push($detalleventa, [
+			'precioventa' => $preciocompra,
+			'cantidad' => $cantidad,
+			'idarticulo' => $idarticulo,
+			'idtalla' => $idtalla,
+			'descuento' => $descuento,
+		]);
+	}
+
+	$rspta = $venta->insertar(
+		$idusuario,
+		$idcliente,
+		$fechahora,
+		$totalventa,
+		$idtipocancelacion,
+		$adelanto,
+		$detalleventa
+	);
+
+	return $rspta ? "Datos registrados correctamente" : "Error al registrar los datos";
+}
+
+
 $idventa = isset($_POST["idventa"]) ? limpiarCadena($_POST["idventa"]) : "";
 $idcliente = isset($_POST["idcliente"]) ? limpiarCadena($_POST["idcliente"]) : "";
 $idusuario = $_SESSION["idusuario"];
@@ -16,16 +63,9 @@ $impuesto = isset($_POST["impuesto"]) ? limpiarCadena($_POST["impuesto"]) : "";
 $total_venta = isset($_POST["total_venta"]) ? limpiarCadena($_POST["total_venta"]) : "";
 
 switch ($_GET["op"]) {
-	case 'guardaryeditar':
-		if (empty($idventa)) {
-			$rspta = $venta->insertar($idcliente, $idusuario, $tipo_comprobante, $serie_comprobante, $num_comprobante, $fecha_hora, $impuesto, $total_venta, $_POST["idarticulo"], $_POST["cantidad"], $_POST["precio_venta"], $_POST["descuento"]);
-			echo $rspta ? "Datos registrados correctamente" : "No se pudo registrar los datos";
-		} else {
-
-		}
+	case 'guardar':
+		echo guardar();
 		break;
-
-
 	case 'anular':
 		$rspta = $venta->anular($idventa);
 		echo $rspta ? "Ingreso anulado correctamente" : "No se pudo anular el ingreso";

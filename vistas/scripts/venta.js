@@ -120,6 +120,9 @@ function limpiar() {
   //marcamos el primer tipo_documento
   $('#tipo_comprobante').val('Boleta');
   $('#tipo_comprobante').selectpicker('refresh');
+
+  $('#idcliente').val('');
+  $('#idcliente').selectpicker('refresh');
 }
 
 //funcion mostrar formulario
@@ -215,7 +218,7 @@ function listarArticulos() {
               data.precioventa +
               ",'" +
               data.imagen +
-              "'" + 
+              "'" +
               ')"><span class="fa fa-plus"></span></button>'
             );
           },
@@ -366,7 +369,7 @@ function verificarBotonVenta() {
   var filas = $('#detalles tr.filas');
   var habilitar = false;
 
-  filas.each(function() {
+  filas.each(function () {
     var cantidad = parseInt($(this).find('input[name="cantidad[]"]').val()) || 0;
     var stock = parseInt($(this).find('td').eq(4).text()) || 0;
     // Si hay al menos una fila con cantidad válida y stock suficiente, habilita el botón
@@ -395,12 +398,12 @@ function agregarDetalle(idarticulo, articulo, precio_venta, imagen) {
     return;
   }
 
-  var articuloObj = datarticulos.find(item => item.idarticulo == idarticulo);
+  var articuloObj = datarticulos.find((item) => item.idarticulo == idarticulo);
   if (!articuloObj) {
     alert('Artículo no encontrado');
     return;
   }
-  var stockObj = articuloObj.detallestock.find(item => item.idtalla == idtalla);
+  var stockObj = articuloObj.detallestock.find((item) => item.idtalla == idtalla);
   if (!stockObj) {
     alert('No hay stock para esta talla');
     return;
@@ -428,16 +431,48 @@ function agregarDetalle(idarticulo, articulo, precio_venta, imagen) {
     var subtotal = precio_venta * cantidad - descuento;
 
     var fila =
-      '<tr class="filas" id="' + filaId + '">' +
-      '<td><button type="button" class="btn btn-danger" onclick="eliminarDetalle(\'' + filaId + '\')">X</button></td>' +
-      '<td><img src="../files/articulos/' + imagen + '" width="50" height="50"></td>' +
-      '<td><input type="hidden" name="idarticulo[]" value="' + idarticulo + '">' + articulo + '</td>' +
-      '<td><input type="hidden" name="idtalla[]" value="' + idtalla + '">' + nombreTalla + '</td>' +
-      '<td>' + stock + '</td>' +
-      '<td><input type="number" name="cantidad[]" value="' + cantidad + '" min="1" max="' + stock + '" onchange="actualizarSubtotal(\'' + filaId + '\')"></td>' +
-      '<td><input type="number" name="precio_venta[]" value="' + precio_venta + '" readonly></td>' +
-      '<td><input type="number" name="descuento[]" value="' + descuento + '" onchange="actualizarSubtotal(\'' + filaId + '\')"></td>' +
-      '<td><span id="subtotal' + filaId + '" name="subtotal">' + subtotal + '</span></td>' +
+      '<tr class="filas" id="' +
+      filaId +
+      '">' +
+      '<td><button type="button" class="btn btn-danger" onclick="eliminarDetalle(\'' +
+      filaId +
+      '\')">X</button></td>' +
+      '<td><img src="../files/articulos/' +
+      imagen +
+      '" width="50" height="50"></td>' +
+      '<td><input type="hidden" name="idarticulo[]" value="' +
+      idarticulo +
+      '">' +
+      articulo +
+      '</td>' +
+      '<td><input type="hidden" name="idtalla[]" value="' +
+      idtalla +
+      '">' +
+      nombreTalla +
+      '</td>' +
+      '<td>' +
+      stock +
+      '</td>' +
+      '<td><input type="number" name="cantidad[]" value="' +
+      cantidad +
+      '" min="1" max="' +
+      stock +
+      '" onchange="actualizarSubtotal(\'' +
+      filaId +
+      '\')"></td>' +
+      '<td><input type="number" name="precio_venta[]" value="' +
+      precio_venta +
+      '" readonly></td>' +
+      '<td><input type="number" name="descuento[]" value="' +
+      descuento +
+      '" onchange="actualizarSubtotal(\'' +
+      filaId +
+      '\')"></td>' +
+      '<td><span id="subtotal' +
+      filaId +
+      '" name="subtotal">' +
+      subtotal +
+      '</span></td>' +
       '</tr>';
     $('#detalles').append(fila);
     modificarSubtotales();
@@ -458,12 +493,12 @@ function actualizarSubtotal(filaId) {
     cantidad = stock;
     cantidadInput.val(stock);
     alert('No puedes ingresar una cantidad mayor al stock disponible');
-  } else if(cantidad < 1) {
+  } else if (cantidad < 1) {
     cantidad = 1;
     cantidadInput.val(1);
   }
 
-  var subtotal = (cantidad * precio) - descuento;
+  var subtotal = cantidad * precio - descuento;
   fila.find('span[name="subtotal"]').text(subtotal);
   modificarSubtotales();
   verificarBotonVenta();
@@ -514,6 +549,5 @@ function eliminarDetalle(filaId) {
   modificarSubtotales(); // Si tienes esta función para actualizar el total, inclúyela aquí
   verificarBotonVenta();
 }
-
 
 init();
