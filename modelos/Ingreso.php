@@ -41,16 +41,22 @@ class Ingreso
 
 	public function anular($idingreso)
 	{
+		date_default_timezone_set('America/Lima'); // O tu zona
+
 		// Obtener la fecha del ingreso
-		$sqlFecha = "SELECT DATE(fecha_hora) as fecha FROM ingreso WHERE idingreso='$idingreso'";
+		$sqlFecha = "SELECT DATE(fecha_registro) as fecha FROM ingreso WHERE idingreso='$idingreso'";
 		$rsptaFecha = ejecutarConsultaSimpleFila($sqlFecha);
 
-		$fechaIngreso = $rsptaFecha['fecha'];
+		$fechaIngreso = $rsptaFecha['fecha'] ?? null;
 		$fechaHoy = date('Y-m-d');
+
+		if (!$fechaIngreso) {
+			return array('status' => 'error', 'message' => 'No se encontró el ingreso.');
+		}
 
 		// Si ya pasó el día, no permitir
 		if ($fechaIngreso != $fechaHoy) {
-			return false; // O puedes devolver un mensaje especial
+			return array('status' => 'error', 'message' => '¡No se puede anular el ingreso porque no es del día actual!');
 		}
 
 		// Obtener detalles del ingreso
@@ -69,9 +75,14 @@ class Ingreso
 
 		// Cambiar el estado a anulado solo si es aceptado
 		$sql = "UPDATE ingreso SET estado='Anulado' WHERE idingreso='$idingreso' AND estado='Aceptado'";
-		return ejecutarConsulta($sql);
-	}
+		$ok = ejecutarConsulta($sql);
 
+		if ($ok) {
+			return array('status' => 'ok', 'message' => 'Ingreso anulado correctamente');
+		} else {
+			return array('status' => 'error', 'message' => 'No se pudo anular el ingreso');
+		}
+	}
 
 	//metodo para mostrar registros
 	public function mostrar($idingreso)

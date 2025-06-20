@@ -86,12 +86,15 @@ switch ($_GET["op"]) {
 		echo (guardar());
 		break;
 
-
 	case 'anular':
 		$rspta = $ingreso->anular($idingreso);
-		echo $rspta ? "Ingreso anulado correctamente" : "No se pudo anular el ingreso";
+		if (is_array($rspta)) {
+			echo $rspta['message'];
+		} else {
+			echo $rspta ? "Ingreso anulado correctamente" : "No se pudo anular el ingreso";
+		}
 		break;
-
+		
 	case 'mostrar':
 		$rspta = $ingreso->mostrar($idingreso);
 		echo json_encode($rspta);
@@ -161,12 +164,12 @@ switch ($_GET["op"]) {
 		$data = array();
 		while ($reg = $rspta->fetch_object()) {
 			$data[] = array(
-				"0" => '<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idingreso . ')"><i class="fa fa-eye"></i></button>',
+				"0" => ($reg->estado == 'Aceptado') ? '<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idingreso . ')"><i class="fa fa-eye"></i></button>' . ' ' . '<button class="btn btn-danger btn-xs" onclick="anular(' . $reg->idingreso . ')"><i class="fa fa-close"></i></button>' : '<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idingreso . ')"><i class="fa fa-eye"></i></button>',
 				"1" => $reg->fecha_registro,
 				"2" => $reg->proveedor,
-				"3" => "", // Si no hay total_compra
+				"3" => $reg->total_compra,
 				"4" => $reg->usuario,
-				"5" => $reg->estado
+				"5" => ($reg->estado == 'Aceptado') ? '<span class="label bg-green">Aceptado</span>' : '<span class="label bg-red">Anulado</span>'
 			);
 		}
 		$results = array(
