@@ -3,6 +3,7 @@ var tablaarticulos;
 var impuesto = 18;
 var cont = 0;
 var detalles = 0;
+var datarticulos = [];
 
 //funcion que se ejecuta al inicio
 function init() {
@@ -155,6 +156,9 @@ function listarArticulos() {
           data: null,
           orderable: false,
           render: function (data, type, row, meta) {
+            if (!datarticulos.some((a) => a.idarticulo == data.idarticulo)) {
+              datarticulos.push(data);
+            }
             return (
               '<button class="btn btn-warning" onclick="agregarDetalle(' +
               data.idarticulo +
@@ -162,6 +166,9 @@ function listarArticulos() {
               data.nombre +
               "'," +
               data.precioventa +
+              ",'" +
+              data.imagen +
+              "'" + 
               ')"><span class="fa fa-plus"></span></button>'
             );
           },
@@ -307,47 +314,86 @@ function marcarImpuesto() {
   }
 }
 
-function agregarDetalle(idarticulo, articulo, precio_venta) {
-  var cantidad = 1;
-  var descuento = 0;
+function agregarDetalle(idarticulo, articulo, precio_venta, imagen) {
+  var selectTalla = $('.select-talla[data-idarticulo="' + idarticulo + '"]');
+  var idtalla = selectTalla.val();
+  var nombreTalla = selectTalla.find('option:selected').text();
 
-  if (idarticulo != '') {
-    var subtotal = cantidad * precio_venta;
+  if (!idtalla) {
+    alert('Debe seleccionar una talla para el producto');
+    return;
+  }
+
+  var articuloObj = datarticulos.find(item => item.idarticulo == idarticulo);
+  if (!articuloObj) {
+    alert('Artículo no encontrado');
+    return;
+  }
+  var stockObj = articuloObj.detallestock.find(item => item.idtalla == idtalla);
+  if (!stockObj) {
+    alert('No hay stock para esta talla');
+    return;
+  }
+  var stock = stockObj.stock;
+
+  var filaId = 'fila' + idarticulo + '_' + idtalla;
+  var filaExistente = $('#' + filaId);
+
+  if (filaExistente.length > 0) {
+    // Ya existe, aumentar cantidad y actualizar subtotal
+    var cantidadInput = filaExistente.find('input[name="cantidad[]"]');
+    var cantidadActual = parseInt(cantidadInput.val());
+    var nuevaCantidad = cantidadActual + 1;
+    if (nuevaCantidad > stock) {
+      alert('No hay suficiente stock para esta talla');
+      return;
+    }
+    cantidadInput.val(nuevaCantidad);
+    actualizarSubtotal(filaId);
+  } else {
+    // No existe, agrega la fila nueva
+    var cantidad = 1;
+    var descuento = 0;
+    var subtotal = precio_venta * cantidad - descuento;
+
     var fila =
-      '<tr class="filas" id="fila' +
-      cont +
-      '">' +
-      '<td><button type="button" class="btn btn-danger" onclick="eliminarDetalle(' +
-      cont +
-      ')">X</button></td>' +
-      '<td><input type="hidden" name="idarticulo[]" value="' +
-      idarticulo +
-      '">' +
-      articulo +
-      '</td>' +
-      '<td><input type="number" name="cantidad[]" id="cantidad[]" value="' +
-      cantidad +
-      '"></td>' +
-      '<td><input type="number" name="precio_venta[]" id="precio_venta[]" value="' +
-      precio_venta +
-      '"></td>' +
-      '<td><input type="number" name="descuento[]" value="' +
-      descuento +
-      '"></td>' +
-      '<td><span id="subtotal' +
-      cont +
-      '" name="subtotal">' +
-      subtotal +
-      '</span></td>' +
-      '<td><button type="button" onclick="modificarSubtotales()" class="btn btn-info"><i class="fa fa-refresh"></i></button></td>' +
+      '<tr class="filas" id="' + filaId + '">' +
+      '<td><button type="button" class="btn btn-danger" onclick="eliminarDetalle(\'' + filaId + '\')">X</button></td>' +
+      '<td><img src="../files/articulos/' + imagen + '" width="50" height="50"></td>' +
+      '<td><input type="hidden" name="idarticulo[]" value="' + idarticulo + '">' + articulo + '</td>' +
+      '<td><input type="hidden" name="idtalla[]" value="' + idtalla + '">' + nombreTalla + '</td>' +
+      '<td>' + stock + '</td>' +
+      '<td><input type="number" name="cantidad[]" value="' + cantidad + '" min="1" max="' + stock + '" onchange="actualizarSubtotal(\'' + filaId + '\')"></td>' +
+      '<td><input type="number" name="precio_venta[]" value="' + precio_venta + '" readonly></td>' +
+      '<td><input type="number" name="descuento[]" value="' + descuento + '" onchange="actualizarSubtotal(\'' + filaId + '\')"></td>' +
+      '<td><span id="subtotal' + filaId + '" name="subtotal">' + subtotal + '</span></td>' +
       '</tr>';
-    cont++;
-    detalles++;
     $('#detalles').append(fila);
     modificarSubtotales();
-  } else {
-    alert('error al ingresar el detalle, revisar las datos del articulo ');
   }
+}
+
+function actualizarSubtotal(filaId) {
+  var fila = $('#' + filaId);
+  var cantidadInput = fila.find('input[name="cantidad[]"]');
+  var cantidad = parseInt(cantidadInput.val()) || 0;
+  var precio = parseFloat(fila.find('input[name="precio_venta[]"]').val()) || 0;
+  var descuento = parseFloat(fila.find('input[name="descuento[]"]').val()) || 0;
+  var stock = parseInt(fila.find('td').eq(4).text()) || 0; // La columna de stock
+
+  // Si la cantidad supera el stock, la ajustamos
+  if (cantidad > stock) {
+    cantidad = stock;
+    cantidadInput.val(stock);
+    alert('No puedes ingresar una cantidad mayor al stock disponible');
+  } else if(cantidad < 1) {
+    cantidad = 1;
+    cantidadInput.val(1);
+  }
+
+  var subtotal = (cantidad * precio) - descuento;
+  fila.find('span[name="subtotal"]').text(subtotal);
+  modificarSubtotales();
 }
 
 function modificarSubtotales() {

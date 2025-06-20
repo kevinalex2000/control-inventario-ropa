@@ -6,7 +6,9 @@ class Persona
 
 
 	//implementamos nuestro constructor
-	public function __construct() {}
+	public function __construct()
+	{
+	}
 
 	//metodo insertar regiustro
 	public function insertar($tipo_persona, $nombre, $tipo_documento, $num_documento, $direccion, $telefono, $email)
