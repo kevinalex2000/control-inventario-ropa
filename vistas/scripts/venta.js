@@ -314,6 +314,30 @@ function marcarImpuesto() {
   }
 }
 
+function verificarBotonVenta() {
+  // Busca todas las filas de productos
+  var filas = $('#detalles tr.filas');
+  var habilitar = false;
+
+  filas.each(function() {
+    var cantidad = parseInt($(this).find('input[name="cantidad[]"]').val()) || 0;
+    var stock = parseInt($(this).find('td').eq(4).text()) || 0;
+    // Si hay al menos una fila con cantidad válida y stock suficiente, habilita el botón
+    if (cantidad > 0 && cantidad <= stock) {
+      habilitar = true;
+    }
+    // Si encuentra una fila sin stock, no habilita el botón
+    if (stock === 0 || cantidad === 0 || cantidad > stock) {
+      habilitar = false;
+      return false; // corta el each
+    }
+  });
+
+  if (filas.length === 0) habilitar = false;
+
+  $('#btnRealizarVenta').prop('disabled', !habilitar);
+}
+
 function agregarDetalle(idarticulo, articulo, precio_venta, imagen) {
   var selectTalla = $('.select-talla[data-idarticulo="' + idarticulo + '"]');
   var idtalla = selectTalla.val();
@@ -352,7 +376,7 @@ function agregarDetalle(idarticulo, articulo, precio_venta, imagen) {
     actualizarSubtotal(filaId);
   } else {
     // No existe, agrega la fila nueva
-    var cantidad = 1;
+    var cantidad = 0;
     var descuento = 0;
     var subtotal = precio_venta * cantidad - descuento;
 
@@ -370,6 +394,7 @@ function agregarDetalle(idarticulo, articulo, precio_venta, imagen) {
       '</tr>';
     $('#detalles').append(fila);
     modificarSubtotales();
+    verificarBotonVenta();
   }
 }
 
@@ -394,6 +419,7 @@ function actualizarSubtotal(filaId) {
   var subtotal = (cantidad * precio) - descuento;
   fila.find('span[name="subtotal"]').text(subtotal);
   modificarSubtotales();
+  verificarBotonVenta();
 }
 
 function modificarSubtotales() {
@@ -436,10 +462,11 @@ function evaluar() {
   }
 }
 
-function eliminarDetalle(indice) {
-  $('#fila' + indice).remove();
-  calcularTotales();
-  detalles = detalles - 1;
+function eliminarDetalle(filaId) {
+  $('#' + filaId).remove();
+  modificarSubtotales(); // Si tienes esta función para actualizar el total, inclúyela aquí
+  verificarBotonVenta();
 }
+
 
 init();

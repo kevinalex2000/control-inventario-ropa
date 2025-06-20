@@ -155,7 +155,7 @@ if (!isset($_SESSION['nombre'])) {
                     <input class="form-control" type="number" placeholder="-">
                   </div>
                   <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding-top:25px;">
-                    <button class="btn btn-primary" type="submit" id="btnGuardar"><i class="fa fa-money"></i>
+                    <button class="btn btn-primary" type="button" id="btnRealizarVenta" disabled><i class="fa fa-money"></i>
                       Realizar Venta</button>
                     <button class="btn btn-danger" onclick="cancelarform()" type="button" id="btnCancelar"><i
                         class="fa fa-arrow-circle-left"></i> Cancelar</button>
