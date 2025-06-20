@@ -25,7 +25,7 @@ class Articulo
 		foreach ($stockxtallas as $stockTalla) {
 			$idtalla = $stockTalla['idtalla'];
 			$stock = $stockTalla['stock'];
-			$sql_stockxtalla = "INSERT INTO articulo_talla (idarticulo, idtalla, stock) VALUES ('$idarticulo_new', $idtalla, '$stock')";
+			$sql_stockxtalla = "INSERT INTO articulo_talla (idarticulo, idtalla, stock, stock_inicial) VALUES ('$idarticulo_new', $idtalla, $stock, $stock)";
 			ejecutarConsulta($sql_stockxtalla);
 		}
 

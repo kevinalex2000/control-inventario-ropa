@@ -14,10 +14,67 @@ function init() {
     guardaryeditar(e);
   });
 
+  $.getJSON('../ajax/talla.php', function (r) {
+    const filtroTalla = $('#filtroTalla');
+
+    r.forEach((talla) => {
+      const option = `<option value="${talla.idtalla}">${talla.nombre}</option>`;
+      filtroTalla.append(option);
+    });
+  });
+
+  $.post('../ajax/articulo.php?op=selectCategoria', function (r) {
+    $('#idcategoria').html(r);
+    $('#idcategoria').selectpicker('refresh');
+    $('#filtroCategoria').html(r.replace('--Seleccione--', 'Todas'));
+  });
+
+  cargarClientes(null);
+
+  $('#formCreacionRapidaCliente').on('submit', function (e) {
+    e.preventDefault(); // evita recarga
+    let formData = new FormData(this);
+    const telefono = $('#telefonoCreacionRapida').val();
+
+    $.ajax({
+      url: '../ajax/persona.php?op=guardaryeditar',
+      type: 'POST',
+      data: formData,
+      contentType: false,
+      processData: false,
+      success: function (respuesta) {
+        cargarClientes(telefono);
+        $('#formCreacionRapidaCliente')[0].reset();
+        $('#modalCliente').modal('hide');
+      },
+      error: function (xhr, status, error) {
+        $('#formCreacionRapidaCliente')[0].reset();
+        console.error('Error en el envío:', error);
+      },
+    });
+  });
+}
+
+function evaluarAbono() {
+  const idtipocancelacion = parseInt($('#tipocancelacion').val());
+  $('#abono').val('');
+
+  if (idtipocancelacion == 1) {
+    $('#colAbono').hide();
+    $('#abono').removeAttr('required');
+  } else {
+    $('#colAbono').show();
+    $('#abono').attr('required', 'true');
+  }
+}
+
+function cargarClientes(telefono) {
   //cargamos los items al select cliente
   $.getJSON('../ajax/persona.php?op=listar&idtipopersona=1', function (r) {
     const selectCliente = $('#idcliente');
-    //const filtroCliente = $('#filtroProveedor');
+    selectCliente.html('');
+
+    selectCliente.append(`<option value="">--Seleccione--</option>`);
 
     r.forEach((cliente) => {
       const numdoc =
@@ -31,22 +88,12 @@ function init() {
       selectCliente.append(option);
     });
 
+    if (telefono != null) {
+      let idpersona = r.find((x) => x.telefono == telefono).idpersona;
+      selectCliente.val(idpersona);
+    }
+
     $('#idcliente').selectpicker('refresh');
-
-    $.post('../ajax/articulo.php?op=selectCategoria', function (r) {
-      $('#idcategoria').html(r);
-      $('#idcategoria').selectpicker('refresh');
-      $('#filtroCategoria').html(r.replace('--Seleccione--', 'Todas'));
-    });
-  });
-
-  $.getJSON('../ajax/talla.php', function (r) {
-    const filtroTalla = $('#filtroTalla');
-
-    r.forEach((talla) => {
-      const option = `<option value="${talla.idtalla}">${talla.nombre}</option>`;
-      filtroTalla.append(option);
-    });
   });
 }
 

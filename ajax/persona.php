@@ -46,7 +46,6 @@ switch ($_GET["op"]) {
 		}
 		break;
 
-
 	case 'eliminar':
 		$rspta = $persona->eliminar($idpersona);
 		echo $rspta ? "Datos eliminados correctamente" : "No se pudo eliminar los datos. Valide que no tenga registros asociadas.";

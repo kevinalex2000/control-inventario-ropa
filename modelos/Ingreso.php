@@ -10,7 +10,6 @@ class Ingreso
 	{
 	}
 
-	//metodo insertar registro
 	public function insertar($idusuario, $idpersona, $fechahora, $totalcompra, $detalleingreso)
 	{
 		$sql = "INSERT INTO ingreso (idproveedor,idusuario,fecha_hora,total_compra,estado) VALUES ('$idpersona','$idusuario','$fechahora','$totalcompra','Aceptado')";
@@ -32,12 +31,12 @@ class Ingreso
 
 		return $sw;
 	}
+
 	public function listar_ingre($fechadesde, $fechahasta, $idproveedor)
 	{
 		$sp = "sp_listar_ingresos";
 		return ejecutarSP($sp, [$fechadesde, $fechahasta, $idproveedor]);
 	}
-
 
 	public function anular($idingreso)
 	{

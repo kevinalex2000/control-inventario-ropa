@@ -647,7 +647,7 @@ ADD CONSTRAINT fk_detalle_venta_talla FOREIGN KEY (idtalla) REFERENCES talla(idt
 
 ALTER TABLE venta
 ADD COLUMN idtipo_cancelacion INT NULL;
- 
+
 UPDATE venta SET idtipo_cancelacion = 1;
 
 ALTER TABLE venta MODIFY COLUMN idtipo_cancelacion INT NOT NULL;
