@@ -1,4 +1,5 @@
 var tabla;
+var tablaarticulos;
 var impuesto = 18;
 var cont = 0;
 var detalles = 0;
@@ -31,6 +32,21 @@ function init() {
     });
 
     $('#idcliente').selectpicker('refresh');
+
+    $.post('../ajax/articulo.php?op=selectCategoria', function (r) {
+      $('#idcategoria').html(r);
+      $('#idcategoria').selectpicker('refresh');
+      $('#filtroCategoria').html(r.replace('--Seleccione--', 'Todas'));
+    });
+  });
+
+  $.getJSON('../ajax/talla.php', function (r) {
+    const filtroTalla = $('#filtroTalla');
+
+    r.forEach((talla) => {
+      const option = `<option value="${talla.idtalla}">${talla.nombre}</option>`;
+      filtroTalla.append(option);
+    });
   });
 }
 
@@ -109,23 +125,116 @@ function listar() {
 }
 
 function listarArticulos() {
-  tabla = $('#tblarticulos')
+  let valorFiltroTalla = $('#filtroTalla').val();
+  let textoTalla = '(' + $('#filtroTalla option:selected').text() + ')';
+
+  if (valorFiltroTalla === '') {
+    textoTalla = '';
+  }
+
+  $('.tallafiltrada').text(textoTalla);
+  tablaarticulos = $('#tblarticulos')
     .dataTable({
       aProcessing: true, //activamos el procedimiento del datatable
       aServerSide: true, //paginacion y filrado realizados por el server
       dom: 'Bfrtip', //definimos los elementos del control de la tabla
       buttons: [],
       ajax: {
-        url: '../ajax/venta.php?op=listarArticulos',
+        url: '../ajax/articulo.php?op=listar',
         type: 'get',
         dataType: 'json',
-        error: function (e) {
-          console.log(e.responseText);
+        dataSrc: '',
+        data: function (d) {
+          d.idcategoria = $('#filtroCategoria').val();
+          d.idtalla = valorFiltroTalla;
+          d.condicion = $('#filtroEstado').val();
         },
       },
+      columns: [
+        {
+          data: null,
+          orderable: false,
+          render: function (data, type, row, meta) {
+            return (
+              '<button class="btn btn-warning" onclick="agregarDetalle(' +
+              data.idarticulo +
+              ",'" +
+              data.nombre +
+              "'," +
+              data.precioventa +
+              ')"><span class="fa fa-plus"></span></button>'
+            );
+          },
+        },
+        {
+          data: null,
+          orderable: false,
+          render: function (data, type, row, meta) {
+            var idarticulo = data.idarticulo;
+            var select =
+              '<select class="form-control input-sm select-talla" style="width: 80px;" data-idarticulo="' +
+              idarticulo +
+              '">';
+            select += '<option value="">-</option>';
+
+            let listatallas = data.detallestock;
+
+            for (var i = 0; i < listatallas.length; i++) {
+              select +=
+                '<option value="' +
+                listatallas[i].idtalla +
+                '">' +
+                listatallas[i].talla +
+                '</option>';
+            }
+            select += '</select>';
+            return select;
+          },
+        },
+        {
+          data: null,
+          render: function (data, type, row, meta) {
+            return (
+              '<img src="../files/articulos/' + data.imagen + '" height="50px" width="50px"></img>'
+            );
+          },
+        },
+        { data: 'nombre' },
+        { data: 'categoria' },
+        { data: 'codigo' },
+        {
+          data: null,
+          render: function (data, type, row, meta) {
+            var texto = data.stock;
+
+            /*
+            let listatallas = data.detallestock;
+
+            if (data.stock > 0) {
+              texto +=
+                '<div style="width: 100%; max-width: 100px; overflow-x: scroll; white-space: nowrap;">';
+
+              for (var i = 0; i < listatallas.length; i++) {
+                if (listatallas[i].stock > 0) {
+                  texto += listatallas[i].talla + ': ' + listatallas[i].stock;
+
+                  if (i < listatallas.length - 1) {
+                    texto += ' - ';
+                  }
+                }
+              }
+              texto += '</div>';
+            }
+              */
+
+            return texto;
+          },
+        },
+        { data: 'precioventa' },
+      ],
       bDestroy: true,
-      iDisplayLength: 5, //paginacion
-      order: [[0, 'desc']], //ordenar (columna, orden)
+      iDisplayLength: 10, //paginacion
+      order: [], //ordenar (columna, orden)
     })
     .DataTable();
 }

@@ -6,7 +6,9 @@ class Articulo
 {
 
 	//implementamos nuestro constructor
-	public function __construct() {}
+	public function __construct()
+	{
+	}
 
 	//metodo insertar regiustro
 	public function insertar($idcategoria, $codigo, $nombre, $descripcion, $imagen, $precioventa, $stockxtallas)
@@ -85,7 +87,7 @@ class Articulo
 	public function mostrar($idarticulo)
 	{
 		$sql = "SELECT * FROM articulo WHERE idarticulo='$idarticulo'";
-		$sqltalla = "SELECT art.idarticulo, tal.idtalla, tal.nombre as talla, art.stock FROM `articulo_talla` art  join talla tal ON tal.idtalla = art.idtalla WHERE idarticulo = '$idarticulo'";
+		$sqltalla = "SELECT art.idarticulo, tal.idtalla, tal.nombre, art.stock FROM `articulo_talla` art  join talla tal ON tal.idtalla = art.idtalla WHERE idarticulo = '$idarticulo'";
 		$producto = ejecutarConsultaSimpleFila($sql);
 		$stocktallas = ejecutarConsulta($sqltalla);
 
@@ -95,7 +97,7 @@ class Articulo
 		while ($fila = $stocktallas->fetch_assoc()) {
 			$detallestock[] = [
 				'idtalla' => $fila['idtalla'],
-				'talla' => $fila['talla'],
+				'talla' => $fila['nombre'],
 				'stock' => (int) $fila['stock']
 			];
 
@@ -120,10 +122,48 @@ class Articulo
 	}
 
 	//listar registros 
-	public function listar($idcategoria, $idtalla, $condicion)
+	public function Listar($idcategoria, $idtalla, $condicion)
 	{
+		$resultado = array();
 		$sp = "sp_listar_articulos";
-		return ejecutarSP($sp, [$idcategoria, $idtalla, $condicion]);
+		$rspta = ejecutarSP($sp, [$idcategoria, $idtalla, $condicion]);
+
+		while ($reg = $rspta->fetch_object()) {
+			$resultado[] = (object) [
+				"idarticulo" => (int) $reg->idarticulo,
+				"codigo" => $reg->codigo,
+				"nombre" => $reg->nombre,
+				"condicion" => $reg->condicion,
+				"categoria" => $reg->categoria,
+				"stock" => (int) $reg->stock,
+				"imagen" => $reg->imagen,
+				"descripcion" => $reg->descripcion,
+				"precioventa" => (float) $reg->precio_venta,
+			];
+		}
+
+		return $resultado;
+	}
+
+	public function ListarStockTallas($idarticulo)
+	{
+		$resultado = array();
+		$sqltalla = "SELECT art.idarticulo, tal.idtalla, tal.nombre, art.stock, stock_inicial
+									FROM `articulo_talla` art  
+									JOIN talla tal ON tal.idtalla = art.idtalla 
+									WHERE idarticulo = '$idarticulo'";
+		$rspta = ejecutarConsulta($sqltalla);
+
+		while ($reg = $rspta->fetch_object()) {
+			$resultado[] = (object) [
+				"idtalla" => (int) $reg->idtalla,
+				"nombre" => $reg->nombre,
+				"stock" => (int) $reg->stock,
+				"stockinicial" => (int) $reg->stock_inicial,
+			];
+		}
+
+		return $resultado;
 	}
 
 	//listar registros activos

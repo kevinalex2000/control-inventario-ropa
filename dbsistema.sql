@@ -637,3 +637,20 @@ DELIMITER ;
 
 ALTER TABLE articulo_talla
 ADD COLUMN stock_inicial INT NOT NULL DEFAULT 0;
+
+ALTER TABLE venta 
+ADD COLUMN fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP;
+
+ALTER TABLE detalle_venta
+ADD COLUMN idtalla INT AFTER idarticulo,
+ADD CONSTRAINT fk_detalle_venta_talla FOREIGN KEY (idtalla) REFERENCES talla(idtalla);
+
+ALTER TABLE venta
+ADD COLUMN idtipo_cancelacion INT NULL;
+ 
+UPDATE venta SET idtipo_cancelacion = 1;
+
+ALTER TABLE venta MODIFY COLUMN idtipo_cancelacion INT NOT NULL;
+
+ALTER TABLE venta
+ADD COLUMN adelanto DECIMAL(10,2) NULL;

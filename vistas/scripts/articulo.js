@@ -143,20 +143,67 @@ function listar() {
       ],
       ajax: {
         url: '../ajax/articulo.php?op=listar',
+        type: 'get',
+        dataType: 'json',
+        dataSrc: '',
         data: function (d) {
           d.idcategoria = $('#filtroCategoria').val();
           d.idtalla = valorFiltroTalla;
           d.condicion = $('#filtroEstado').val();
         },
-        type: 'get',
-        dataType: 'json',
-        error: function (e) {
-          console.log(e.responseText);
-        },
       },
+      columns: [
+        {
+          data: null,
+          orderable: false,
+          render: function (data, type, row, meta) {
+            return data.condicion == 1
+              ? '<button class="btn btn-warning btn-xs" onclick="mostrar(' +
+                  data.idarticulo +
+                  ')"><i class="fa fa-pencil"></i></button>' +
+                  ' ' +
+                  '<button class="btn btn-danger btn-xs" onclick="desactivar(' +
+                  data.idarticulo +
+                  ')"><i class="fa fa-close"></i></button>'
+              : '<button class="btn btn-warning btn-xs" onclick="mostrar(' +
+                  data.idarticulo +
+                  ')"><i class="fa fa-pencil"></i></button>' +
+                  ' ' +
+                  '<button class="btn btn-primary btn-xs" onclick="activar(' +
+                  data.idarticulo +
+                  ')"><i class="fa fa-check"></i></button>' +
+                  ' ' +
+                  '<button class="btn btn-danger btn-xs" onclick="eliminar(' +
+                  data.idarticulo +
+                  ')"><i class="fa fa-trash"></i></button>';
+          },
+        },
+        { data: 'nombre' },
+        { data: 'categoria' },
+        { data: 'codigo' },
+        { data: 'stock' },
+        {
+          data: null,
+          render: function (data, type, row, meta) {
+            return (
+              '<img src="../files/articulos/' + data.imagen + '" height="50px" width="50px"></img>'
+            );
+          },
+        },
+        { data: 'descripcion' },
+        { data: 'precioventa' },
+        {
+          data: null,
+          render: function (data, type, row, meta) {
+            return data.condicion
+              ? '<span class="label bg-green">Activado</span>'
+              : '<span class="label bg-red">Desactivado</span>';
+          },
+        },
+      ],
       bDestroy: true,
-      iDisplayLength: 20, //paginacion
-      order: [[0, 'desc']], //ordenar (columna, orden)
+      iDisplayLength: 20,
+      order: [[0, 'desc']],
     })
     .DataTable();
 }

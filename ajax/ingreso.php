@@ -83,7 +83,7 @@ $total_compra = isset($_POST["total_compra"]) ? limpiarCadena($_POST["total_comp
 
 switch ($_GET["op"]) {
 	case 'guardar':
-		echo (guardar());
+		echo guardar();
 		break;
 
 	case 'anular':
@@ -94,14 +94,14 @@ switch ($_GET["op"]) {
 			echo $rspta ? "Ingreso anulado correctamente" : "No se pudo anular el ingreso";
 		}
 		break;
-		
+
 	case 'mostrar':
 		$rspta = $ingreso->mostrar($idingreso);
 		echo json_encode($rspta);
 		break;
 
 	case 'listarDetalle':
-		echo (listarDetalle());
+		echo listarDetalle();
 		break;
 
 	case 'listar':
@@ -133,9 +133,9 @@ switch ($_GET["op"]) {
 		$rspta = $articulo->listar(null, null, 1);
 		$data = array();
 
-		while ($reg = $rspta->fetch_object()) {
+		foreach ($rspta as $reg) {
 			$data[] = array(
-				"0" => '<button class="btn btn-warning" onclick="agregarDetalle(' . $reg->idarticulo . ',\'' . $reg->nombre . ' \' ,\'' . $reg->imagen . ' \' ,\'' . $reg->precio_venta . ' \')"><span class="fa fa-plus"></span></button>',
+				"0" => '<button class="btn btn-warning" onclick="agregarDetalle(' . $reg->idarticulo . ',\'' . $reg->nombre . ' \' ,\'' . $reg->imagen . ' \' ,\'' . $reg->precioventa . ' \')"><span class="fa fa-plus"></span></button>',
 				"1" => $reg->nombre,
 				"2" => $reg->categoria,
 				"3" => $reg->codigo,

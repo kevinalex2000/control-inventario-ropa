@@ -62,7 +62,6 @@ function listar() {
         {
           data: null,
           render: function (data, type, row) {
-            console.log(row);
             let render = `
             <button class="btn btn-warning btn-xs" onclick="mostrar(${row.idpersona})"><i class="fa fa-pencil"></i></button>
             <button class="btn btn-danger btn-xs" onclick="eliminar(${row.idpersona})"><i class="fa fa-trash"></i></button>`;

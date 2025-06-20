@@ -58,15 +58,23 @@ if (!isset($_SESSION['nombre'])) {
                   </tfoot>
                 </table>
               </div>
-              <div class="panel-body" style="height: 400px;" id="formularioregistros">
+              <div class="panel-body" id="formularioregistros">
                 <form action="" name="formulario" id="formulario" method="POST">
                   <div class="form-group col-lg-8 col-md-8 col-xs-12">
                     <label for="">Cliente:</label>
                     <input class="form-control" type="hidden" name="idventa" id="idventa">
-                    <select name="idcliente" id="idcliente" class="form-control selectpicker" data-live-search="true"
-                      required>
-                      <option value="">--Seleccione--</option>
-                    </select>
+                    <div class="input-group">
+                      <select name="idcliente" id="idcliente" class="form-control selectpicker" data-live-search="true"
+                        required>
+                        <option value="">--Seleccione--</option>
+                      </select>
+                      <span class="input-group-btn">
+                        <button class="btn btn-default" style="margin-left: 10px;">
+                          <i class="fa fa-user-plus"></i> Creación rapida
+                        </button>
+                      </span>
+
+                    </div>
                   </div>
                   <div class="form-group col-lg-4 col-md-4 col-xs-12">
                     <label for="">Fecha(*): </label>
@@ -173,27 +181,62 @@ if (!isset($_SESSION['nombre'])) {
             <h4 class="modal-title">Seleccione un Articulo</h4>
           </div>
           <div class="modal-body">
-            <table id="tblarticulos" class="table table-striped table-bordered table-condensed table-hover">
+            <div class="row" style="margin-bottom: 30px;">
+              <!-- Filtro Categoría -->
+              <div class="col-md-3">
+                <label for="filtroCategoria">Categoría</label>
+                <select id="filtroCategoria" class="form-control input-sm ">
+                  <option value="">Todas</option>
+                </select>
+              </div>
+
+              <!-- Filtro Talla -->
+              <div class="col-md-3">
+                <label for="filtroTalla">Talla</label>
+                <select id="filtroTalla" class="form-control input-sm">
+                  <option value="">Todas</option>
+                </select>
+              </div>
+
+              <!-- Botón Excel -->
+              <div class="col-md-2" style="padding-top: 25px;">
+                <button id="btnExportExcel" class="btn btn-sm" onclick="listarArticulos()">
+                  <span class="fa fa-filter"></span> Filtrar
+                </button>
+              </div>
+
+              <!-- Campo Buscar -->
+              <div class="col-md-4">
+                <label for="buscarTabla">Buscar</label>
+                <input type="text" id="buscarTabla" class="form-control input-sm" placeholder="Buscar en la tabla..."
+                  onkeyup="buscarEnTabla(this.value, tablaarticulos)">
+              </div>
+            </div>
+
+            <table id="tblarticulos" class="table table-striped table-bordered table-condensed table-hover"
+              style="width: 100%">
               <thead>
-                <th>Opciones</th>
+                <th></th>
+                <th>Talla</th>
+                <th>Imagen</th>
                 <th>Nombre</th>
                 <th>Categoria</th>
                 <th>Código</th>
-                <th>Stock</th>
-                <th>Precio Venta</th>
-                <th>Imagen</th>
+                <th>Stock <span class="tallafiltrada"></span></th>
+                <th>Precio</th>
               </thead>
               <tbody>
 
               </tbody>
               <tfoot>
-                <th>Opciones</th>
+                <th></th>
+                <th>Talla</th>
+                <th>Imagen</th>
                 <th>Nombre</th>
                 <th>Categoria</th>
                 <th>Código</th>
-                <th>Stock</th>
-                <th>Precio Venta</th>
-                <th>Imagen</th>
+                <th>Stock <span class="tallafiltrada"></span></th>
+                <th>Precio</th>
               </tfoot>
             </table>
           </div>

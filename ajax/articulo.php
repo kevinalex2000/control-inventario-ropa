@@ -5,7 +5,6 @@ $articulo = new Articulo();
 
 function GuardarOEditar()
 {
-
 	global $articulo;
 
 	$idarticulo = isset($_POST["idarticulo"]) ? limpiarCadena($_POST["idarticulo"]) : null;
@@ -17,12 +16,12 @@ function GuardarOEditar()
 	$precioventa = isset($_POST["precio_venta"]) ? limpiarCadena($_POST["precio_venta"]) : null;
 	$stockxtalla = isset($_POST["stockxtalla"]) ? json_decode($_POST["stockxtalla"], true) : null;
 	$existe = $articulo->existeNombreOCodigo($nombre, $codigo, $idarticulo);
-	
+
 	if ($existe['codigo']) {
 		echo "El código ya está siendo utilizado por otro artículo";
 		exit;
 	}
-	
+
 	if ($existe['nombre']) {
 		echo "El nombre ya está siendo utilizado por otro artículo";
 		exit;
@@ -50,8 +49,46 @@ function GuardarOEditar()
 		$rspta = $articulo->editar($idarticulo, $idcategoria, $codigo, $nombre, $descripcion, $imagen, $precioventa);
 		echo $rspta ? "Datos actualizados correctamente" : "No se pudo actualizar los datos";
 	}
+}
 
+function Listar()
+{
+	global $articulo;
 
+	$idcategoria = isset($_GET["idcategoria"]) ? limpiarCadena($_GET["idcategoria"]) : null;
+	$idtalla = isset($_GET["idtalla"]) ? limpiarCadena($_GET["idtalla"]) : null;
+	$condicion = isset($_GET["condicion"]) ? limpiarCadena($_GET["condicion"]) : null;
+
+	$rspta = $articulo->listar($idcategoria, $idtalla, $condicion);
+	$data = array();
+
+	foreach ($rspta as $reg) {
+		$detallestock = $articulo->ListarStockTallas($reg->idarticulo);
+		$datadetallestock = array();
+
+		foreach ($detallestock as $st) {
+			$datadetallestock[] = array(
+				"idtalla" => $st->idtalla,
+				"talla" => $st->nombre,
+				"stock" => $st->stock,
+			);
+		}
+
+		$data[] = array(
+			"idarticulo" => $reg->idarticulo,
+			"codigo" => $reg->codigo,
+			"nombre" => $reg->nombre,
+			"condicion" => $reg->condicion,
+			"categoria" => $reg->categoria,
+			"stock" => $reg->stock,
+			"imagen" => $reg->imagen,
+			"descripcion" => $reg->descripcion,
+			"precioventa" => $reg->precioventa,
+			"detallestock" => $datadetallestock
+		);
+	}
+
+	return $data;
 }
 
 $idarticulo = isset($_POST["idarticulo"]) ? limpiarCadena($_POST["idarticulo"]) : "";
@@ -72,7 +109,7 @@ switch ($_GET["op"]) {
 	case 'guardaryeditar':
 		GuardarOEditar();
 		break;
-	
+
 	case 'validarNombreCodigo':
 		$nombre = isset($_POST["nombre"]) ? limpiarCadena($_POST["nombre"]) : '';
 		$codigo = isset($_POST["codigo"]) ? limpiarCadena($_POST["codigo"]) : '';
@@ -101,47 +138,7 @@ switch ($_GET["op"]) {
 		break;
 
 	case 'listar':
-		$idcategoria = isset($_GET["idcategoria"]) ? limpiarCadena($_GET["idcategoria"]) : null;
-		$idtalla = isset($_GET["idtalla"]) ? limpiarCadena($_GET["idtalla"]) : null;
-		$condicion = isset($_GET["condicion"]) ? limpiarCadena($_GET["condicion"]) : null;
-
-		$rspta = $articulo->listar($idcategoria, $idtalla, $condicion);
-		$data = array();
-
-		while ($reg = $rspta->fetch_object()) {
-			$data[] = array(
-
-				"0" => ($reg->condicion)
-					? '<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idarticulo . ')"><i class="fa fa-pencil"></i></button>'
-					. ' '
-					. '<button class="btn btn-danger btn-xs" onclick="desactivar(' . $reg->idarticulo . ')"><i class="fa fa-close"></i></button>'
-					: '<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idarticulo . ')"><i class="fa fa-pencil"></i></button>'
-					. ' '
-					. '<button class="btn btn-primary btn-xs" onclick="activar(' . $reg->idarticulo . ')"><i class="fa fa-check"></i></button>'
-					. ' '
-					. '<button class="btn btn-danger btn-xs" onclick="eliminar(' . $reg->idarticulo . ')"><i class="fa fa-trash"></i></button>',
-				"1" => $reg->nombre,
-				"2" => $reg->categoria,
-				"3" => $reg->codigo,
-				"4" => $reg->stock,
-				"5" => "<img src='../files/articulos/" . $reg->imagen . "' height='50px' width='50px'>",
-				"6" => $reg->descripcion,
-				"7" => $reg->precio_venta,
-				"8" => ($reg->condicion)
-					? '<span class="label bg-green">Activado</span>'
-					: '<span class="label bg-red">Desactivado</span>'
-			);
-		}
-
-
-		$results = array(
-			"sEcho" => 1,//info para datatables
-			"iTotalRecords" => count($data),//enviamos el total de registros al datatable
-			"iTotalDisplayRecords" => count($data),//enviamos el total de registros a visualizar
-			"aaData" => $data
-		);
-
-		echo json_encode($results);
+		echo json_encode(Listar());
 		break;
 
 	case 'selectCategoria':
