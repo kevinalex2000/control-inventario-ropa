@@ -376,7 +376,7 @@ function agregarDetalle(idarticulo, articulo, precio_venta, imagen) {
     actualizarSubtotal(filaId);
   } else {
     // No existe, agrega la fila nueva
-    var cantidad = 0;
+    var cantidad = 1;
     var descuento = 0;
     var subtotal = precio_venta * cantidad - descuento;
 
@@ -388,8 +388,8 @@ function agregarDetalle(idarticulo, articulo, precio_venta, imagen) {
       '<td><input type="hidden" name="idtalla[]" value="' + idtalla + '">' + nombreTalla + '</td>' +
       '<td>' + stock + '</td>' +
       '<td><input type="number" name="cantidad[]" value="' + cantidad + '" min="1" max="' + stock + '" onchange="actualizarSubtotal(\'' + filaId + '\')"></td>' +
-      '<td><input type="number" name="precio_venta[]" value="' + precio_venta + '" readonly></td>' +
-      '<td><input type="number" name="descuento[]" value="' + descuento + '" onchange="actualizarSubtotal(\'' + filaId + '\')"></td>' +
+      '<td><input type="hidden" name="precio_venta[]" value="' + precio_venta + '" readonly> ' + precio_venta + '</td>' +
+      '<td ><input type="number" name="descuento[]" value="' + descuento + '" onchange="actualizarSubtotal(\'' + filaId + '\')"></td>' +
       '<td><span id="subtotal' + filaId + '" name="subtotal">' + subtotal + '</span></td>' +
       '</tr>';
     $('#detalles').append(fila);
@@ -403,17 +403,28 @@ function actualizarSubtotal(filaId) {
   var cantidadInput = fila.find('input[name="cantidad[]"]');
   var cantidad = parseInt(cantidadInput.val()) || 0;
   var precio = parseFloat(fila.find('input[name="precio_venta[]"]').val()) || 0;
-  var descuento = parseFloat(fila.find('input[name="descuento[]"]').val()) || 0;
-  var stock = parseInt(fila.find('td').eq(4).text()) || 0; // La columna de stock
+  var descuentoInput = fila.find('input[name="descuento[]"]');
+  var descuento = parseFloat(descuentoInput.val()) || 0;
+  var stock = parseInt(fila.find('td').eq(4).text()) || 0; // Stock desde la columna
 
-  // Si la cantidad supera el stock, la ajustamos
+  // Validar cantidad contra stock
   if (cantidad > stock) {
     cantidad = stock;
     cantidadInput.val(stock);
     alert('No puedes ingresar una cantidad mayor al stock disponible');
-  } else if(cantidad < 1) {
+  } else if (cantidad < 1) {
     cantidad = 1;
     cantidadInput.val(1);
+  }
+
+  // Validar descuento no mayor que el precio
+  if (descuento > precio) {
+    descuento = precio;
+    descuentoInput.val(precio);
+    alert('El descuento no puede ser mayor que el precio de venta');
+  } else if (descuento < 0) {
+    descuento = 0;
+    descuentoInput.val(0);
   }
 
   var subtotal = (cantidad * precio) - descuento;
@@ -421,7 +432,6 @@ function actualizarSubtotal(filaId) {
   modificarSubtotales();
   verificarBotonVenta();
 }
-
 function modificarSubtotales() {
   var cant = document.getElementsByName('cantidad[]');
   var prev = document.getElementsByName('precio_venta[]');
