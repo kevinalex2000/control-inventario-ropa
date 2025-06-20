@@ -606,35 +606,6 @@ ADD COLUMN fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP;
 ALTER TABLE detalle_ingreso 
 ADD COLUMN idtalla INT AFTER idarticulo, 
 ADD CONSTRAINT fk_detalle_ingreso_talla FOREIGN KEY (idtalla) REFERENCES talla(idtalla);
-DELIMITER $$
-
-CREATE PROCEDURE sp_listar_ingresos (
-    IN p_fechadesde DATE,
-    IN p_fechahasta DATE,
-    IN p_idproveedor INT
-)
-BEGIN
-    SELECT 
-    	i.idingreso,
-        p.idpersona,
-        p.nombre as proveedor,
-        u.idusuario,
-        u.nombre as usuario,
-        i.fecha_hora,
-        i.estado,
-        i.fecha_registro
-    FROM ingreso i
-    LEFT JOIN persona p ON p.idpersona = i.idproveedor
-    LEFT JOIN usuario u ON u.idusuario = i.idusuario
-    WHERE i.fecha_registro >= p_fechadesde
-      AND i.fecha_registro < DATE_ADD(p_fechahasta, INTERVAL 1 DAY)
-      AND (p_idproveedor IS NULL OR p.idpersona = p_idproveedor);
-END $$
-
-DELIMITER ;
-CALL sp_listar_ingresos('2025-06-01', '2025-06-18', NULL);
-
-New PROCEDURE PARA QUE SE ESCOGA POR SEPARADO EL FILTRO
 
 DELIMITER $$
 
@@ -652,7 +623,8 @@ BEGIN
         u.nombre AS usuario,
         i.fecha_hora,
         i.estado,
-        i.fecha_registro
+        i.fecha_registro,
+        i.total_compra
     FROM ingreso i
     LEFT JOIN persona p ON p.idpersona = i.idproveedor
     LEFT JOIN usuario u ON u.idusuario = i.idusuario
@@ -662,4 +634,6 @@ BEGIN
         AND (p_idproveedor IS NULL OR p.idpersona = p_idproveedor);
 END $$
 DELIMITER ;
-CALL sp_listar_ingresos('2025-06-01', '2025-06-18', NULL);
+
+ALTER TABLE articulo_talla
+ADD COLUMN stock_inicial INT NOT NULL DEFAULT 0;

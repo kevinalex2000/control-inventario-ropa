@@ -18,8 +18,11 @@ if (!isset($_SESSION['nombre'])) {
           <div class="col-md-12">
             <div class="box">
               <div class="box-header with-border">
-                <h1 class="box-title">Clientes <button class="btn btn-success" onclick="mostrarform(true)"><i
-                      class="fa fa-plus-circle"></i>Agregar</button></h1>
+                <h1 class="box-title">Clientes
+
+                  <button class="btn btn-success btn-sm" onclick="mostrarform(true)" id="btnagregar"><i
+                      class="fa fa-plus-circle"></i> Nuevo</button>
+                </h1>
                 <div class="box-tools pull-right">
 
                 </div>
@@ -39,8 +42,8 @@ if (!isset($_SESSION['nombre'])) {
                     <th>Opciones</th>
                     <th>Nombre</th>
                     <th>Documento</th>
-                    <th>Numero</th>
-                    <th>Telefono</th>
+                    <th>Número</th>
+                    <th>Teléfono</th>
                     <th>Email</th>
                   </thead>
                   <tbody>
@@ -49,8 +52,8 @@ if (!isset($_SESSION['nombre'])) {
                     <th>Opciones</th>
                     <th>Nombre</th>
                     <th>Documento</th>
-                    <th>Numero</th>
-                    <th>Telefono</th>
+                    <th>Número</th>
+                    <th>Teléfono</th>
                     <th>Email</th>
                   </tfoot>
                 </table>
@@ -65,7 +68,7 @@ if (!isset($_SESSION['nombre'])) {
                       placeholder="Nombre del cliente" required>
                   </div>
                   <div class="form-group col-lg-6 col-md-6 col-xs-12">
-                    <label for="">Tipo Dcumento</label>
+                    <label for="">Tipo Documento</label>
                     <select class="form-control select-picker" name="tipo_documento" id="tipo_documento" required>
                       <option value="DNI">DNI</option>
                       <option value="RUC">RUC</option>
@@ -78,12 +81,12 @@ if (!isset($_SESSION['nombre'])) {
                       placeholder="Número de Documento">
                   </div>
                   <div class="form-group col-lg-6 col-md-6 col-xs-12">
-                    <label for="">Direccion</label>
+                    <label for="">Dirección</label>
                     <input class="form-control" type="text" name="direccion" id="direccion" maxlength="70"
                       placeholder="Direccion">
                   </div>
                   <div class="form-group col-lg-6 col-md-6 col-xs-12">
-                    <label for="">Telefono</label>
+                    <label for="">Teléfono(*)</label>
                     <input class="form-control" type="text" name="telefono" id="telefono" maxlength="20"
                       placeholder="Número de Telefono">
                   </div>
