@@ -210,16 +210,10 @@ function listarArticulos() {
               datarticulos.push(data);
             }
             return (
-              '<button class="btn btn-warning" onclick="agregarDetalle(' +
+              '<button class="btn btn-warning btn-agregar-articulo" data-idarticulo="' +
               data.idarticulo +
-              ",'" +
-              data.nombre +
-              "'," +
-              data.precioventa +
-              ",'" +
-              data.imagen +
-              "'" +
-              ')"><span class="fa fa-plus"></span></button>'
+              '">' +
+              '<span class="fa fa-plus"></span></button>'
             );
           },
         },
@@ -294,6 +288,36 @@ function listarArticulos() {
       order: [], //ordenar (columna, orden)
     })
     .DataTable();
+  $('#tblarticulos tbody').on('click', '.btn-agregar-articulo', function () {
+    var boton = $(this);
+    var tr = boton.closest('tr');
+    var idarticulo = boton.data('idarticulo');
+    var selectTalla = tr.find('.select-talla');
+    var idtalla = selectTalla.val();
+
+    // Buscar el artículo y la talla en el array datarticulos
+    var articuloObj = datarticulos.find((item) => item.idarticulo == idarticulo);
+
+    if (!idtalla) {
+      alert('No seleccionó una talla');
+      return;
+    }
+
+    var stockObj = articuloObj.detallestock.find((item) => item.idtalla == idtalla);
+    var stock = stockObj ? stockObj.stock : 0;
+
+    if (stock <= 0) {
+      alert('No hay stock suficiente');
+      return;
+    }
+
+    // Aquí recupera el resto de datos para agregarDetalle...
+    var articulo = tr.find('td').eq(3).text();
+    var precio_venta = parseFloat(tr.find('td').eq(6).text());
+    var imagen = datarticulos.find((item) => item.idarticulo == idarticulo).imagen;
+
+    agregarDetalle(idarticulo, articulo, precio_venta, imagen);
+  });
 }
 //funcion para guardaryeditar
 function guardaryeditar(e) {
@@ -426,7 +450,7 @@ function agregarDetalle(idarticulo, articulo, precio_venta, imagen) {
     actualizarSubtotal(filaId);
   } else {
     // No existe, agrega la fila nueva
-    var cantidad = 0;
+    var cantidad = 1;
     var descuento = 0;
     var subtotal = precio_venta * cantidad - descuento;
 
@@ -453,17 +477,19 @@ function agregarDetalle(idarticulo, articulo, precio_venta, imagen) {
       '<td>' +
       stock +
       '</td>' +
-      '<td><input type="number" name="cantidad[]" value="' +
+      '<td><input type="number" class="form-control cantidad" name="cantidad[]" value="' +
       cantidad +
       '" min="1" max="' +
       stock +
       '" onchange="actualizarSubtotal(\'' +
       filaId +
       '\')"></td>' +
-      '<td><input type="number" name="precio_venta[]" value="' +
+      '<td><input type="hidden" name="precio_venta[]" value="' +
       precio_venta +
-      '" readonly></td>' +
-      '<td><input type="number" name="descuento[]" value="' +
+      '" readonly> ' +
+      precio_venta +
+      '</td>' +
+      '<td ><input type="number" class="form-control descuento" name="descuento[]" value="' +
       descuento +
       '" onchange="actualizarSubtotal(\'' +
       filaId +
@@ -485,10 +511,11 @@ function actualizarSubtotal(filaId) {
   var cantidadInput = fila.find('input[name="cantidad[]"]');
   var cantidad = parseInt(cantidadInput.val()) || 0;
   var precio = parseFloat(fila.find('input[name="precio_venta[]"]').val()) || 0;
-  var descuento = parseFloat(fila.find('input[name="descuento[]"]').val()) || 0;
-  var stock = parseInt(fila.find('td').eq(4).text()) || 0; // La columna de stock
+  var descuentoInput = fila.find('input[name="descuento[]"]');
+  var descuento = parseFloat(descuentoInput.val()) || 0;
+  var stock = parseInt(fila.find('td').eq(4).text()) || 0; // Stock desde la columna
 
-  // Si la cantidad supera el stock, la ajustamos
+  // Validar cantidad contra stock
   if (cantidad > stock) {
     cantidad = stock;
     cantidadInput.val(stock);
@@ -498,12 +525,21 @@ function actualizarSubtotal(filaId) {
     cantidadInput.val(1);
   }
 
+  // Validar descuento no mayor que el precio
+  if (descuento > precio) {
+    descuento = precio;
+    descuentoInput.val(precio);
+    alert('El descuento no puede ser mayor que el precio de venta');
+  } else if (descuento < 0) {
+    descuento = 0;
+    descuentoInput.val(0);
+  }
+
   var subtotal = cantidad * precio - descuento;
   fila.find('span[name="subtotal"]').text(subtotal);
   modificarSubtotales();
   verificarBotonVenta();
 }
-
 function modificarSubtotales() {
   var cant = document.getElementsByName('cantidad[]');
   var prev = document.getElementsByName('precio_venta[]');
