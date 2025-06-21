@@ -7,6 +7,18 @@ var datarticulos = [];
 
 //funcion que se ejecuta al inicio
 function init() {
+  $('#abono').on('input', function () {
+    let subtotal = parseFloat($('#total_venta').val()) || 0;
+    let abono = parseFloat($(this).val()) || 0;
+    if (abono > subtotal) {
+      alert('El adelanto no puede ser mayor que el total de la venta.');
+      $(this).val(0);
+      abono = 0;
+    }
+    let pendiente = subtotal - abono;
+    $('#saldo_pendiente').val(pendiente.toFixed(2));
+  });
+
   $('#tipo_comprobante').change(marcarImpuesto);
   mostrarform(false);
   listar();
@@ -288,8 +300,8 @@ function listarArticulos() {
       order: [], //ordenar (columna, orden)
     })
     .DataTable();
-    $('#tblarticulos tbody').off('click', '.btn-agregar-articulo'); // Quita manejadores previos
-    $('#tblarticulos tbody').on('click', '.btn-agregar-articulo', function () {
+  $('#tblarticulos tbody').off('click', '.btn-agregar-articulo'); // Quita manejadores previos
+  $('#tblarticulos tbody').on('click', '.btn-agregar-articulo', function () {
     var boton = $(this);
     var tr = boton.closest('tr');
     var idarticulo = boton.data('idarticulo');
@@ -327,6 +339,27 @@ function guardaryeditar(e) {
   let mensaje = '';
 
   var formData = new FormData($('#formulario')[0]);
+
+  let subtotal = parseFloat($('#total_venta').val());
+  let idtipocancelacion = parseInt(formData.get('tipocancelacion'));
+  let abono = formData.get('abono') != '' ? parseFloat(formData.get('abono')) : null;
+
+  // Validación: si es parcial, el abono debe ser menor al subtotal y mayor que 0
+  if (idtipocancelacion == 2) {
+    if (!abono || abono <= 0) {
+      valid = false;
+      mensaje = 'Debe ingresar un monto de adelanto mayor a 0 para cancelación parcial.';
+    } else if (abono >= subtotal) {
+      valid = false;
+      mensaje = 'El adelanto no puede ser mayor o igual al total de la venta.';
+      $('#abono').val(0); // resetea el campo
+    }
+  }
+
+  if (!valid) {
+    alert(mensaje);
+    return;
+  }
 
   let json = {
     idcliente: parseInt(formData.get('idcliente')),
@@ -399,11 +432,11 @@ function mostrar(idventa) {
 
 //funcion para desactivar
 function anular(idventa) {
-  bootbox.confirm('¿Esta seguro de desactivar este dato?', function (result) {
+  bootbox.confirm('¿Está seguro de anular esta venta?', function (result) {
     if (result) {
       $.post('../ajax/venta.php?op=anular', { idventa: idventa }, function (e) {
         bootbox.alert(e);
-        tabla.ajax.reload();
+        tabla.ajax.reload(); // Recarga la lista de ventas
       });
     }
   });
@@ -485,16 +518,50 @@ function agregarDetalle(idarticulo, articulo, precio_venta, imagen) {
     var subtotal = precio_venta * cantidad - descuento;
 
     var fila =
-      '<tr class="filas" id="' + filaId + '">' +
-      '<td><button type="button" class="btn btn-danger" onclick="eliminarDetalle(\'' + filaId + '\')">X</button></td>' +
-      '<td><img src="../files/articulos/' + imagen + '" width="50" height="50"></td>' +
-      '<td><input type="hidden" name="idarticulo[]" value="' + idarticulo + '">' + articulo + '</td>' +
-      '<td><input type="hidden" name="idtalla[]" value="' + idtalla + '">' + nombreTalla + '</td>' +
-      '<td>' + stock + '</td>' +
-      '<td><input type="number" class="form-control cantidad" name="cantidad[]" value="' + cantidad + '" min="1" max="' + stock + '" onchange="actualizarSubtotal(\'' + filaId + '\')"></td>' +
-      '<td><input type="hidden" name="precio_venta[]" value="' + precio_venta + '" readonly> ' + precio_venta + '</td>' +
-      '<td ><input type="number" class="form-control descuento" name="descuento[]" value="' + descuento + '" min="1" max="' + stock + '" onchange="actualizarSubtotal(\'' + filaId + '\')"></td>' +
-      '<td><span id="subtotal' + filaId + '" name="subtotal">' + subtotal + '</span></td>' +
+      '<tr class="filas" id="' +
+      filaId +
+      '">' +
+      '<td><button type="button" class="btn btn-danger" onclick="eliminarDetalle(\'' +
+      filaId +
+      '\')">X</button></td>' +
+      '<td><img src="../files/articulos/' +
+      imagen +
+      '" width="50" height="50"></td>' +
+      '<td><input type="hidden" name="idarticulo[]" value="' +
+      idarticulo +
+      '">' +
+      articulo +
+      '</td>' +
+      '<td><input type="hidden" name="idtalla[]" value="' +
+      idtalla +
+      '">' +
+      nombreTalla +
+      '</td>' +
+      '<td>' +
+      stock +
+      '</td>' +
+      '<td><input type="number" class="form-control cantidad" name="cantidad[]" value="' +
+      cantidad +
+      '" min="1" max="' +
+      stock +
+      '" onchange="actualizarSubtotal(\'' +
+      filaId +
+      '\')"></td>' +
+      '<td><input type="hidden" name="precio_venta[]" value="' +
+      precio_venta +
+      '" readonly> ' +
+      precio_venta +
+      '</td>' +
+      '<td ><input type="number" class="form-control descuento" name="descuento[]" value="' +
+      descuento +
+      '" onchange="actualizarSubtotal(\'' +
+      filaId +
+      '\')"></td>' +
+      '<td><span id="subtotal' +
+      filaId +
+      '" name="subtotal">' +
+      subtotal +
+      '</span></td>' +
       '</tr>';
     $('#detalles').append(fila);
     modificarSubtotales();
@@ -512,8 +579,8 @@ function actualizarSubtotal(filaId) {
   var stock = parseInt(fila.find('td').eq(4).text()) || 0; // Stock desde la columna
 
   // Si el campo cantidad está vacío o no es número, deja el subtotal en 0
-  if (cantidadInput.val() === "" || isNaN(cantidad) || cantidad < 1) {
-    fila.find('span[name="subtotal"]').text("0");
+  if (cantidadInput.val() === '' || isNaN(cantidad) || cantidad < 1) {
+    fila.find('span[name="subtotal"]').text('0');
     modificarSubtotales();
     verificarBotonVenta();
     return;
@@ -574,6 +641,7 @@ function calcularTotales() {
   $('#total').html('S/.' + total);
   $('#total_venta').val(total);
   evaluar();
+  validarAbonoContraSubtotal();
 }
 
 function evaluar() {
@@ -591,11 +659,34 @@ function eliminarDetalle(filaId) {
   verificarBotonVenta();
 }
 
-$('#detalles').on('input', '.cantidad, .descuento', function() {
+// Siempre define la función:
+function validarAbonoContraSubtotal() {
+  let subtotal = parseFloat($('#total_venta').val()) || 0;
+  let abono = parseFloat($('#abono').val()) || 0;
+  if (abono > subtotal) {
+    alert('El adelanto no puede ser mayor que el total de la venta.');
+    $('#abono').val(0);
+    abono = 0;
+  }
+  let pendiente = subtotal - abono;
+  $('#saldo_pendiente').val(pendiente.toFixed(2));
+}
+
+$(document).ready(function () {
+  $('#abono').on('input', validarAbonoContraSubtotal);
+});
+
+// Pero SIEMPRE llama a validarAbonoContraSubtotal() después de actualizar el subtotal con JS
+// Ejemplo:
+$('#descuento').on('input', function () {
+  // ... tu lógica para actualizar el subtotal ...
+  $('#total_venta').val(nuevoSubtotal);
+  validarAbonoContraSubtotal(); // <-- ¡Esto es lo importante!
+});
+$('#detalles').on('input', '.cantidad, .descuento', function () {
   var fila = $(this).closest('tr');
   var filaId = fila.attr('id');
   actualizarSubtotal(filaId);
 });
-
 
 init();

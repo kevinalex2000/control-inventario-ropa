@@ -13,11 +13,15 @@ class Venta
 
 	public function insertar($idusuario, $idpersona, $fechahora, $totalventa, $idtipocancelacion, $adelanto, $detalleventa)
 	{
+		// Si es pago total (cancelación completa)
 		if ($idtipocancelacion == 1) {
-			$adelanto = 'NULL';
+			$pagado = 1; // Completo
+		} else { 
+			$pagado = 0;
 		}
 
-		$sql = "INSERT INTO venta (idcliente,idusuario,fecha_hora,total_venta,estado,idtipo_cancelacion,adelanto) VALUES ('$idpersona','$idusuario','$fechahora','$totalventa','1','$idtipocancelacion',$adelanto)";
+		$sql = "INSERT INTO venta (idcliente,idusuario,fecha_hora,total_venta,estado,idtipo_cancelacion,adelanto,pagado)
+            VALUES ('$idpersona','$idusuario','$fechahora','$totalventa','1','$idtipocancelacion',$adelanto,$pagado)";
 
 		$idventanew = ejecutarConsulta_retornarID($sql);
 		$sw = true;
@@ -29,7 +33,8 @@ class Venta
 			$idtalla = $item['idtalla'];
 			$descuento = $item['descuento'];
 
-			$sql_detalle = "INSERT INTO detalle_venta (idventa,idarticulo,cantidad,precio_venta, idtalla, descuento) VALUES($idventanew,$idarticulo,$cantidad,$precioventa,$idtalla,$descuento)";
+			$sql_detalle = "INSERT INTO detalle_venta (idventa,idarticulo,precio_venta,cantidad,idtalla,descuento)
+                        VALUES ('$idventanew','$idarticulo','$precioventa','$cantidad','$idtalla','$descuento')";
 			ejecutarConsulta($sql_detalle) or $sw = false;
 
 			$sql_actualizarstock = "UPDATE articulo_talla SET stock=stock-$cantidad WHERE idarticulo=$idarticulo AND idtalla=$idtalla";
@@ -41,8 +46,19 @@ class Venta
 
 	public function anular($idventa)
 	{
+		// Cambiar estado de la venta
 		$sql = "UPDATE venta SET estado='3' WHERE idventa='$idventa'";
-		return ejecutarConsulta($sql);
+		$anulada = ejecutarConsulta($sql);
+
+		// Recuperar detalles y actualizar stock
+		$sql_detalle = "SELECT idarticulo, idtalla, cantidad FROM detalle_venta WHERE idventa='$idventa'";
+		$detalles = ejecutarConsulta($sql_detalle);
+		while ($item = $detalles->fetch_object()) {
+			$sql_stock = "UPDATE articulo_talla SET stock = stock + $item->cantidad WHERE idarticulo = $item->idarticulo AND idtalla = $item->idtalla";
+			ejecutarConsulta($sql_stock);
+		}
+
+		return $anulada;
 	}
 
 	public function completar($idventa)
@@ -60,14 +76,20 @@ class Venta
 
 	public function listarDetalle($idventa)
 	{
-		$sql = "SELECT dv.idventa,dv.idarticulo,a.nombre,dv.cantidad,dv.precio_venta,dv.descuento,(dv.cantidad*dv.precio_venta-dv.descuento) as subtotal FROM detalle_venta dv INNER JOIN articulo a ON dv.idarticulo=a.idarticulo WHERE dv.idventa='$idventa'";
+		$sql = "SELECT dv.idventa,dv.idarticulo,a.nombre,dv.cantidad,dv.precio_venta,dv.descuento,(dv.cantidad*dv.precio_venta-dv.descuento) as subtotal 
+		FROM detalle_venta dv INNER JOIN articulo a ON dv.idarticulo=a.idarticulo 
+		WHERE dv.idventa='$idventa'";
 		return ejecutarConsulta($sql);
 	}
 
 	//listar registros
 	public function listar()
 	{
-		$sql = "SELECT v.idventa,DATE(v.fecha_hora) as fecha,v.idcliente,p.nombre as cliente,u.idusuario,u.nombre as usuario, v.tipo_comprobante,v.serie_comprobante,v.num_comprobante,v.total_venta,v.impuesto,v.estado FROM venta v INNER JOIN persona p ON v.idcliente=p.idpersona INNER JOIN usuario u ON v.idusuario=u.idusuario ORDER BY v.idventa DESC";
+		$sql = "SELECT v.idventa,DATE(v.fecha_hora) as fecha,v.idcliente,p.nombre as cliente,u.idusuario,u.nombre as usuario, 
+		v.tipo_comprobante,v.serie_comprobante,v.num_comprobante,v.total_venta,v.impuesto,v.estado, v.idtipo_cancelacion, v.pagado, v.adelanto
+		FROM venta v INNER JOIN persona p ON v.idcliente=p.idpersona 
+		INNER JOIN usuario u ON v.idusuario=u.idusuario 
+		ORDER BY v.idventa DESC";
 		return ejecutarConsulta($sql);
 	}
 
