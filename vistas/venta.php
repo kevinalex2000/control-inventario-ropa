@@ -178,7 +178,7 @@ if (!isset($_SESSION['nombre'])) {
 
     <!--Modal-->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog" style="width: 65% !important;">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -216,33 +216,35 @@ if (!isset($_SESSION['nombre'])) {
                   onkeyup="buscarEnTabla(this.value, tablaarticulos)">
               </div>
             </div>
+            <div class="tabla-overflow">
+              <table id="tblarticulos" class="table table-striped table-bordered table-condensed table-hover"
+                style="width: 100%">
+                <thead>
+                  <th></th>
+                  <th>Talla</th>
+                  <th>Imagen</th>
+                  <th>Nombre</th>
+                  <th>Categoria</th>
+                  <th>Código</th>
+                  <th>Stock <span class="tallafiltrada"></span></th>
+                  <th>Precio</th>
+                </thead>
+                <tbody>
 
-            <table id="tblarticulos" class="table table-striped table-bordered table-condensed table-hover"
-              style="width: 100%">
-              <thead>
-                <th></th>
-                <th>Talla</th>
-                <th>Imagen</th>
-                <th>Nombre</th>
-                <th>Categoria</th>
-                <th>Código</th>
-                <th>Stock <span class="tallafiltrada"></span></th>
-                <th>Precio</th>
-              </thead>
-              <tbody>
+                </tbody>
+                <tfoot>
+                  <th></th>
+                  <th>Talla</th>
+                  <th>Imagen</th>
+                  <th>Nombre</th>
+                  <th>Categoria</th>
+                  <th>Código</th>
+                  <th>Stock <span class="tallafiltrada"></span></th>
+                  <th>Precio</th>
+                </tfoot>
+              </table>
 
-              </tbody>
-              <tfoot>
-                <th></th>
-                <th>Talla</th>
-                <th>Imagen</th>
-                <th>Nombre</th>
-                <th>Categoria</th>
-                <th>Código</th>
-                <th>Stock <span class="tallafiltrada"></span></th>
-                <th>Precio</th>
-              </tfoot>
-            </table>
+            </div>
           </div>
           <div class="modal-footer">
             <button class="btn btn-default" type="button" data-dismiss="modal">Cerrar</button>
