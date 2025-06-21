@@ -92,7 +92,15 @@ switch ($_GET["op"]) {
 		break;
 	case 'anular':
 		$rspta = $venta->anular($idventa);
-		echo $rspta ? "Ingreso anulado correctamente" : "No se pudo anular el ingreso";
+		echo $rspta ? "Venta anulado correctamente" : "No se pudo anular la Venta";
+		break;
+	case 'entregar':
+		$rspta = $venta->Entregar($idventa);
+		echo $rspta ? "Venta entregada correctamente" : "No se pudo marcar como entregado la Venta";
+		break;
+	case 'completarpago':
+		$rspta = $venta->CompletarPago($idventa);
+		echo $rspta ? "Venta guardada correctamente" : "No se pudo completar el guardado de la Venta";
 		break;
 
 	case 'mostrar':
@@ -118,22 +126,20 @@ switch ($_GET["op"]) {
 			$data[] = array(
 				"0" => (($reg->estado == 1) ?
 					'<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idventa . ')"><i class="fa fa-eye"></i></button> ' .
-					'<button class="btn btn-danger btn-xs" onclick="anular(' . $reg->idventa . ')"><i class="fa fa-times"></i></button> ' .
-					'<a target="_blank" href="' . $url . $reg->idventa . '"><button class="btn btn-info btn-xs"><i class="fa fa-file"></i></button></a>'
+					'<button class="btn btn-danger btn-xs" onclick="anular(' . $reg->idventa . ')"><i class="fa fa-times"></i></button> '
 					:
-					'<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idventa . ')"><i class="fa fa-eye"></i></button> ' .
-					'<a target="_blank" href="' . $url . $reg->idventa . '"><button class="btn btn-info btn-xs"><i class="fa fa-file"></i></button></a>'
+					'<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idventa . ')"><i class="fa fa-eye"></i></button> '
 				),
-				"1" => $reg->fecha,
-				"2" => $reg->cliente,
+				"1" => $reg->fecha_registro,
+				"2" => $reg->cliente . ' (Tel:' . $reg->telefono . ')',
 				"3" => $reg->usuario,
 				"4" => $reg->total_venta,
 				// Estado de pago
 				"5" => ($reg->pagado == 1)
-					? '<span class="label bg-green">Completo</span>'
-					: '<span class="label bg-blue">Debe: S/.' . number_format($reg->total_venta - floatval($reg->adelanto), 2) . '</span>',
+					? '<span class="label bg-green"><i class="fa fa-check-circle"></i> Pagado</span>'
+					: '<span class="label bg-gray"><i class="fa fa-exclamation-triangle"></i>  Debe: S/.' . number_format($reg->total_venta - floatval($reg->adelanto), 2) . '</span>',
 				// Estado general
-				"6" => ($reg->estado == 1) ? '<span class="label bg-blue">En progreso</span>'
+				"6" => ($reg->estado == 1) ? '<span class="label bg-blue">Entrega pendiente</span>'
 					: (($reg->estado == 2) ? '<span class="label bg-green">Completado</span>'
 						: '<span class="label bg-red">Anulado</span>')
 			);
@@ -145,17 +151,6 @@ switch ($_GET["op"]) {
 			"aaData" => $data
 		);
 		echo json_encode($results);
-		break;
-
-	case 'selectCliente':
-		require_once "../modelos/Persona.php";
-		$persona = new Persona();
-
-		$rspta = $persona->listarc();
-
-		while ($reg = $rspta->fetch_object()) {
-			echo '<option value=' . $reg->idpersona . '>' . $reg->nombre . '</option>';
-		}
 		break;
 
 	case 'listarArticulos':

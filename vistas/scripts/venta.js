@@ -66,6 +66,14 @@ function init() {
       },
     });
   });
+
+  $('#btnEntregar').click(function () {
+    Entregar($('#idventa').val());
+  });
+
+  $('#btnDeuda').click(function () {
+    CompletarPago($('#idventa').val());
+  });
 }
 
 function evaluarAbono() {
@@ -74,10 +82,12 @@ function evaluarAbono() {
 
   if (idtipocancelacion == 1) {
     $('#colAbono').hide();
+    $('#colPendiente').hide();
     $('#abono').val('');
     $('#abono').removeAttr('required');
   } else {
     $('#colAbono').show();
+    $('#colPendiente').show();
     $('#abono').attr('required', 'true');
   }
 }
@@ -86,8 +96,8 @@ function cargarClientes(telefono) {
   //cargamos los items al select cliente
   $.getJSON('../ajax/persona.php?op=listar&idtipopersona=1', function (r) {
     const selectCliente = $('#idcliente');
+    const filtroCliente = $('#filtroCliente');
     selectCliente.html('');
-
     selectCliente.append(`<option value="">--Seleccione--</option>`);
 
     r.forEach((cliente) => {
@@ -95,10 +105,11 @@ function cargarClientes(telefono) {
         cliente.numdocumento !== ''
           ? cliente.tipodocumento + ': ' + cliente.numdocumento
           : 'Sin doc';
-      const texto = cliente.nombre + ' (tel: ' + cliente.telefono + ')';
+      const texto = cliente.nombre + ' (Tel: ' + cliente.telefono + ')';
       const option = `<option value="${cliente.idpersona}">${texto}</option>`;
 
       //filtroproveedor.append(option);
+      filtroCliente.append(option);
       selectCliente.append(option);
     });
 
@@ -162,6 +173,7 @@ function mostrarform(flag) {
     $('#btnEntregar').hide();
     $('#btnDeuda').hide();
 
+    datarticulos = [];
     listarArticulos();
 
     $('#btnGuardar').attr('disabled', 'true');
@@ -198,8 +210,14 @@ function listar() {
         },
       },
       bDestroy: true,
-      iDisplayLength: 5, //paginacion
-      order: [[0, 'desc']], //ordenar (columna, orden)
+      iDisplayLength: 10, //paginacion
+      order: [[1, 'desc']], //ordenar (columna, orden)
+      columnDefs: [
+        {
+          targets: 0, // Índice de la columna que quieres que no sea ordenable (columna 1)
+          orderable: false, // Desactiva el ordenamiento
+        },
+      ],
     })
     .DataTable();
 }
@@ -453,12 +471,14 @@ function mostrar(idventa) {
     $('#btnCancelar').show();
     $('#btnAgregarArt').hide();
 
-    if (parseInt(data.estado) == 1) {
-      $('#btnEntregar').show();
-    }
+    if (parseInt(data.estado) != 3) {
+      if (parseInt(data.estado) == 1) {
+        $('#btnEntregar').show();
+      }
 
-    if (true) {
-      $('#btnDeuda').show();
+      if (parseInt(data.pagado) == 0) {
+        $('#btnDeuda').show();
+      }
     }
 
     $.getJSON('../ajax/venta.php?op=listarDetalle&idventa=' + idventa, function (r) {
@@ -485,6 +505,7 @@ function mostrar(idventa) {
 
       $('#total').text(total);
       $('.ocultar-vista').hide();
+      $('#saldo_pendiente').val(total - parseFloat(data.adelanto));
     });
   });
 }
@@ -496,6 +517,30 @@ function anular(idventa) {
       $.post('../ajax/venta.php?op=anular', { idventa: idventa }, function (e) {
         bootbox.alert(e);
         tabla.ajax.reload(); // Recarga la lista de ventas
+      });
+    }
+  });
+}
+
+function Entregar(idventa) {
+  bootbox.confirm('la entrega se completará, por favor confirmar.', function (result) {
+    if (result) {
+      $.post('../ajax/venta.php?op=entregar', { idventa: idventa }, function (e) {
+        bootbox.alert(e);
+        tabla.ajax.reload();
+        mostrarform(false);
+      });
+    }
+  });
+}
+
+function CompletarPago(idventa) {
+  bootbox.confirm('La venta se marcará como pagado, por favor confirmar.', function (result) {
+    if (result) {
+      $.post('../ajax/venta.php?op=completarpago', { idventa: idventa }, function (e) {
+        bootbox.alert(e);
+        tabla.ajax.reload();
+        mostrarform(false);
       });
     }
   });

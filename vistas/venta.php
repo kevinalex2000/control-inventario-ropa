@@ -33,6 +33,43 @@ if (!isset($_SESSION['nombre'])) {
               <!--box-header-->
               <!--centro-->
               <div class="panel-body table-responsive" id="listadoregistros">
+
+                <div class="row" style="margin-bottom: 30px;">
+                  <!-- Filtro Categoría -->
+                  <div class="col-md-2">
+                    <label for="filtroCategoria">Desde</label>
+                    <input class="form-control" type="date" name="fecha_desde" id="fecha_desde" required>
+                  </div>
+
+                  <!-- Filtro Talla -->
+                  <div class="col-md-2">
+                    <label for="filtroTalla">Hasta</label>
+                    <input class="form-control" type="date" name="fecha_hasta" id="fecha_hasta" required>
+                  </div>
+
+                  <!-- Filtro Estado -->
+                  <div class="col-md-2">
+                    <label for="filtroCliente">Cliente</label>
+                    <select id="filtroCliente" class="form-control input-sm">
+                      <option value="">Todos</option>
+                    </select>
+                  </div>
+
+                  <!-- Botón Excel -->
+                  <div class="col-md-2" style="padding-top: 25px;">
+                    <button id="btnExportExcel" class="btn btn-sm" onclick="listarConFiltro()">
+                      <span class="fa fa-filter"></span> Filtrar
+                    </button>
+                  </div>
+
+                  <!-- Campo Buscar -->
+                  <div class="col-md-4">
+                    <label for="buscarTabla">Buscar</label>
+                    <input type="text" id="buscarTabla" class="form-control input-sm" placeholder="Buscar en la tabla..."
+                      onkeyup="buscarEnTabla(this.value, tabla)">
+                  </div>
+                </div>
+
                 <table id="tbllistado" class="table table-striped table-bordered table-condensed table-hover">
                   <thead>
                     <th>Opciones</th>
@@ -142,7 +179,7 @@ if (!isset($_SESSION['nombre'])) {
                       </tfoot>
                     </table>
                   </div>
-
+                  <input type="hidden" id="idarticulomostrar">
 
                   <div class="form-group col-md-3 form-inline">
                     <label for="">Cancelación: </label>
@@ -156,7 +193,7 @@ if (!isset($_SESSION['nombre'])) {
                     <label for="">Abono(*): </label>
                     <input name="abono" id="abono" class="form-control" type="number" placeholder="-">
                   </div>
-                  <div class="col-md-3">
+                  <div class="col-md-3" id="colPendiente">
                     <label for="">Pendiente por pagar:</label>
                     <input name="saldo_pendiente" id="saldo_pendiente" class="form-control" type="text" readonly>
                   </div>

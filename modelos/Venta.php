@@ -16,7 +16,7 @@ class Venta
 		// Si es pago total (cancelación completa)
 		if ($idtipocancelacion == 1) {
 			$pagado = 1; // Completo
-		} else { 
+		} else {
 			$pagado = 0;
 		}
 
@@ -73,7 +73,7 @@ class Venta
 		$sql = "SELECT v.idventa,DATE(v.fecha_hora) as fecha,
 			v.idcliente,p.nombre as cliente,u.idusuario,u.nombre as usuario, 
 			v.tipo_comprobante,v.serie_comprobante,v.num_comprobante,v.total_venta,
-			v.impuesto,v.estado,v.idtipo_cancelacion,v.adelanto
+			v.impuesto,v.estado,v.idtipo_cancelacion,v.adelanto, v.pagado
 			FROM venta v INNER JOIN persona p ON v.idcliente=p.idpersona 
 			INNER JOIN usuario u ON v.idusuario=u.idusuario 
 			WHERE idventa='$idventa'";
@@ -94,7 +94,7 @@ class Venta
 	//listar registros
 	public function listar()
 	{
-		$sql = "SELECT v.idventa,DATE(v.fecha_hora) as fecha,v.idcliente,p.nombre as cliente,u.idusuario,u.nombre as usuario, 
+		$sql = "SELECT v.idventa,DATE(v.fecha_hora) as fecha, v.fecha_registro,v.idcliente,p.nombre as cliente, p.telefono,u.idusuario,u.nombre as usuario, 
 		v.tipo_comprobante,v.serie_comprobante,v.num_comprobante,v.total_venta,v.impuesto,v.estado, v.idtipo_cancelacion, v.pagado, v.adelanto
 		FROM venta v INNER JOIN persona p ON v.idcliente=p.idpersona 
 		INNER JOIN usuario u ON v.idusuario=u.idusuario 
@@ -114,6 +114,20 @@ class Venta
 		$sql = "SELECT a.nombre AS articulo, a.codigo, d.cantidad, d.precio_venta, d.descuento, (d.cantidad*d.precio_venta-d.descuento) AS subtotal FROM detalle_venta d INNER JOIN articulo a ON d.idarticulo=a.idarticulo WHERE d.idventa='$idventa'";
 		return ejecutarConsulta($sql);
 	}
+
+	public function Entregar($idventa)
+	{
+		$sql = "UPDATE venta SET estado = 2 WHERE idventa='$idventa'";
+		return ejecutarConsulta($sql);
+	}
+
+	public function CompletarPago($idventa)
+	{
+		$sql = "UPDATE venta SET pagado = 1 WHERE idventa='$idventa'";
+		echo $sql;
+		return ejecutarConsulta($sql);
+	}
+
 
 
 }
