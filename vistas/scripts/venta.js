@@ -205,23 +205,27 @@ function listar() {
         url: '../ajax/venta.php?op=listar',
         type: 'get',
         dataType: 'json',
+        data: function (d) {
+          d.fecha_desde = $('#fecha_desde').val();
+          d.fecha_hasta = $('#fecha_hasta').val();
+          d.idcliente = $('#filtroCliente').val();
+        },
         error: function (e) {
           console.log(e.responseText);
         },
       },
       bDestroy: true,
-      iDisplayLength: 10, //paginacion
-      order: [[1, 'desc']], //ordenar (columna, orden)
+      iDisplayLength: 10,
+      order: [[1, 'desc']],
       columnDefs: [
         {
-          targets: 0, // Índice de la columna que quieres que no sea ordenable (columna 1)
-          orderable: false, // Desactiva el ordenamiento
+          targets: 0,
+          orderable: false,
         },
       ],
     })
     .DataTable();
 }
-
 function listarArticulos() {
   let valorFiltroTalla = $('#filtroTalla').val();
   let textoTalla = '(' + $('#filtroTalla option:selected').text() + ')';
@@ -761,6 +765,12 @@ function eliminarDetalle(filaId) {
   $('#' + filaId).remove();
   modificarSubtotales(); // Si tienes esta función para actualizar el total, inclúyela aquí
   verificarBotonVenta();
+}
+
+function listarConFiltro() {
+  if (tabla) {
+    tabla.ajax.reload();
+  }
 }
 
 // Siempre define la función:
