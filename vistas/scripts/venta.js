@@ -245,7 +245,7 @@ function listarArticulos() {
         data: function (d) {
           d.idcategoria = $('#filtroCategoria').val();
           d.idtalla = valorFiltroTalla;
-          d.condicion = $('#filtroEstado').val();
+          d.condicion = 1;
         },
       },
       columns: [
