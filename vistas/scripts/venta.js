@@ -321,17 +321,46 @@ function listarArticulos() {
 }
 //funcion para guardaryeditar
 function guardaryeditar(e) {
-  e.preventDefault(); //no se activara la accion predeterminada
-  //$("#btnGuardar").prop("disabled",true);
+  e.preventDefault();
+  let valid = true;
+  let mensaje = '';
+
   var formData = new FormData($('#formulario')[0]);
 
-  $.ajax({
-    url: '../ajax/venta.php?op=guardaryeditar',
-    type: 'POST',
-    data: formData,
-    contentType: false,
-    processData: false,
+  let json = {
+    idcliente: parseInt(formData.get('idcliente')),
+    fechahora: formData.get('fecha_hora'),
+    idtipocancelacion: parseInt(formData.get('tipocancelacion')),
+    adelanto: formData.get('abono') != '' ? parseFloat(formData.get('abono')) : null,
+    detalle: [],
+  };
 
+  let idsarticulos = formData.getAll('idarticulo[]');
+  let idstallas = formData.getAll('idtalla[]');
+  let cantidades = formData.getAll('cantidad[]');
+  let preciosventa = formData.getAll('precio_venta[]');
+  let descuentos = formData.getAll('descuento[]');
+
+  idsarticulos.forEach((idarticulo, index) => {
+    json.detalle.push({
+      idtalla: parseInt(idstallas[index]),
+      cantidad: parseInt(cantidades[index]),
+      precioventa: parseFloat(preciosventa[index]),
+      descuento: parseFloat(descuentos[index]),
+      idarticulo: parseInt(idsarticulos[index]),
+    });
+  });
+
+  if (!valid) {
+    alert(mensaje);
+    return;
+  }
+
+  $.ajax({
+    url: '../ajax/venta.php?op=guardar',
+    type: 'POST',
+    data: JSON.stringify(json),
+    contentType: 'application/json',
     success: function (datos) {
       bootbox.alert(datos);
       mostrarform(false);

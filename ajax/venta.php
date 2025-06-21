@@ -14,23 +14,23 @@ function guardar()
 	$input = file_get_contents('php://input');
 	$data = json_decode($input, true);
 
-	$idcliente = $data['idcliente'];
+	$idcliente = (int) $data['idcliente'];
 	$fechahora = $data['fechahora'];
 	$idtipocancelacion = (int) $data['idtipocancelacion'];
-	$adelanto = $data['adelanto'];
+	$adelanto = (float) $data['adelanto'];
 	$totalventa = 0;
 	$detalleventa = [];
 
 	foreach ($data['detalle'] as $item) {
-		$idarticulo = $item['idarticulo'];
-		$preciocompra = $item['precioventa'];
-		$cantidad = $item['cantidad'];
-		$idtalla = $item['idtalla'];
-		$descuento = $item['descuento'];
-		$subtotal = (floatval($preciocompra) * floatval($cantidad)) - $descuento;
+		$idarticulo = (int) $item['idarticulo'];
+		$precioventa = (float) $item['precioventa'];
+		$cantidad = (int) $item['cantidad'];
+		$idtalla = (int) $item['idtalla'];
+		$descuento = (float) $item['descuento'];
+		$subtotal = ($precioventa * $cantidad) - $descuento;
 		$totalventa += $subtotal;
 		array_push($detalleventa, [
-			'precioventa' => $preciocompra,
+			'precioventa' => $precioventa,
 			'cantidad' => $cantidad,
 			'idarticulo' => $idarticulo,
 			'idtalla' => $idtalla,

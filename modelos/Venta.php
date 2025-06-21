@@ -17,7 +17,8 @@ class Venta
 			$adelanto = 'NULL';
 		}
 
-		$sql = "INSERT INTO venta (idcliente,idusuario,fecha_hora,total_venta,estado,idtipo_cancelacion,adelanto) VALUES ('$idpersona','$idusuario','$fechahora','$totalventa','1',$idtipocancelacion,$adelanto)";
+		$sql = "INSERT INTO venta (idcliente,idusuario,fecha_hora,total_venta,estado,idtipo_cancelacion,adelanto) VALUES ('$idpersona','$idusuario','$fechahora','$totalventa','1','$idtipocancelacion',$adelanto)";
+
 		$idventanew = ejecutarConsulta_retornarID($sql);
 		$sw = true;
 
@@ -28,7 +29,7 @@ class Venta
 			$idtalla = $item['idtalla'];
 			$descuento = $item['descuento'];
 
-			$sql_detalle = "INSERT INTO detalle_ingreso (idingreso,idarticulo,cantidad,precio_compra, idtalla, descuento) VALUES($idventanew,$idarticulo,$cantidad,$precioventa,$idtalla,$descuento)";
+			$sql_detalle = "INSERT INTO detalle_venta (idventa,idarticulo,cantidad,precio_venta, idtalla, descuento) VALUES($idventanew,$idarticulo,$cantidad,$precioventa,$idtalla,$descuento)";
 			ejecutarConsulta($sql_detalle) or $sw = false;
 
 			$sql_actualizarstock = "UPDATE articulo_talla SET stock=stock-$cantidad WHERE idarticulo=$idarticulo AND idtalla=$idtalla";

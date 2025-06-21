@@ -654,3 +654,6 @@ ALTER TABLE venta MODIFY COLUMN idtipo_cancelacion INT NOT NULL;
 
 ALTER TABLE venta
 ADD COLUMN adelanto DECIMAL(10,2) NULL;
+
+ALTER TABLE venta 
+ADD COLUMN fecha_entrega DATETIME NULL;
