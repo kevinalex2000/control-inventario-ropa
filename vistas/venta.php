@@ -74,6 +74,7 @@ if (!isset($_SESSION['nombre'])) {
                   <thead>
                     <th>Opciones</th>
                     <th>Fecha</th>
+                    <th>Codigo</th>
                     <th>Cliente</th>
                     <th>Usuario</th>
                     <th>Total Venta</th>
@@ -85,6 +86,7 @@ if (!isset($_SESSION['nombre'])) {
                   <tfoot>
                     <th>Opciones</th>
                     <th>Fecha</th>
+                    <th>Codigo</th>
                     <th>Cliente</th>
                     <th>Usuario</th>
                     <th>Total Venta</th>

@@ -478,6 +478,8 @@ function mostrar(idventa) {
 
       if (parseInt(data.pagado) == 0) {
         $('#btnDeuda').show();
+      } else {
+        $('#colPendiente').hide();
       }
     }
 
