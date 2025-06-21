@@ -116,15 +116,26 @@ switch ($_GET["op"]) {
 			}
 
 			$data[] = array(
-				"0" => (($reg->estado == 'Aceptado') ? '<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idventa . ')"><i class="fa fa-eye"></i></button>' . ' ' . '<button class="btn btn-danger btn-xs" onclick="anular(' . $reg->idventa . ')"><i class="fa fa-close"></i></button>' : '<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idventa . ')"><i class="fa fa-eye"></i></button>') .
-					'<a target="_blank" href="' . $url . $reg->idventa . '"></a>',
+				"0" => (($reg->estado == 1) ?
+					'<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idventa . ')"><i class="fa fa-eye"></i></button> ' .
+					'<button class="btn btn-danger btn-xs" onclick="anular(' . $reg->idventa . ')"><i class="fa fa-times"></i></button> ' .
+					'<a target="_blank" href="' . $url . $reg->idventa . '"><button class="btn btn-info btn-xs"><i class="fa fa-file"></i></button></a>'
+					:
+					'<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idventa . ')"><i class="fa fa-eye"></i></button> ' .
+					'<a target="_blank" href="' . $url . $reg->idventa . '"><button class="btn btn-info btn-xs"><i class="fa fa-file"></i></button></a>'
+				),
 				"1" => $reg->fecha,
 				"2" => $reg->cliente,
 				"3" => $reg->usuario,
-				"4" => $reg->tipo_comprobante,
-				"5" => $reg->serie_comprobante . '-' . $reg->num_comprobante,
-				"6" => $reg->total_venta,
-				"7" => ($reg->estado == 'Aceptado') ? '<span class="label bg-green">Aceptado</span>' : '<span class="label bg-red">Anulado</span>'
+				"4" => $reg->total_venta,
+				// Estado de pago
+				"5" => ($reg->pagado == 1)
+					? '<span class="label bg-green">Completo</span>'
+					: '<span class="label bg-blue">Debe: S/.' . number_format($reg->total_venta - floatval($reg->adelanto), 2) . '</span>',
+				// Estado general
+				"6" => ($reg->estado == 1) ? '<span class="label bg-blue">En progreso</span>'
+					: (($reg->estado == 2) ? '<span class="label bg-green">Completado</span>'
+						: '<span class="label bg-red">Anulado</span>')
 			);
 		}
 		$results = array(

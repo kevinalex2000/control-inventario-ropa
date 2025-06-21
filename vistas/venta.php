@@ -39,9 +39,8 @@ if (!isset($_SESSION['nombre'])) {
                     <th>Fecha</th>
                     <th>Cliente</th>
                     <th>Usuario</th>
-                    <th>Documento</th>
-                    <th>Número</th>
                     <th>Total Venta</th>
+                    <th>Estado de pago</th>
                     <th>Estado</th>
                   </thead>
                   <tbody>
@@ -51,9 +50,8 @@ if (!isset($_SESSION['nombre'])) {
                     <th>Fecha</th>
                     <th>Cliente</th>
                     <th>Usuario</th>
-                    <th>Documento</th>
-                    <th>Número</th>
                     <th>Total Venta</th>
+                    <th>Estado de pago</th>
                     <th>Estado</th>
                   </tfoot>
                 </table>
@@ -157,6 +155,10 @@ if (!isset($_SESSION['nombre'])) {
                   <div class="col-md-3" id="colAbono" style="display: none">
                     <label for="">Abono(*): </label>
                     <input name="abono" id="abono" class="form-control" type="number" placeholder="-">
+                  </div>
+                  <div class="col-md-3">
+                    <label for="">Pendiente por pagar:</label>
+                    <input name="saldo_pendiente" id="saldo_pendiente" class="form-control" type="text" readonly>
                   </div>
                   <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding-top:25px;">
                     <button class="btn btn-primary" type="submit" id="btnRealizarVenta" disabled><i class="fa fa-money"></i>
