@@ -63,7 +63,7 @@ if (!isset($_SESSION['nombre'])) {
                   <div class="form-group col-lg-8 col-md-8 col-xs-12">
                     <label for="">Cliente:</label>
                     <input class="form-control" type="hidden" name="idventa" id="idventa">
-                    <div class="input-group">
+                    <div id="divCliente" class="input-group">
                       <select name="idcliente" id="idcliente" class="form-control selectpicker" data-live-search="true"
                         required>
                         <option value="">--Seleccione--</option>
@@ -71,7 +71,7 @@ if (!isset($_SESSION['nombre'])) {
                       <span class="input-group-btn">
                         <a data-toggle="modal" href="#modalCliente">
 
-                          <button class="btn btn-default" style="margin-left: 10px;">
+                          <button id="btnCreacionRapidaCliente" class="btn btn-default" style="margin-left: 10px;">
                             <i class="fa fa-user-plus"></i> Creación rapida
                           </button>
                         </a>
@@ -117,11 +117,11 @@ if (!isset($_SESSION['nombre'])) {
                   <div class="col-lg-12 col-md-12 col-xs-12">
                     <table id="detalles" class="table table-striped table-bordered table-condensed table-hover  head-black">
                       <thead style="background-color:#A9D0F5">
-                        <th>Opciones</th>
+                        <th class="ocultar-vista">Opciones</th>
                         <th>Imagen</th>
                         <th>Articulo</th>
                         <th>Talla</th>
-                        <th>Stock Actual</th>
+                        <th class="ocultar-vista">Stock Actual</th>
                         <th>Cantidad</th>
                         <th>Precio Venta</th>
                         <th>Descuento</th>
@@ -130,11 +130,11 @@ if (!isset($_SESSION['nombre'])) {
                       <tbody>
                       </tbody>
                       <tfoot>
+                        <th class="ocultar-vista"></th>
                         <th></th>
                         <th></th>
                         <th></th>
-                        <th></th>
-                        <th></th>
+                        <th class="ocultar-vista"></th>
                         <th></th>
                         <th></th>
                         <th>Total (S/)</th>
@@ -161,6 +161,12 @@ if (!isset($_SESSION['nombre'])) {
                   <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding-top:25px;">
                     <button class="btn btn-primary" type="submit" id="btnRealizarVenta" disabled><i class="fa fa-money"></i>
                       Realizar Venta</button>
+                    <button id="btnEntregar" class="btn btn-success" type="button">
+                      <i class="fa fa-truck"></i>
+                      Entregar pedido</button>
+                    <button id="btnDeuda" class="btn btn-default" type="button">
+                      <i class="fa fa-money"></i>
+                      Completar deuda</button>
                     <button class="btn btn-danger" onclick="cancelarform()" type="button" id="btnCancelar"><i
                         class="fa fa-arrow-circle-left"></i> Cancelar</button>
                   </div>

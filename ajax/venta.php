@@ -51,6 +51,30 @@ function guardar()
 	return $rspta ? "Datos registrados correctamente" : "Error al registrar los datos";
 }
 
+function listarDetalle()
+{
+	global $venta;
+	//recibimos el idventa
+	$id = $_GET['idventa'];
+	$rspta = $venta->listarDetalle($id);
+	$data = array();
+
+	while ($reg = $rspta->fetch_object()) {
+		$data[] = array(
+			"idarticulo" => $reg->idarticulo,
+			"nombre" => $reg->nombre,
+			"imagen" => $reg->imagen,
+			"talla" => $reg->talla,
+			"cantidad" => $reg->cantidad,
+			"precioventa" => $reg->precio_venta,
+			"descuento" => $reg->descuento,
+			"subtotal" => ($reg->precio_venta * $reg->cantidad) - $reg->descuento
+		);
+	}
+
+	return json_encode($data);
+}
+
 
 $idventa = isset($_POST["idventa"]) ? limpiarCadena($_POST["idventa"]) : "";
 $idcliente = isset($_POST["idcliente"]) ? limpiarCadena($_POST["idcliente"]) : "";
@@ -77,37 +101,7 @@ switch ($_GET["op"]) {
 		break;
 
 	case 'listarDetalle':
-		//recibimos el idventa
-		$id = $_GET['id'];
-
-		$rspta = $venta->listarDetalle($id);
-		$total = 0;
-		echo ' <thead style="background-color:#A9D0F5">
-        <th>Opciones</th>
-        <th>Articulo</th>
-        <th>Cantidad</th>
-        <th>Precio Venta</th>
-        <th>Descuento</th>
-        <th>Subtotal</th>
-       </thead>';
-		while ($reg = $rspta->fetch_object()) {
-			echo '<tr class="filas">
-			<td></td>
-			<td>' . $reg->nombre . '</td>
-			<td>' . $reg->cantidad . '</td>
-			<td>' . $reg->precio_venta . '</td>
-			<td>' . $reg->descuento . '</td>
-			<td>' . $reg->subtotal . '</td></tr>';
-			$total = $total + ($reg->precio_venta * $reg->cantidad - $reg->descuento);
-		}
-		echo '<tfoot>
-         <th>TOTAL</th>
-         <th></th>
-         <th></th>
-         <th></th>
-         <th></th>
-         <th><h4 id="total">S/. ' . $total . '</h4><input type="hidden" name="total_venta" id="total_venta"></th>
-       </tfoot>';
+		echo listarDetalle();
 		break;
 
 	case 'listar':
@@ -123,7 +117,7 @@ switch ($_GET["op"]) {
 
 			$data[] = array(
 				"0" => (($reg->estado == 'Aceptado') ? '<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idventa . ')"><i class="fa fa-eye"></i></button>' . ' ' . '<button class="btn btn-danger btn-xs" onclick="anular(' . $reg->idventa . ')"><i class="fa fa-close"></i></button>' : '<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idventa . ')"><i class="fa fa-eye"></i></button>') .
-					'<a target="_blank" href="' . $url . $reg->idventa . '"> <button class="btn btn-info btn-xs"><i class="fa fa-file"></i></button></a>',
+					'<a target="_blank" href="' . $url . $reg->idventa . '"></a>',
 				"1" => $reg->fecha,
 				"2" => $reg->cliente,
 				"3" => $reg->usuario,

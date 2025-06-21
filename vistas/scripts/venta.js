@@ -62,6 +62,7 @@ function evaluarAbono() {
 
   if (idtipocancelacion == 1) {
     $('#colAbono').hide();
+    $('#abono').val('');
     $('#abono').removeAttr('required');
   } else {
     $('#colAbono').show();
@@ -122,17 +123,33 @@ function limpiar() {
   $('#tipo_comprobante').selectpicker('refresh');
 
   $('#idcliente').val('');
+  $('#idcliente').removeAttr('disabled');
   $('#idcliente').selectpicker('refresh');
+
+  $('#abono').val('');
+  $('#abono').removeAttr('disabled');
+  $('#tipocancelacion').val('1');
+  $('#tipocancelacion').removeAttr('disabled');
+  $('#tipocancelacion').selectpicker('refresh');
+  evaluarAbono();
 }
 
 //funcion mostrar formulario
 function mostrarform(flag) {
   limpiar();
   if (flag) {
+    $('#btnCreacionRapidaCliente').show();
+    $('.ocultar-vista').show();
+    $('#btnRealizarVenta').show();
+    $('#detalles tbody').html('');
+    $('#total').html('0');
     $('#listadoregistros').hide();
     $('#formularioregistros').show();
     //$("#btnGuardar").prop("disabled",false);
     $('#btnagregar').hide();
+    $('#btnEntregar').hide();
+    $('#btnDeuda').hide();
+
     listarArticulos();
 
     $('#btnGuardar').attr('disabled', 'true');
@@ -288,8 +305,8 @@ function listarArticulos() {
       order: [], //ordenar (columna, orden)
     })
     .DataTable();
-    $('#tblarticulos tbody').off('click', '.btn-agregar-articulo'); // Quita manejadores previos
-    $('#tblarticulos tbody').on('click', '.btn-agregar-articulo', function () {
+  $('#tblarticulos tbody').off('click', '.btn-agregar-articulo'); // Quita manejadores previos
+  $('#tblarticulos tbody').on('click', '.btn-agregar-articulo', function () {
     var boton = $(this);
     var tr = boton.closest('tr');
     var idarticulo = boton.data('idarticulo');
@@ -377,7 +394,18 @@ function mostrar(idventa) {
     data = JSON.parse(data);
     mostrarform(true);
 
+    $('#tipocancelacion').val(data.idtipo_cancelacion);
+    evaluarAbono();
+    $('#abono').val(data.adelanto);
+    $('#abono').attr('disabled', 'true');
+    $('#tipocancelacion').attr('disabled', 'true');
+    $('#tipocancelacion').selectpicker('refresh');
+
+    $('#btnCreacionRapidaCliente').hide();
+    $('#btnRealizarVenta').hide();
+
     $('#idcliente').val(data.idcliente);
+    $('#idcliente').attr('disabled', 'true');
     $('#idcliente').selectpicker('refresh');
     $('#tipo_comprobante').val(data.tipo_comprobante);
     $('#tipo_comprobante').selectpicker('refresh');
@@ -391,9 +419,40 @@ function mostrar(idventa) {
     $('#btnGuardar').attr('disabled', 'true');
     $('#btnCancelar').show();
     $('#btnAgregarArt').hide();
-  });
-  $.post('../ajax/venta.php?op=listarDetalle&id=' + idventa, function (r) {
-    $('#detalles').html(r);
+
+    if (parseInt(data.estado) == 1) {
+      $('#btnEntregar').show();
+    }
+
+    if (true) {
+      $('#btnDeuda').show();
+    }
+
+    $.getJSON('../ajax/venta.php?op=listarDetalle&idventa=' + idventa, function (r) {
+      $('#detalles tbody').html('');
+      let total = 0;
+      r.forEach((fila) => {
+        let filaElement = `
+          <tr>
+            <td class="ocultar-vista"></td>
+            <td><img src="../files/articulos/${fila.imagen}" width="50" height="50"></td>
+            <td>${fila.nombre}</td>
+            <td>${fila.talla}</td>
+            <td class="ocultar-vista"></td>
+            <td>${fila.cantidad}</td>
+            <td>${fila.precioventa}</td>
+            <td>${fila.descuento}</td>
+            <td>${fila.subtotal}</td>
+          </tr>
+        `;
+        $('#detalles tbody').append(filaElement);
+
+        total += parseFloat(fila.subtotal);
+      });
+
+      $('#total').text(total);
+      $('.ocultar-vista').hide();
+    });
   });
 }
 
@@ -485,16 +544,50 @@ function agregarDetalle(idarticulo, articulo, precio_venta, imagen) {
     var subtotal = precio_venta * cantidad - descuento;
 
     var fila =
-      '<tr class="filas" id="' + filaId + '">' +
-      '<td><button type="button" class="btn btn-danger" onclick="eliminarDetalle(\'' + filaId + '\')">X</button></td>' +
-      '<td><img src="../files/articulos/' + imagen + '" width="50" height="50"></td>' +
-      '<td><input type="hidden" name="idarticulo[]" value="' + idarticulo + '">' + articulo + '</td>' +
-      '<td><input type="hidden" name="idtalla[]" value="' + idtalla + '">' + nombreTalla + '</td>' +
-      '<td>' + stock + '</td>' +
-      '<td><input type="number" class="form-control cantidad" name="cantidad[]" value="' + cantidad + '" min="1" max="' + stock + '" onchange="actualizarSubtotal(\'' + filaId + '\')"></td>' +
-      '<td><input type="hidden" name="precio_venta[]" value="' + precio_venta + '" readonly> ' + precio_venta + '</td>' +
-      '<td ><input type="number" class="form-control descuento" name="descuento[]" value="' + descuento + '" min="1" max="' + stock + '" onchange="actualizarSubtotal(\'' + filaId + '\')"></td>' +
-      '<td><span id="subtotal' + filaId + '" name="subtotal">' + subtotal + '</span></td>' +
+      '<tr class="filas" id="' +
+      filaId +
+      '">' +
+      '<td><button type="button" class="btn btn-danger" onclick="eliminarDetalle(\'' +
+      filaId +
+      '\')">X</button></td>' +
+      '<td><img src="../files/articulos/' +
+      imagen +
+      '" width="50" height="50"></td>' +
+      '<td><input type="hidden" name="idarticulo[]" value="' +
+      idarticulo +
+      '">' +
+      articulo +
+      '</td>' +
+      '<td><input type="hidden" name="idtalla[]" value="' +
+      idtalla +
+      '">' +
+      nombreTalla +
+      '</td>' +
+      '<td>' +
+      stock +
+      '</td>' +
+      '<td><input type="number" class="form-control cantidad" name="cantidad[]" value="' +
+      cantidad +
+      '" min="1" max="' +
+      stock +
+      '" onchange="actualizarSubtotal(\'' +
+      filaId +
+      '\')"></td>' +
+      '<td><input type="hidden" name="precio_venta[]" value="' +
+      precio_venta +
+      '" readonly> ' +
+      precio_venta +
+      '</td>' +
+      '<td ><input type="number" class="form-control descuento" name="descuento[]" value="' +
+      descuento +
+      '" min="1" onchange="actualizarSubtotal(\'' +
+      filaId +
+      '\')"></td>' +
+      '<td><span id="subtotal' +
+      filaId +
+      '" name="subtotal">' +
+      subtotal +
+      '</span></td>' +
       '</tr>';
     $('#detalles').append(fila);
     modificarSubtotales();
@@ -512,8 +605,8 @@ function actualizarSubtotal(filaId) {
   var stock = parseInt(fila.find('td').eq(4).text()) || 0; // Stock desde la columna
 
   // Si el campo cantidad está vacío o no es número, deja el subtotal en 0
-  if (cantidadInput.val() === "" || isNaN(cantidad) || cantidad < 1) {
-    fila.find('span[name="subtotal"]').text("0");
+  if (cantidadInput.val() === '' || isNaN(cantidad) || cantidad < 1) {
+    fila.find('span[name="subtotal"]').text('0');
     modificarSubtotales();
     verificarBotonVenta();
     return;
@@ -591,11 +684,10 @@ function eliminarDetalle(filaId) {
   verificarBotonVenta();
 }
 
-$('#detalles').on('input', '.cantidad, .descuento', function() {
+$('#detalles').on('input', '.cantidad, .descuento', function () {
   var fila = $(this).closest('tr');
   var filaId = fila.attr('id');
   actualizarSubtotal(filaId);
 });
-
 
 init();
