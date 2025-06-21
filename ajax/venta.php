@@ -124,7 +124,11 @@ switch ($_GET["op"]) {
 		break;
 
 	case 'listar':
-		$rspta = $venta->listar();
+		$fecha_desde = isset($_GET['fecha_desde']) ? $_GET['fecha_desde'] : '';
+		$fecha_hasta = isset($_GET['fecha_hasta']) ? $_GET['fecha_hasta'] : '';
+		$idcliente = isset($_GET['idcliente']) ? $_GET['idcliente'] : '';
+
+		$rspta = $venta->listar($fecha_desde, $fecha_hasta, $idcliente);
 		$data = array();
 
 		while ($reg = $rspta->fetch_object()) {

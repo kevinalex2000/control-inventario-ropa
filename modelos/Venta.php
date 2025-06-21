@@ -92,13 +92,30 @@ class Venta
 	}
 
 	//listar registros
-	public function listar()
+	public function listar($fecha_desde = '', $fecha_hasta = '', $idcliente = '')
 	{
+		$where = [];
+		if ($fecha_desde) {
+			$where[] = "DATE(v.fecha_hora) >= '$fecha_desde'";
+		}
+		if ($fecha_hasta) {
+			$where[] = "DATE(v.fecha_hora) <= '$fecha_hasta'";
+		}
+		if ($idcliente) {
+			$where[] = "v.idcliente = '$idcliente'";
+		}
+
+		$where_sql = '';
+		if (count($where) > 0) {
+			$where_sql = 'WHERE ' . implode(' AND ', $where);
+		}
+
 		$sql = "SELECT v.idventa,DATE(v.fecha_hora) as fecha, v.fecha_registro,v.idcliente,p.nombre as cliente, p.telefono,u.idusuario,u.nombre as usuario, 
-		v.tipo_comprobante,v.serie_comprobante,v.num_comprobante,v.total_venta,v.impuesto,v.estado, v.idtipo_cancelacion, v.pagado, v.adelanto
-		FROM venta v INNER JOIN persona p ON v.idcliente=p.idpersona 
-		INNER JOIN usuario u ON v.idusuario=u.idusuario 
-		ORDER BY v.idventa DESC";
+    v.tipo_comprobante,v.serie_comprobante,v.num_comprobante,v.total_venta,v.impuesto,v.estado, v.idtipo_cancelacion, v.pagado, v.adelanto
+    FROM venta v INNER JOIN persona p ON v.idcliente=p.idpersona 
+    INNER JOIN usuario u ON v.idusuario=u.idusuario 
+    $where_sql
+    ORDER BY v.idventa DESC";
 		return ejecutarConsulta($sql);
 	}
 
