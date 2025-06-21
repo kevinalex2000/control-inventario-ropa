@@ -288,7 +288,8 @@ function listarArticulos() {
       order: [], //ordenar (columna, orden)
     })
     .DataTable();
-  $('#tblarticulos tbody').on('click', '.btn-agregar-articulo', function () {
+    $('#tblarticulos tbody').off('click', '.btn-agregar-articulo'); // Quita manejadores previos
+    $('#tblarticulos tbody').on('click', '.btn-agregar-articulo', function () {
     var boton = $(this);
     var tr = boton.closest('tr');
     var idarticulo = boton.data('idarticulo');
