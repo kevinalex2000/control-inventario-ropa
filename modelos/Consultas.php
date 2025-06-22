@@ -35,10 +35,26 @@ class Consultas
 
 	public function totalventahoy()
 	{
-		$sql = "SELECT IFNULL(SUM(total_venta), 0) AS total_venta
-						FROM venta
-						WHERE MONTH(fecha_hora) = MONTH(CURDATE())
-							AND YEAR(fecha_hora) = YEAR(CURDATE());";
+		$sql = "SELECT 
+    IFNULL(SUM((vd.precio_venta - (vd.descuento/vd.cantidad) - IFNULL(pc.precio_compra, 0)) * vd.cantidad), 0) AS total_venta
+FROM venta v
+JOIN detalle_venta vd ON v.idventa = vd.idventa
+
+LEFT JOIN (
+    SELECT d.idarticulo, d.idtalla, d.precio_compra
+    FROM detalle_ingreso d
+    JOIN ingreso i ON d.idingreso = i.idingreso
+    WHERE i.fecha_registro = (
+        SELECT MAX(i2.fecha_registro)
+        FROM detalle_ingreso d2
+        JOIN ingreso i2 ON d2.idingreso = i2.idingreso
+        WHERE d2.idarticulo = d.idarticulo AND d2.idtalla = d.idtalla
+    )
+) pc ON pc.idarticulo = vd.idarticulo AND pc.idtalla = vd.idtalla
+
+WHERE MONTH(v.fecha_hora) = MONTH(CURDATE())
+  AND YEAR(v.fecha_hora) = YEAR(CURDATE());";
+
 		return ejecutarConsulta($sql);
 	}
 
@@ -50,22 +66,57 @@ class Consultas
 
 	public function ventasultimos_30dias()
 	{
-		$sql = "SELECT DATE_FORMAT(fecha_hora, '%d %b') AS fecha, SUM(total_venta) AS total
-		FROM venta
-		WHERE fecha_hora >= CURDATE() - INTERVAL 30 DAY
-		GROUP BY DATE(fecha_hora)
-		ORDER BY fecha_hora ASC;
-		";
+		$sql = "SELECT 
+    DATE_FORMAT(v.fecha_hora, '%d %b') AS fecha,
+    SUM((vd.precio_venta - (vd.descuento/vd.cantidad) - IFNULL(pc.precio_compra, 0)) * vd.cantidad) AS total
+FROM venta v
+JOIN detalle_venta vd ON v.idventa = vd.idventa
+
+LEFT JOIN (
+    SELECT d.idarticulo, d.idtalla, d.precio_compra
+    FROM detalle_ingreso d
+    JOIN ingreso i ON d.idingreso = i.idingreso
+    WHERE i.fecha_registro = (
+        SELECT MAX(i2.fecha_registro)
+        FROM detalle_ingreso d2
+        JOIN ingreso i2 ON d2.idingreso = i2.idingreso
+        WHERE d2.idarticulo = d.idarticulo AND d2.idtalla = d.idtalla
+    )
+) pc ON pc.idarticulo = vd.idarticulo AND pc.idtalla = vd.idtalla
+
+WHERE v.fecha_hora >= CURDATE() - INTERVAL 30 DAY
+GROUP BY DATE(v.fecha_hora)
+ORDER BY v.fecha_hora ASC;";
+
 		return ejecutarConsulta($sql);
 	}
 
 	public function ventasultimos_12meses()
 	{
-		$sql = " SELECT DATE_FORMAT(fecha_hora,'%M') AS fecha, SUM(total_venta) AS total FROM venta GROUP BY MONTH(fecha_hora) ORDER BY fecha_hora DESC LIMIT 0,12";
+		$sql = "SELECT 
+    DATE_FORMAT(v.fecha_hora, '%b %Y') AS fecha,
+    SUM((vd.precio_venta - (vd.descuento/vd.cantidad) - IFNULL(pc.precio_compra, 0)) * vd.cantidad) AS total
+FROM venta v
+JOIN detalle_venta vd ON v.idventa = vd.idventa
+
+LEFT JOIN (
+    SELECT d.idarticulo, d.idtalla, d.precio_compra
+    FROM detalle_ingreso d
+    JOIN ingreso i ON d.idingreso = i.idingreso
+    WHERE i.fecha_registro = (
+        SELECT MAX(i2.fecha_registro)
+        FROM detalle_ingreso d2
+        JOIN ingreso i2 ON d2.idingreso = i2.idingreso
+        WHERE d2.idarticulo = d.idarticulo AND d2.idtalla = d.idtalla
+    )
+) pc ON pc.idarticulo = vd.idarticulo AND pc.idtalla = vd.idtalla
+
+WHERE v.fecha_hora >= CURDATE() - INTERVAL 12 MONTH
+GROUP BY YEAR(v.fecha_hora), MONTH(v.fecha_hora)
+ORDER BY YEAR(v.fecha_hora), MONTH(v.fecha_hora);";
+
 		return ejecutarConsulta($sql);
 	}
-
-
 }
 
 ?>

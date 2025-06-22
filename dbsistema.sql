@@ -574,7 +574,7 @@ CREATE PROCEDURE sp_listar_articulos (
     IN p_condicion INT
 )
 BEGIN
-    SELECT 
+  SELECT 
         a.idarticulo,
         a.nombre,
         cat.nombre AS categoria,
@@ -592,7 +592,9 @@ BEGIN
     LEFT JOIN categoria cat ON cat.idcategoria = a.idcategoria
     WHERE
         (p_condicion IS NULL OR a.condicion = p_condicion)
-        AND (p_idcategoria IS NULL OR a.idcategoria = p_idcategoria);
+        AND (p_idcategoria IS NULL OR a.idcategoria = p_idcategoria)
+    ORDER BY 
+    	a.idarticulo DESC;
 END $$
 
 DELIMITER ;

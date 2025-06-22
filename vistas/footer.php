@@ -1,9 +1,5 @@
 <footer class="main-footer">
-  <div class="pull-right hidden-xs">
-    <b>Version</b> 0.0.1
-  </div>
-  <strong>Copyright &copy; 2025 InventaKode.</strong> Todo los derechos
-  reservados.
+  <strong>Version </strong>1.0.0
 </footer>
 
 <!-- jQuery 3 -->

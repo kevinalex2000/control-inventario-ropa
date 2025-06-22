@@ -19,7 +19,7 @@ if (!isset($_SESSION['nombre'])) {
 
     $rsptav = $consulta->totalventahoy();
     $regv = $rsptav->fetch_object();
-    $totalv = $regv->total_venta;
+    $totalv = number_format($regv->total_venta, 2);
 
     //obtener valores para cargar al grafico de barras
     $compras10 = $consulta->comprasultimos_10dias();
@@ -114,7 +114,7 @@ if (!isset($_SESSION['nombre'])) {
                       <h4 style="font-size: 17px;">
                         <strong>S/. <?php echo $totalv; ?> </strong>
                       </h4>
-                      <p>Ventas</p>
+                      <p>Ganancias netas</p>
                     </div>
                     <div class="icon">
                       <i class="ion ion-bag"></i>
@@ -127,7 +127,7 @@ if (!isset($_SESSION['nombre'])) {
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                   <div class="box box-primary">
                     <div class="box-header with-border">
-                      Ventas en los ultimos 30 dias
+                      Ganancias en los ultimos 30 dias
                     </div>
                     <div class="box-body">
                       <canvas id="compras" width="400" height="300"></canvas>
@@ -137,7 +137,7 @@ if (!isset($_SESSION['nombre'])) {
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                   <div class="box box-primary">
                     <div class="box-header with-border">
-                      Ventas de los ultimos 12 meses
+                      Ganancias de los ultimos 12 meses
                     </div>
                     <div class="box-body">
                       <canvas id="ventas" width="400" height="300"></canvas>

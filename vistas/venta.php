@@ -131,7 +131,7 @@ if (!isset($_SESSION['nombre'])) {
                         required>
                         <option value="">--Seleccione--</option>
                       </select>
-                      <span class="input-group-btn">
+                      <span class="input-group-btn" style="z-index:100">
                         <a data-toggle="modal" href="#modalCliente">
 
                           <button id="btnCreacionRapidaCliente" class="btn btn-default" style="margin-left: 10px;">
