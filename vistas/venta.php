@@ -69,36 +69,62 @@ if (!isset($_SESSION['nombre'])) {
                       onkeyup="buscarEnTabla(this.value, tabla)">
                   </div>
                 </div>
+                <div class="overflow-auto">
+                  <table id="tbllistado" class="table table-striped table-bordered table-condensed table-hover">
+                    <thead>
+                      <th>Opciones</th>
+                      <th>Fecha</th>
+                      <th>Codigo</th>
+                      <th>Cliente</th>
+                      <th>Usuario</th>
+                      <th>Venta</th>
+                      <th>Pago</th>
+                      <th>Estado</th>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                    <tfoot>
+                      <th>Opciones</th>
+                      <th>Fecha</th>
+                      <th>Codigo</th>
+                      <th>Cliente</th>
+                      <th>Usuario</th>
+                      <th>Venta</th>
+                      <th>Pago</th>
+                      <th>Estado</th>
+                    </tfoot>
+                  </table>
 
-                <table id="tbllistado" class="table table-striped table-bordered table-condensed table-hover">
-                  <thead>
-                    <th>Opciones</th>
-                    <th>Fecha</th>
-                    <th>Codigo</th>
-                    <th>Cliente</th>
-                    <th>Usuario</th>
-                    <th>Total Venta</th>
-                    <th>Estado de pago</th>
-                    <th>Estado</th>
-                  </thead>
-                  <tbody>
-                  </tbody>
-                  <tfoot>
-                    <th>Opciones</th>
-                    <th>Fecha</th>
-                    <th>Codigo</th>
-                    <th>Cliente</th>
-                    <th>Usuario</th>
-                    <th>Total Venta</th>
-                    <th>Estado de pago</th>
-                    <th>Estado</th>
-                  </tfoot>
-                </table>
+                </div>
               </div>
               <div class="panel-body" id="formularioregistros">
                 <form action="" name="formulario" id="formulario" method="POST">
-                  <div class="form-group col-lg-8 col-md-8 col-xs-12">
+
+                  <div class="row px-2 vi-show">
+                    <div class="form-group col-md-4">
+                      <label for="">Codigo de venta:</label>
+                      <input class="form-control" type="text" id="vi_codigo" value="VE-2025060044" readonly>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="">Estado de pago: </label><br>
+                      <div id="vi_pagado">Completado</div>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="">Estado de entrega: </label><br>
+                      <div id="vi_estado">Completado</div>
+                    </div>
+                  </div>
+                  <div class="form-group vi-show col-md-8">
                     <label for="">Cliente:</label>
+                    <input class="form-control" type="text" id="vi_nombre" readonly>
+                  </div>
+                  <div class="form-group vi-show col-md-4">
+                    <label for="">Fecha: </label>
+                    <input class="form-control" type="text" id="vi_fecha_hora" readonly>
+                  </div>
+
+                  <div class="form-group vi-hide col-lg-8 col-md-8 col-xs-12">
+                    <label for="">Cliente(*):</label>
                     <input class="form-control" type="hidden" name="idventa" id="idventa">
                     <div id="divCliente" class="input-group">
                       <select name="idcliente" id="idcliente" class="form-control selectpicker" data-live-search="true"
@@ -116,7 +142,7 @@ if (!isset($_SESSION['nombre'])) {
 
                     </div>
                   </div>
-                  <div class="form-group col-lg-4 col-md-4 col-xs-12">
+                  <div class="form-group vi-hide col-lg-4 col-md-4 col-xs-12" vi-hide>
                     <label for="">Fecha(*): </label>
                     <input class="form-control" type="date" name="fecha_hora" id="fecha_hora" required readonly>
                   </div>
@@ -151,35 +177,39 @@ if (!isset($_SESSION['nombre'])) {
                         articulos</button>
                     </a>
                   </div>
-                  <div class="col-lg-12 col-md-12 col-xs-12">
-                    <table id="detalles" class="table table-striped table-bordered table-condensed table-hover  head-black">
-                      <thead style="background-color:#A9D0F5">
-                        <th class="ocultar-vista">Opciones</th>
-                        <th>Imagen</th>
-                        <th>Articulo</th>
-                        <th>Talla</th>
-                        <th class="ocultar-vista">Stock Actual</th>
-                        <th>Cantidad</th>
-                        <th>Precio Venta</th>
-                        <th>Descuento</th>
-                        <th>Subtotal</th>
-                      </thead>
-                      <tbody>
-                      </tbody>
-                      <tfoot>
-                        <th class="ocultar-vista"></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th class="ocultar-vista"></th>
-                        <th></th>
-                        <th></th>
-                        <th>Total (S/)</th>
-                        <th>
-                          <div id="total">S/. 0.00</div><input type="hidden" name="total_venta" id="total_venta">
-                        </th>
-                      </tfoot>
-                    </table>
+                  <div class="col-lg-12 col-md-12 col-xs-12" style="z-index: 100">
+                    <div class="overflow-auto">
+
+                      <table id="detalles"
+                        class="table table-striped table-bordered table-condensed table-hover  head-black">
+                        <thead style="background-color:#A9D0F5">
+                          <th class="ocultar-vista">Opciones</th>
+                          <th>Imagen</th>
+                          <th>Articulo</th>
+                          <th>Talla</th>
+                          <th class="ocultar-vista">Stock Actual</th>
+                          <th>Cantidad</th>
+                          <th>Precio Venta</th>
+                          <th>Descuento</th>
+                          <th>Subtotal</th>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                        <tfoot>
+                          <th class="ocultar-vista"></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th class="ocultar-vista"></th>
+                          <th></th>
+                          <th></th>
+                          <th>Total (S/)</th>
+                          <th>
+                            <div id="total">S/. 0.00</div><input type="hidden" name="total_venta" id="total_venta">
+                          </th>
+                        </tfoot>
+                      </table>
+                    </div>
                   </div>
                   <input type="hidden" id="idarticulomostrar">
 
@@ -251,7 +281,7 @@ if (!isset($_SESSION['nombre'])) {
 
               <!-- Botón Excel -->
               <div class="col-md-2" style="padding-top: 25px;">
-                <button id="btnExportExcel" class="btn btn-sm" onclick="listarConFiltro()">
+                <button id="btnFiltrarArticulo" class="btn btn-sm" onclick="listarArticulos()">
                   <span class="fa fa-filter"></span> Filtrar
                 </button>
               </div>
@@ -263,7 +293,7 @@ if (!isset($_SESSION['nombre'])) {
                   onkeyup="buscarEnTabla(this.value, tablaarticulos)">
               </div>
             </div>
-            <div class="tabla-overflow">
+            <div class="overflow-auto">
               <table id="tblarticulos" class="table table-striped table-bordered table-condensed table-hover"
                 style="width: 100%">
                 <thead>

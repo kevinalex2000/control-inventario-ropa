@@ -173,6 +173,9 @@ function mostrarform(flag) {
     $('#btnEntregar').hide();
     $('#btnDeuda').hide();
 
+    $('.vi-hide').show();
+    $('.vi-show').hide();
+
     datarticulos = [];
     listarArticulos();
 
@@ -230,7 +233,7 @@ function listarArticulos() {
   let valorFiltroTalla = $('#filtroTalla').val();
   let textoTalla = '(' + $('#filtroTalla option:selected').text() + ')';
 
-  if (valorFiltroTalla === '') {
+  if (valorFiltroTalla == '') {
     textoTalla = '';
   }
 
@@ -449,6 +452,9 @@ function mostrar(idventa) {
     data = JSON.parse(data);
     mostrarform(true);
 
+    $('.vi-hide').hide();
+    $('.vi-show').show();
+
     $('#tipocancelacion').val(data.idtipo_cancelacion);
     evaluarAbono();
     $('#abono').val(data.adelanto);
@@ -466,9 +472,31 @@ function mostrar(idventa) {
     $('#tipo_comprobante').selectpicker('refresh');
     $('#serie_comprobante').val(data.serie_comprobante);
     $('#num_comprobante').val(data.num_comprobante);
+    $('#vi_fecha_hora').val(data.fecha_registro);
     $('#fecha_hora').val(data.fecha);
     $('#impuesto').val(data.impuesto);
     $('#idventa').val(data.idventa);
+    $('#vi_nombre').val(data.cliente + ' (Tel:' + data.telefono + ')');
+    $('#vi_codigo').val(data.codigo);
+
+    let elemntPagado = '-';
+
+    if (parseInt(data.estado) != 3) {
+      elemntPagado =
+        parseInt(data.pagado) == 1
+          ? '<span class="label bg-green"><i class="fa fa-check-circle"></i> Pagado</span>'
+          : '<span class="label bg-gray"><i class="fa fa-exclamation-triangle"></i> Aún debe</span>';
+    }
+
+    $('#vi_pagado').html(elemntPagado);
+
+    let elementEstado =
+      data.estado == 1
+        ? '<span class="label bg-blue">Entrega pendiente</span>'
+        : data.estado == 2
+        ? '<span class="label bg-green">Completado</span>'
+        : '<span class="label bg-red">Anulado</span>';
+    $('#vi_estado').html(elementEstado);
 
     //ocultar y mostrar los botones
     $('#btnGuardar').attr('disabled', 'true');

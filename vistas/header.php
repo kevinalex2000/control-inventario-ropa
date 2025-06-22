@@ -147,10 +147,9 @@ if (strlen(session_id()) < 1)
           }
           ?>
 
-          <!--
-                             <?php
-                             if ($_SESSION['acceso'] == 1) {
-                               echo '  <li class="treeview">
+          <?php
+          if ($_SESSION['acceso'] == 1) {
+            echo '  <li class="treeview">
           <a href="#">
             <i class="fa fa-folder"></i> <span>Acceso</span>
             <span class="pull-right-container">
@@ -162,8 +161,9 @@ if (strlen(session_id()) < 1)
             <li><a href="permiso.php"><i class="fa fa-circle-o"></i> Permisos</a></li>
           </ul>
         </li>';
-                             }
-                             ?>  
+          }
+          ?>
+          <!--
                                      <?php
                                      if ($_SESSION['consultac'] == 1) {
                                        echo '     <li class="treeview">

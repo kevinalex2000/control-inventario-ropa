@@ -73,7 +73,7 @@ class Venta
 		$sql = "SELECT v.idventa,DATE(v.fecha_hora) as fecha,
 			v.idcliente,p.nombre as cliente,u.idusuario,u.nombre as usuario, 
 			v.tipo_comprobante,v.serie_comprobante,v.num_comprobante,v.total_venta,
-			v.impuesto,v.estado,v.idtipo_cancelacion,v.adelanto, v.pagado
+			v.impuesto,v.estado,v.idtipo_cancelacion,v.adelanto, v.pagado, v.fecha_registro, p.telefono
 			FROM venta v INNER JOIN persona p ON v.idcliente=p.idpersona 
 			INNER JOIN usuario u ON v.idusuario=u.idusuario 
 			WHERE idventa='$idventa'";

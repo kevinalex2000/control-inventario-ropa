@@ -8,7 +8,7 @@ if (!isset($_SESSION['nombre'])) {
 
   require 'header.php';
   if ($_SESSION['almacen'] == 1) {
-?>
+    ?>
     <div class="content-wrapper">
       <!-- Main content -->
       <section class="content">
@@ -82,11 +82,11 @@ if (!isset($_SESSION['nombre'])) {
                 <table id="tbllistado" class="table table-striped table-bordered table-condensed table-hover">
                   <thead>
                     <th>Opciones</th>
+                    <th>Imagen</th>
                     <th>Nombre</th>
                     <th>Categoria</th>
                     <th>Codigo</th>
                     <th>Stock <span class="tallafiltrada"> </span></th>
-                    <th>Imagen</th>
                     <th>Descripcion</th>
                     <th>Precio</th>
                     <th>Estado</th>
@@ -95,11 +95,11 @@ if (!isset($_SESSION['nombre'])) {
                   </tbody>
                   <tfoot>
                     <th>Opciones</th>
+                    <th>Imagen</th>
                     <th>Nombre</th>
                     <th>Categoria</th>
                     <th>Codigo</th>
                     <th>Stock <span class="tallafiltrada"> </span></th>
-                    <th>Imagen</th>
                     <th>Descripcion</th>
                     <th>Precio</th>
                     <th>Estado</th>
@@ -182,17 +182,17 @@ if (!isset($_SESSION['nombre'])) {
       </section>
       <!-- /.content -->
     </div>
-  <?php
+    <?php
   } else {
     require 'noacceso.php';
   }
   require 'footer.php'
-  ?>
+    ?>
   <script src="../public/js/JsBarcode.all.min.js"></script>
   <script src="../public/js/jquery.PrintArea.js"></script>
   <script src="scripts/articulo.js"></script>
 
-<?php
+  <?php
 }
 
 ob_end_flush();

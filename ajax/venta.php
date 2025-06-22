@@ -78,7 +78,7 @@ function listarDetalle()
 function generarCodigoVenta($idventa, $fechaRegistro)
 {
 	// Convertimos la fecha a formato YYYYMMDD
-	$fecha = date('Ymd', strtotime($fechaRegistro));
+	$fecha = date('Ym', strtotime($fechaRegistro));
 
 	// Rellenamos el idventa con ceros a la izquierda para que tenga 4 dígitos
 	$numero = str_pad($idventa, 4, '0', STR_PAD_LEFT);
@@ -116,6 +116,7 @@ switch ($_GET["op"]) {
 
 	case 'mostrar':
 		$rspta = $venta->mostrar($idventa);
+		$rspta['codigo'] = generarCodigoVenta($rspta['idventa'], $rspta['fecha_registro']);
 		echo json_encode($rspta);
 		break;
 

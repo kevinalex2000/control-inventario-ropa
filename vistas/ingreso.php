@@ -77,26 +77,29 @@ if (!isset($_SESSION['nombre'])) {
                     </button>
                   </div>
                 </div>
-                <table id="tbllistado" class="table table-striped table-bordered table-condensed table-hover">
-                  <thead>
-                    <th>Opciones</th>
-                    <th>Fecha</th>
-                    <th>Proveedor</th>
-                    <th>Total Compra</th>
-                    <th>Usuario</th>
-                    <th>Estado</th>
-                  </thead>
-                  <tbody>
-                  </tbody>
-                  <tfoot>
-                    <th>Opciones</th>
-                    <th>Fecha</th>
-                    <th>Proveedor</th>
-                    <th>Total Compra</th>
-                    <th>Usuario</th>
-                    <th>Estado</th>
-                  </tfoot>
-                </table>
+                <div class="overflow-auto">
+                  <table id="tbllistado" class="table table-striped table-bordered table-condensed table-hover">
+                    <thead>
+                      <th>Opciones</th>
+                      <th>Fecha</th>
+                      <th>Proveedor</th>
+                      <th>Total Compra</th>
+                      <th>Usuario</th>
+                      <th>Estado</th>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                    <tfoot>
+                      <th>Opciones</th>
+                      <th>Fecha</th>
+                      <th>Proveedor</th>
+                      <th>Total Compra</th>
+                      <th>Usuario</th>
+                      <th>Estado</th>
+                    </tfoot>
+                  </table>
+
+                </div>
               </div>
               <div class="panel-body" id="formularioregistros">
                 <form action="" name="formulario" id="formulario" method="POST">
@@ -140,32 +143,35 @@ if (!isset($_SESSION['nombre'])) {
                         articulos</button>
                     </a>
                   </div>
-                  <div class="form-group col-lg-12 col-md-12 col-xs-12">
-                    <table id="detalles" class="table table-striped table-bordered table-condensed table-hover head-black">
-                      <thead>
-                        <th>Opciones</th>
-                        <th>Imagen</th>
-                        <th>Articulo</th>
-                        <th>Talla</th>
-                        <th>Cantidad</th>
-                        <th>Precio Compra</th>
-                        <th>Subtotal</th>
-                      </thead>
-                      <tbody>
+                  <div class="form-group col-lg-12 col-md-12 col-xs-12" style="z-index: 100">
+                    <div class="overflow-auto">
+                      <table id="detalles"
+                        class="table table-striped table-bordered table-condensed table-hover head-black">
+                        <thead>
+                          <th>Opciones</th>
+                          <th>Imagen</th>
+                          <th>Articulo</th>
+                          <th>Talla</th>
+                          <th>Cantidad</th>
+                          <th>Precio Compra</th>
+                          <th>Subtotal</th>
+                        </thead>
+                        <tbody>
 
-                      </tbody>
-                      <tfoot>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th>Total (S/)</th>
-                        <th>
-                          <div id="total">S/. 0.00</div><input type="hidden" name="total_compra" id="total_compra">
-                        </th>
-                      </tfoot>
-                    </table>
+                        </tbody>
+                        <tfoot>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th>Total (S/)</th>
+                          <th>
+                            <div id="total">S/. 0.00</div><input type="hidden" name="total_compra" id="total_compra">
+                          </th>
+                        </tfoot>
+                      </table>
+                    </div>
                   </div>
                   <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <button class="btn btn-primary" type="submit" id="btnGuardar"><i class="fa fa-save"></i>
@@ -202,32 +208,34 @@ if (!isset($_SESSION['nombre'])) {
                   onkeyup="buscarEnTabla(this.value, tablaArticulos)">
               </div>
             </div>
-            <table id="tblarticulos" class="table table-striped table-bordered table-condensed table-hover dataTable"
-              style="width:100%">
-              <thead>
-                <th>Opciones</th>
-                <th>Talla</th>
-                <th>Nombre</th>
-                <th>Categoria</th>
-                <th>Código</th>
-                <th>Stock</th>
-                <th>Imagen</th>
-                <th>ID Artículo</th>
-              </thead>
-              <tbody>
+            <div class="overflow-auto">
+              <table id="tblarticulos" class="table table-striped table-bordered table-condensed table-hover dataTable"
+                style="width:100%">
+                <thead>
+                  <th></th>
+                  <th>Talla</th>
+                  <th>Imagen</th>
+                  <th>Nombre</th>
+                  <th>Categoria</th>
+                  <th>Código</th>
+                  <th>Stock</th>
+                  <th>ID Artículo</th>
+                </thead>
+                <tbody>
 
-              </tbody>
-              <tfoot>
-                <th>Opciones</th>
-                <th>Talla</th>
-                <th>Nombre</th>
-                <th>Categoria</th>
-                <th>Código</th>
-                <th>Stock</th>
-                <th>Imagen</th>
-                <th>ID Artículo</th>
-              </tfoot>
-            </table>
+                </tbody>
+                <tfoot>
+                  <th></th>
+                  <th>Talla</th>
+                  <th>Imagen</th>
+                  <th>Nombre</th>
+                  <th>Categoria</th>
+                  <th>Código</th>
+                  <th>Stock</th>
+                  <th>ID Artículo</th>
+                </tfoot>
+              </table>
+            </div>
           </div>
           <div class="modal-footer">
             <button class="btn btn-default" type="button" data-dismiss="modal">Cerrar</button>

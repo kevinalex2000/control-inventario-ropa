@@ -178,10 +178,6 @@ function listar() {
                   ')"><i class="fa fa-trash"></i></button>';
           },
         },
-        { data: 'nombre' },
-        { data: 'categoria' },
-        { data: 'codigo' },
-        { data: 'stock' },
         {
           data: null,
           render: function (data, type, row, meta) {
@@ -190,6 +186,10 @@ function listar() {
             );
           },
         },
+        { data: 'nombre' },
+        { data: 'categoria' },
+        { data: 'codigo' },
+        { data: 'stock' },
         { data: 'descripcion' },
         { data: 'precioventa' },
         {
@@ -203,7 +203,6 @@ function listar() {
       ],
       bDestroy: true,
       iDisplayLength: 20,
-      order: [[0, 'desc']],
     })
     .DataTable();
 }

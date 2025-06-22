@@ -130,17 +130,17 @@ switch ($_GET["op"]) {
 	case 'listarArticulos':
 		require_once "../modelos/Articulo.php";
 		$articulo = new Articulo();
-		$rspta = $articulo->listar(null, null, 1);
+		$rspta = $articulo->listar(null, null, null);
 		$data = array();
 
 		foreach ($rspta as $reg) {
 			$data[] = array(
 				"0" => '<button class="btn btn-warning" onclick="agregarDetalle(' . $reg->idarticulo . ',\'' . $reg->nombre . ' \' ,\'' . $reg->imagen . ' \' ,\'' . $reg->precioventa . ' \')"><span class="fa fa-plus"></span></button>',
-				"1" => $reg->nombre,
-				"2" => $reg->categoria,
-				"3" => $reg->codigo,
-				"4" => $reg->stock,
-				"5" => "<img src='../files/articulos/" . $reg->imagen . "' height='50px' width='50px'>",
+				"1" => "<img src='../files/articulos/" . $reg->imagen . "' height='50px' width='50px'>",
+				"2" => $reg->nombre,
+				"3" => $reg->categoria,
+				"4" => $reg->codigo,
+				"5" => $reg->stock,
 				"6" => $reg->idarticulo
 			);
 		}
