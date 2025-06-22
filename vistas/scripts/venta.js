@@ -159,6 +159,7 @@ function limpiar() {
 
 //funcion mostrar formulario
 function mostrarform(flag) {
+  datarticulos = [];
   limpiar();
   if (flag) {
     $('#btnCreacionRapidaCliente').show();
@@ -176,7 +177,6 @@ function mostrarform(flag) {
     $('.vi-hide').show();
     $('.vi-show').hide();
 
-    datarticulos = [];
     listarArticulos();
 
     $('#btnGuardar').attr('disabled', 'true');
@@ -260,9 +260,16 @@ function listarArticulos() {
           data: null,
           orderable: false,
           render: function (data, type, row, meta) {
-            if (!datarticulos.some((a) => a.idarticulo == data.idarticulo)) {
+            const index = datarticulos.findIndex((a) => a.idarticulo == data.idarticulo);
+
+            if (index === -1) {
+              // No existe, lo agregamos
               datarticulos.push(data);
+            } else {
+              // Ya existe, lo reemplazamos
+              datarticulos[index] = data;
             }
+
             return (
               '<button class="btn btn-warning btn-agregar-articulo" data-idarticulo="' +
               data.idarticulo +
@@ -357,7 +364,6 @@ function listarArticulos() {
       alert('No seleccionó una talla');
       return;
     }
-
     var stockObj = articuloObj.detallestock.find((item) => item.idtalla == idtalla);
     var stock = stockObj ? stockObj.stock : 0;
 

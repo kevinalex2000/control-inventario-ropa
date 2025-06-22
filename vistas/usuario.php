@@ -71,7 +71,7 @@ if (!isset($_SESSION['nombre'])) {
                     </select>
                   </div>
                   <div class="form-group col-lg-6 col-md-6 col-xs-12">
-                    <label for="">Numero de Documento(*):</label>
+                    <label for="">Numero de Documento:</label>
                     <input type="text" class="form-control" name="num_documento" id="num_documento" placeholder="Documento"
                       maxlength="20">
                   </div>

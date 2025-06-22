@@ -170,7 +170,7 @@ if (!isset($_SESSION['nombre'])) {
       data: {
         labels: [<?php echo $fechasv30 ?>],
         datasets: [{
-          label: '# Ventas en S/. de los últimos 30 dias',
+          label: '# Ganancias en S/. de los últimos 30 dias',
           data: [<?php echo $totalesv30 ?>],
           backgroundColor: [
             'rgba(75, 192, 192, 0.2)',
@@ -197,7 +197,7 @@ if (!isset($_SESSION['nombre'])) {
       data: {
         labels: [<?php echo $fechasv ?>],
         datasets: [{
-          label: '# Ventas en S/. de los últimos 12 meses',
+          label: '# Ganancias en S/. de los últimos 12 meses',
           data: [<?php echo $totalesv ?>],
           backgroundColor: [
             'rgba(255, 99, 132, 0.2)',
