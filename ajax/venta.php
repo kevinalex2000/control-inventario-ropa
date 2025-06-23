@@ -147,6 +147,11 @@ switch ($_GET["op"]) {
 					: '<span class="label bg-gray"><i class="fa fa-exclamation-triangle"></i>  Debe: S/.' . number_format($reg->total_venta - floatval($reg->adelanto), 2) . '</span>';
 			}
 
+			$fechaRegistro = new DateTime($reg->fecha_registro);
+			$hoy = new DateTime();
+			$dias = $hoy->diff($fechaRegistro)->days;
+			$debe_pintar = ($reg->pagado == 0 && $reg->estado != 3 && $dias > 2) ? 1 : 0;
+
 			$data[] = array(
 				"0" => (($reg->estado == 1) ?
 					'<button class="btn btn-warning btn-xs" onclick="mostrar(' . $reg->idventa . ')"><i class="fa fa-eye"></i></button> ' .
@@ -164,7 +169,8 @@ switch ($_GET["op"]) {
 				// Estado general
 				"7" => ($reg->estado == 1) ? '<span class="label bg-blue">Entrega pendiente</span>'
 					: (($reg->estado == 2) ? '<span class="label bg-green">Completado</span>'
-						: '<span class="label bg-red">Anulado</span>')
+						: '<span class="label bg-red">Anulado</span>'),
+				"8" => $debe_pintar  // campo auxiliar para decidir pintar
 			);
 		}
 		$results = array(

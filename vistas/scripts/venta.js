@@ -225,7 +225,15 @@ function listar() {
           targets: 0,
           orderable: false,
         },
+        { targets: [8], visible: false, searchable: false }, // ocultar columna "pintar"
       ],
+      createdRow: function (row, data, dataIndex) {
+        const debePintar = parseInt(data[8]); // valor viene del backend
+
+        if (debePintar === 1) {
+          $(row).addClass('table-warning');
+        }
+      },
     })
     .DataTable();
 }

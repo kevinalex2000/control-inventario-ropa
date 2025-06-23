@@ -57,7 +57,9 @@ if (strlen(session_id()) < 1)
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <!--
               <span class="hidden-xs"><b><?php echo $_SESSION['login']; ?></b></span>-->
-                <img src="../files/usuarios/<?php echo $_SESSION['imagen']; ?>" class="user-image" alt="User Image">
+                <img
+                  src="../files/usuarios/<?php echo $_SESSION['imagen'] == null || $_SESSION['imagen'] == "" ? "avatar.png" : $_SESSION['imagen']; ?>"
+                  class="user-image" alt="User Image">
               </a>
               <ul class="dropdown-menu">
                 <!-- User image -->

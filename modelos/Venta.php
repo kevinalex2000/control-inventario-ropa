@@ -141,12 +141,8 @@ class Venta
 	public function CompletarPago($idventa)
 	{
 		$sql = "UPDATE venta SET pagado = 1 WHERE idventa='$idventa'";
-		echo $sql;
 		return ejecutarConsulta($sql);
 	}
-
-
-
 }
 
 ?>

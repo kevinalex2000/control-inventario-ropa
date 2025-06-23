@@ -60,3 +60,7 @@ table th {
 .overflow-auto {
   overflow-x: auto;
 }
+
+.table-warning {
+  background-color: #ffefd2 !important;
+}
