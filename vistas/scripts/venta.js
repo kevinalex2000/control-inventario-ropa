@@ -256,7 +256,10 @@ function listarArticulos() {
         url: '../ajax/articulo.php?op=listar',
         type: 'get',
         dataType: 'json',
-        dataSrc: '',
+        dataSrc: function (json) {
+          // Filtramos los datos con stock mayor a 0
+          return json.filter((item) => item.stock > 0);
+        },
         data: function (d) {
           d.idcategoria = $('#filtroCategoria').val();
           d.idtalla = valorFiltroTalla;

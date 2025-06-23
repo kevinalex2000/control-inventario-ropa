@@ -298,7 +298,7 @@ function mostrar(idarticulo) {
     });
 
     // BLOQUEAR los campos de tallas al editar (readonly)
-    $('.stock-talla').prop('readonly', true);
+    $('.desactivar-editar-si .stock-talla').prop('readonly', true);
   }).always(function () {
     // Eliminar la pantalla de carga cuando termina la solicitud
     $('#' + loaderId).remove();

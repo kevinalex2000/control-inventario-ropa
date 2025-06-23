@@ -54,7 +54,7 @@ class Articulo
 		];
 	}
 
-	public function editar($idarticulo, $idcategoria, $codigo, $nombre, $descripcion, $imagen, $precioventa)
+	public function editar($idarticulo, $idcategoria, $codigo, $nombre, $descripcion, $imagen, $precioventa, $stockxtallas, $idusuario)
 	{
 		if ($idcategoria == null || $idcategoria == 0) {
 			$idcategoria = 'NULL';
@@ -62,6 +62,17 @@ class Articulo
 
 		$sql = "UPDATE articulo SET idcategoria=$idcategoria,codigo='$codigo', nombre='$nombre',descripcion='$descripcion',imagen='$imagen', precio_venta='$precioventa' 
 		WHERE idarticulo='$idarticulo'";
+
+		if ($idusuario == 1) {
+			foreach ($stockxtallas as $stockTalla) {
+				$idtalla = $stockTalla['idtalla'];
+				$stock = $stockTalla['stock'];
+				$sql_stockxtalla = "UPDATE articulo_talla SET stock = $stock WHERE  idarticulo = $idarticulo AND idtalla = $idtalla";
+				ejecutarConsulta($sql_stockxtalla);
+			}
+		}
+
+
 		return ejecutarConsulta($sql);
 	}
 

@@ -1,5 +1,7 @@
 <?php
 require_once "../modelos/Articulo.php";
+if (strlen(session_id()) < 1)
+	session_start();
 
 $articulo = new Articulo();
 
@@ -7,6 +9,7 @@ function GuardarOEditar()
 {
 	global $articulo;
 
+	$idusuario = $_SESSION["idusuario"];
 	$idarticulo = isset($_POST["idarticulo"]) ? limpiarCadena($_POST["idarticulo"]) : null;
 	$idcategoria = isset($_POST["idcategoria"]) ? limpiarCadena($_POST["idcategoria"]) : null;
 	$codigo = isset($_POST["codigo"]) ? limpiarCadena($_POST["codigo"]) : null;
@@ -46,7 +49,7 @@ function GuardarOEditar()
 		$rspta = $articulo->insertar($idcategoria, $codigo, $nombre, $descripcion, $imagen, $precioventa, $stockxtalla);
 		echo $rspta ? "Datos registrados correctamente" : "No se pudo registrar los datos";
 	} else {
-		$rspta = $articulo->editar($idarticulo, $idcategoria, $codigo, $nombre, $descripcion, $imagen, $precioventa);
+		$rspta = $articulo->editar($idarticulo, $idcategoria, $codigo, $nombre, $descripcion, $imagen, $precioventa, $stockxtalla, $idusuario);
 		echo $rspta ? "Datos actualizados correctamente" : "No se pudo actualizar los datos";
 	}
 }
@@ -120,7 +123,7 @@ switch ($_GET["op"]) {
 
 	case 'eliminar':
 		$rspta = $articulo->eliminar($idarticulo);
-		echo $rspta ? "Artículo eliminado correctamente" : "No se pudo eliminar el artículo";
+		echo $rspta ? "Artículo eliminado correctamente" : "No se pudo eliminar el artículo debido a que ya cuenta con historia.";
 		break;
 
 	case 'desactivar':

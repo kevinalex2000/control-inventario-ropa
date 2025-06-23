@@ -135,7 +135,8 @@ if (!isset($_SESSION['nombre'])) {
                   </div>
                   <div class="form-group col-lg-6 col-md-6 col-xs-12">
                     <label for="">Stock por tallas:</label>
-                    <table id="idtblstockxtallas" class="table table-bordered table-condensed text-center"
+                    <table id="idtblstockxtallas"
+                      class="table table-bordered table-condensed text-center desactivar-editar-<?php echo (int) $_SESSION['idusuario'] == 1 ? 'no' : 'si' ?>"
                       style="max-width: 300px">
                       <thead>
                         <tr class="active">
